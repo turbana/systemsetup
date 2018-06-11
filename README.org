@@ -1,18 +1,18 @@
 #+TITLE: System Setup
 #+STARTUP: content
 
-* System Setup
 Provide complete workstation provisioning through ansible.
 
-** Todo
-*** TODO google chrome
-*** TODO emacs from source
-*** TODO spacemacs
-*** TODO etc git
-*** TODO custom symlinks
-*** TODO hostname
+* Todo
+** TODO google chrome
+** TODO emacs from source
+** TODO spacemacs
+** TODO etc git
+** TODO custom symlinks
+** TODO hostname
 
-** Initial
+* Initial
+local.yml
 #+BEGIN_SRC yaml :tangle local.yml
   - hosts: localhost
     become: true
@@ -26,8 +26,9 @@ Provide complete workstation provisioning through ansible.
       - include: tasks/packages.yml
 #+END_SRC
 
-** Tasks
-*** Packages
+* Tasks
+** Packages
+tasks/packages.yml
 #+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install packages
     apt: name={{item}}
