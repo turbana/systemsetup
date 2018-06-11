@@ -35,20 +35,30 @@ local.yml
 * Tasks
 ** Packages
 tasks/packages.yml
+*** System
 #+BEGIN_SRC yaml :tangle tasks/packages.yml
-  - name: install packages
+  - name: install system packages
     apt: name={{item}}
     with_items:
-      # system
       - linux-headers-amd64
       - gcc
       - perl
+#+END_SRC
 
-      # utilities
+*** Utility
+#+BEGIN_SRC yaml :tangle tasks/packages.yml
+  - name: install utility packages
+    apt: name={{item}}
+    with_items:
       - curl
       - screen
+#+END_SRC
 
-      # xmonad
+*** xmonad
+#+BEGIN_SRC yaml :tangle tasks/packages.yml
+  - name: install xmonad packages
+    apt: name={{item}}
+    with_items:
       - libx11-dev
       - libxrandr2
       - libxrandr-dev
@@ -58,12 +68,22 @@ tasks/packages.yml
       - dmenu
       - dzen2
       - xclip
+#+END_SRC
 
-      # google chrome
+*** Google chrome
+#+BEGIN_SRC yaml :tangle tasks/packages.yml
+  - name: install google chrome packages
+    apt: name={{item}}
+    with_items:
       # - libgif-dev
       # - libgnutls28-dev
       # - google-chrome-stable
+#+END_SRC
 
-      # python
+*** Python
+#+BEGIN_SRC yaml :tangle tasks/packages.yml
+  - name: install python packages
+    apt: name={{item}}
+    with_items:
       - python-pip
 #+END_SRC

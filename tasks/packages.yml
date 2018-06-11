@@ -1,16 +1,19 @@
-- name: install packages
+- name: install system packages
   apt: name={{item}}
   with_items:
-    # system
     - linux-headers-amd64
     - gcc
     - perl
 
-    # utilities
+- name: install utility packages
+  apt: name={{item}}
+  with_items:
     - curl
     - screen
 
-    # xmonad
+- name: install xmonad packages
+  apt: name={{item}}
+  with_items:
     - libx11-dev
     - libxrandr2
     - libxrandr-dev
@@ -21,10 +24,14 @@
     - dzen2
     - xclip
 
-    # google chrome
+- name: install google chrome packages
+  apt: name={{item}}
+  with_items:
     # - libgif-dev
     # - libgnutls28-dev
     # - google-chrome-stable
 
-    # python
+- name: install python packages
+  apt: name={{item}}
+  with_items:
     - python-pip
