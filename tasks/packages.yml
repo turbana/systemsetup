@@ -14,7 +14,7 @@
     - libx11-dev
     - libxrandr2
     - libxrandr-dev
-    - ghc6
+    - ghc
     - xmonad
     - cabal-install
     - dmenu
@@ -22,10 +22,9 @@
     - xclip
 
     # google chrome
-    - libgif-dev
-    - libgnutls28-dev
-    - google-chrome-stable
+    # - libgif-dev
+    # - libgnutls28-dev
+    # - google-chrome-stable
 
     # python
-    - python
     - python-pip
