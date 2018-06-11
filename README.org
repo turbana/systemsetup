@@ -3,6 +3,11 @@
 
 Provide complete workstation provisioning through ansible.
 
+To bootstrap from a fresh Debian install run the following as root:
+#+BEGIN_SRC shell :tangle no
+  wget -q https://raw.githubusercontent.com/turbana/systemsetup/master/bootstrap.sh && sh bootstrap.sh
+#+END_SRC
+
 * Todo
 ** TODO google chrome
 ** TODO emacs from source
@@ -10,6 +15,7 @@ Provide complete workstation provisioning through ansible.
 ** TODO etc git
 ** TODO custom symlinks
 ** TODO hostname
+** TODO auto login
 
 * Initial
 local.yml
