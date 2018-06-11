@@ -1,0 +1,20 @@
+- name: install packages
+  apt: name={{item}}
+  with_items:
+    # xmonad
+    - libx11-dev
+    - libxrandr2
+    - libxrandr-dev
+    - ghc6
+    - xmonad
+    - cabal-install
+    - dmenu
+    - dzen2
+
+    # google chrome
+    - libgif-dev
+    - libgnutls28-dev
+    - google-chrome-stable
+
+    # python
+    - python-pip

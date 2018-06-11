@@ -1,0 +1,51 @@
+#+TITLE: System Setup
+#+STARTUP: content
+
+* System Setup
+Provide complete workstation provisioning through ansible.
+
+** Todo
+*** TODO google chrome
+*** TODO emacs from source
+*** TODO spacemacs
+*** TODO etc git
+*** TODO custom symlinks
+*** TODO hostname
+
+** Initial
+#+BEGIN_SRC yaml :tangle local.yml
+  - hosts: localhost
+    become: true
+    pre_tasks:
+      - name: update repositories
+        apt: update_cache=yes
+        changed_when: False
+
+    tasks:
+      - include: tasks/packages.yml
+#+END_SRC
+
+** Tasks
+*** Packages
+#+BEGIN_SRC yaml :tangle tasks/packages.yml
+  - name: install packages
+    apt: name={{item}}
+    with_items:
+      # xmonad
+      - libx11-dev
+      - libxrandr2
+      - libxrandr-dev
+      - ghc6
+      - xmonad
+      - cabal-install
+      - dmenu
+      - dzen2
+
+      # google chrome
+      - libgif-dev
+      - libgnutls28-dev
+      - google-chrome-stable
+
+      # python
+      - python-pip
+#+END_SRC
