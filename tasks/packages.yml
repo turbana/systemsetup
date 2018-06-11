@@ -1,6 +1,15 @@
 - name: install packages
   apt: name={{item}}
   with_items:
+    # system
+    - linux-headers-amd64
+    - gcc
+    - perl
+
+    # utilities
+    - curl
+    - screen
+
     # xmonad
     - libx11-dev
     - libxrandr2
@@ -10,6 +19,7 @@
     - cabal-install
     - dmenu
     - dzen2
+    - xclip
 
     # google chrome
     - libgif-dev
@@ -17,4 +27,5 @@
     - google-chrome-stable
 
     # python
+    - python
     - python-pip

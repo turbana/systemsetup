@@ -33,6 +33,15 @@ tasks/packages.yml
   - name: install packages
     apt: name={{item}}
     with_items:
+      # system
+      - linux-headers-amd64
+      - gcc
+      - perl
+
+      # utilities
+      - curl
+      - screen
+
       # xmonad
       - libx11-dev
       - libxrandr2
@@ -42,6 +51,7 @@ tasks/packages.yml
       - cabal-install
       - dmenu
       - dzen2
+      - xclip
 
       # google chrome
       - libgif-dev
@@ -49,5 +59,6 @@ tasks/packages.yml
       - google-chrome-stable
 
       # python
+      - python
       - python-pip
 #+END_SRC
