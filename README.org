@@ -106,16 +106,16 @@ local.yml
 ** Apt Repositories
 tasks/apt_repos.yml
 #+BEGIN_SRC yaml :tangle tasks/apt_repos.yml
+  - name: add google apt signing key
+    apt_key:
+      url: https://dl-ssl.google.com/linux/linux_signing_key.pub
+      state: present
+
   - name: add google chrome apt repo
     apt_repository:
       repo: deb http://dl.google.com/linux/chrome/deb/ stable main
       state: present
       update_cache: yes
-
-  - name: add google apt signing key
-    apt_key:
-      url: https://dl-ssl.google.com/linux/linux_signing_key.pub
-      state: present
 #+END_SRC
 ** Packages
 tasks/packages.yml
