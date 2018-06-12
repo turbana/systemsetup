@@ -7,4 +7,5 @@
     #   changed_when: False
 
   tasks:
+    - include: tasks/apt_repos.yml
     - include: tasks/packages.yml

@@ -9,7 +9,6 @@ To bootstrap from a fresh Debian install run the following as root:
 #+END_SRC
 
 * Todo
-** TODO google chrome
 ** TODO emacs from source
 ** TODO spacemacs
 ** TODO etc git
@@ -97,10 +96,25 @@ local.yml
       #   changed_when: False
 
     tasks:
+      - include: tasks/apt_repos.yml
       - include: tasks/packages.yml
 #+END_SRC
 
 * Tasks
+** Apt Repositories
+tasks/apt_repos.yml
+#+BEGIN_SRC yaml :tangle tasks/apt_repos.yml
+  - name: add google chrome apt repo
+    apt_repository:
+      repo: deb http://dl.google.com/linux/chrome/deb/ stable main
+      state: present
+      update_cache: yes
+
+  - name: add google apt signing key
+    apt_key:
+      url: https://dl-ssl.google.com/linux/linux_signing_key.pub
+      state: present
+#+END_SRC
 ** Packages
 tasks/packages.yml
 *** System
@@ -138,12 +152,12 @@ tasks/packages.yml
 #+END_SRC
 
 *** Google chrome
-#+BEGIN_SRC yaml :tangle no
+#+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install google chrome packages
     apt: name={{item}}
     with_items:
-      - libgif-dev
-      - libgnutls28-dev
+      # - libgif-dev
+      # - libgnutls28-dev
       - google-chrome-stable
 #+END_SRC
 
