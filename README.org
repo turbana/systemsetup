@@ -138,13 +138,13 @@ tasks/packages.yml
 #+END_SRC
 
 *** Google chrome
-#+BEGIN_SRC yaml :tangle tasks/packages.yml
+#+BEGIN_SRC yaml :tangle no
   - name: install google chrome packages
     apt: name={{item}}
     with_items:
-      # - libgif-dev
-      # - libgnutls28-dev
-      # - google-chrome-stable
+      - libgif-dev
+      - libgnutls28-dev
+      - google-chrome-stable
 #+END_SRC
 
 *** Python
