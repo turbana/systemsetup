@@ -52,4 +52,4 @@ if [ ! -f $HOME/id_ecdsa ]; then
 fi
 
 echo " * start ansible"
-ansible-pull -U $GIT_REPO
+ansible-pull -U $GIT_REPO -e user=$USER

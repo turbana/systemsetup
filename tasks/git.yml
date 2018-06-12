@@ -1,0 +1,4 @@
+- name: checkout dotfiles repo
+  git:
+    repo: git@github.com:turbana/dotfiles.git
+    dest: ~/.etc

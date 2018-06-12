@@ -7,5 +7,7 @@
     #   changed_when: False
 
   tasks:
-    - include: tasks/apt_repos.yml
-    - include: tasks/packages.yml
+    - import_tasks: tasks/apt_repos.yml
+    - import_tasks: tasks/packages.yml
+    - import_tasks: tasks/git.yml
+      become_user: "{{ user }}"
