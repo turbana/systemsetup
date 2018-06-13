@@ -100,6 +100,8 @@ local.yml
         become_user: "{{ user }}"
       - import_tasks: tasks/symlinks.yml
         become_user: "{{ user }}"
+      - import_tasks: tasks/emacs.yml
+        become_user: "{{ user }}"
 #+END_SRC
 
 * Tasks
@@ -158,8 +160,6 @@ tasks/packages.yml
   - name: install google chrome packages
     apt: name={{item}}
     with_items:
-      # - libgif-dev
-      # - libgnutls28-dev
       - google-chrome-stable
 #+END_SRC
 
@@ -169,6 +169,24 @@ tasks/packages.yml
     apt: name={{item}}
     with_items:
       - python-pip
+#+END_SRC
+*** Emacs
+#+BEGIN_SRC yaml :tangle tasks/packages.yml
+  - name: install emacs dependencies
+    apt: name={{item}}
+    with_items:
+      - gcc
+      - automake
+      - autotools-dev
+      - libmagick++-dev
+      - libgtk2.0-dev
+      - libxft-dev
+      - libgnutls28-dev
+      - libdbus-1-dev
+      - libgif-dev
+      - texinfo
+      - libxmp4
+      - libxpm-dev
 #+END_SRC
 ** Git
 #+BEGIN_SRC yaml :tangle tasks/git.yml
@@ -181,6 +199,13 @@ tasks/packages.yml
     git:
       repo: git@github.com:turbana/dotfiles.git
       dest: ~/.etc
+
+  - name: checkout emacs repo
+    git:
+      repo: git://git.savannah.gnu.org/emacs.git
+      dest: ~/apps/src/emacs
+      depth: 1
+      version: emacs-26.1
 #+END_SRC
 ** Symlinks
 
@@ -211,4 +236,32 @@ tasks/symlinks.yml
       - { src: "xmonad/dzen2-left-bar.sh", dest: ".xmonad/dzen2-left-bar.sh" }
       - { src: "xmonad/dzen2-right-bar.sh", dest: ".xmonad/dzen2-right-bar.sh" }
       - { src: "xmonad/xmonad.hs", dest: ".xmonad/xmonad.hs" }
+#+END_SRC
+** Emacs
+
+tasks/emacs.yml
+#+BEGIN_SRC yaml :tangle tasks/emacs.yml
+  - name: build emacs - autogen.sh
+    command: >-
+      sh autogen.sh
+      chdir=~/apps/src/emacs
+      creates=~/apps/src/emacs/configure
+
+  - name: build emacs - configure
+    command: >-
+      ./configure --prefix=$HOME/apps --with-x-toolkit=yes
+      chdir=~/apps/src/emacs
+      creates=~/apps/src/emacs/Makefile
+
+  - name: build emacs - make
+    command: >-
+      make
+      chdir=~/apps/src/emacs
+      creates=~/apps/src/emacs/src/emacs
+
+  - name: build emacs - make install
+    command: >-
+      make install
+      chdir=~/apps/src/emacs
+      creates=~/apps/bin/emacs
 #+END_SRC

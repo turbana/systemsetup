@@ -1,0 +1,23 @@
+- name: build emacs - autogen.sh
+  command: >-
+    sh autogen.sh
+    chdir=~/apps/src/emacs
+    creates=~/apps/src/emacs/configure
+
+- name: build emacs - configure
+  command: >-
+    ./configure --prefix=$HOME/apps --with-x-toolkit=yes
+    chdir=~/apps/src/emacs
+    creates=~/apps/src/emacs/Makefile
+
+- name: build emacs - make
+  command: >-
+    make
+    chdir=~/apps/src/emacs
+    creates=~/apps/src/emacs/src/emacs
+
+- name: build emacs - make install
+  command: >-
+    make install
+    chdir=~/apps/src/emacs
+    creates=~/apps/bin/emacs

@@ -7,3 +7,10 @@
   git:
     repo: git@github.com:turbana/dotfiles.git
     dest: ~/.etc
+
+- name: checkout emacs repo
+  git:
+    repo: git://git.savannah.gnu.org/emacs.git
+    dest: ~/apps/src/emacs
+    depth: 1
+    version: emacs-26.1

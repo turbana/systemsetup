@@ -13,3 +13,5 @@
       become_user: "{{ user }}"
     - import_tasks: tasks/symlinks.yml
       become_user: "{{ user }}"
+    - import_tasks: tasks/emacs.yml
+      become_user: "{{ user }}"
