@@ -1,0 +1,25 @@
+- name: create xmonad directory
+  file:
+    path: "~/.xmonad"
+    state: directory
+
+- name: setup symlinks
+  file:
+    src: "~/.etc/{{ item.src }}"
+    dest: "~/{{ item.dest }}"
+    state: link
+    force: yes
+  with_items:
+    - { src: "bash_logout", dest: ".bash_logout" }
+    - { src: "bashrc", dest: ".bashrc" }
+    - { src: "dir_colors", dest: ".dir_colors" }
+    - { src: "profile", dest: ".profile" }
+    - { src: "screenrc", dest: ".screenrc" }
+    - { src: "xsession", dest: ".xsession" }
+    - { src: "xresources", dest: ".xresources" }
+    - { src: "xresources", dest: ".xresources" }
+    - { src: "xmonad/black.png", dest: ".xmonad/black.png" }
+    - { src: "xmonad/cpugraph.py", dest: ".xmonad/cpugraph.py" }
+    - { src: "xmonad/dzen2-left-bar.sh", dest: ".xmonad/dzen2-left-bar.sh" }
+    - { src: "xmonad/dzen2-right-bar.sh", dest: ".xmonad/dzen2-right-bar.sh" }
+    - { src: "xmonad/xmonad.hs", dest: ".xmonad/xmonad.hs" }

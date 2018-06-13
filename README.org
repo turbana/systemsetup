@@ -11,7 +11,6 @@ To bootstrap from a fresh Debian install run the following as root:
 * Todo
 ** TODO emacs from source
 ** TODO spacemacs
-** TODO custom symlinks
 ** TODO hostname
 ** TODO auto login
 ** TODO python virtualenv / libraries
@@ -99,6 +98,8 @@ local.yml
       - import_tasks: tasks/packages.yml
       - import_tasks: tasks/git.yml
         become_user: "{{ user }}"
+      - import_tasks: tasks/symlinks.yml
+        become_user: "{{ user }}"
 #+END_SRC
 
 * Tasks
@@ -180,4 +181,34 @@ tasks/packages.yml
     git:
       repo: git@github.com:turbana/dotfiles.git
       dest: ~/.etc
+#+END_SRC
+** Symlinks
+
+tasks/symlinks.yml
+#+BEGIN_SRC yaml :tangle tasks/symlinks.yml
+  - name: create xmonad directory
+    file:
+      path: "~/.xmonad"
+      state: directory
+
+  - name: setup symlinks
+    file:
+      src: "~/.etc/{{ item.src }}"
+      dest: "~/{{ item.dest }}"
+      state: link
+      force: yes
+    with_items:
+      - { src: "bash_logout", dest: ".bash_logout" }
+      - { src: "bashrc", dest: ".bashrc" }
+      - { src: "dir_colors", dest: ".dir_colors" }
+      - { src: "profile", dest: ".profile" }
+      - { src: "screenrc", dest: ".screenrc" }
+      - { src: "xsession", dest: ".xsession" }
+      - { src: "xresources", dest: ".xresources" }
+      - { src: "xresources", dest: ".xresources" }
+      - { src: "xmonad/black.png", dest: ".xmonad/black.png" }
+      - { src: "xmonad/cpugraph.py", dest: ".xmonad/cpugraph.py" }
+      - { src: "xmonad/dzen2-left-bar.sh", dest: ".xmonad/dzen2-left-bar.sh" }
+      - { src: "xmonad/dzen2-right-bar.sh", dest: ".xmonad/dzen2-right-bar.sh" }
+      - { src: "xmonad/xmonad.hs", dest: ".xmonad/xmonad.hs" }
 #+END_SRC
