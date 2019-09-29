@@ -33,19 +33,3 @@
   apt: name={{item}}
   with_items:
     - python-pip
-
-- name: install emacs dependencies
-  apt: name={{item}}
-  with_items:
-    - gcc
-    - automake
-    - autotools-dev
-    - libmagick++-dev
-    - libgtk2.0-dev
-    - libxft-dev
-    - libgnutls28-dev
-    - libdbus-1-dev
-    - libgif-dev
-    - texinfo
-    - libxmp4
-    - libxpm-dev
