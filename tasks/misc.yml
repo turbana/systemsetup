@@ -1,9 +1,26 @@
-- name: create xmonad directory
+- name: create user directories
   file:
-    path: "~/.xmonad"
+    path: "{{ item }}"
     state: directory
+  with_items:
+    - "~/.xmonad"
+    - "~/downloads"
 
-- name: setup symlinks
+- name: remove cruft directories
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "~/Desktop"
+    - "~/Documents"
+    - "~/Downloads"
+    - "~/Music"
+    - "~/Pictures"
+    - "~/Public"
+    - "~/Templates"
+    - "~/Videos"
+
+- name: setup dotfile symlinks
   file:
     src: "~/.etc/{{ item.src }}"
     dest: "~/{{ item.dest }}"
@@ -15,6 +32,7 @@
     - { src: "dir_colors", dest: ".dir_colors" }
     - { src: "profile", dest: ".profile" }
     - { src: "screenrc", dest: ".screenrc" }
+    - { src: "spacemacs/dotspacemacs", dest: ".spacemacs"}
     - { src: "xsession", dest: ".xsession" }
     - { src: "xresources", dest: ".xresources" }
     - { src: "xresources", dest: ".xresources" }

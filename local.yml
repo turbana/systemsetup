@@ -11,7 +11,7 @@
     - import_tasks: tasks/packages.yml
     - import_tasks: tasks/git.yml
       become_user: "{{ user }}"
-    - import_tasks: tasks/symlinks.yml
+    - import_tasks: tasks/misc.yml
       become_user: "{{ user }}"
     - import_tasks: tasks/emacs.yml
       become_user: "{{ user }}"

@@ -100,7 +100,7 @@ local.yml
       - import_tasks: tasks/packages.yml
       - import_tasks: tasks/git.yml
         become_user: "{{ user }}"
-      - import_tasks: tasks/symlinks.yml
+      - import_tasks: tasks/misc.yml
         become_user: "{{ user }}"
       - import_tasks: tasks/emacs.yml
         become_user: "{{ user }}"
@@ -172,7 +172,7 @@ tasks/packages.yml
     with_items:
       - python-pip
 #+END_SRC
-** Git
+** My github repos
 #+BEGIN_SRC yaml :tangle tasks/git.yml
   - name: add github.com to known_hosts
     known_hosts:
@@ -184,16 +184,33 @@ tasks/packages.yml
       repo: git@github.com:turbana/dotfiles.git
       dest: ~/.etc
 #+END_SRC
-** Symlinks
+** Misc
 
-tasks/symlinks.yml
-#+BEGIN_SRC yaml :tangle tasks/symlinks.yml
-  - name: create xmonad directory
+tasks/misc.yml
+#+BEGIN_SRC yaml :tangle tasks/misc.yml
+  - name: create user directories
     file:
-      path: "~/.xmonad"
+      path: "{{ item }}"
       state: directory
+    with_items:
+      - "~/.xmonad"
+      - "~/downloads"
 
-  - name: setup symlinks
+  - name: remove cruft directories
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - "~/Desktop"
+      - "~/Documents"
+      - "~/Downloads"
+      - "~/Music"
+      - "~/Pictures"
+      - "~/Public"
+      - "~/Templates"
+      - "~/Videos"
+
+  - name: setup dotfile symlinks
     file:
       src: "~/.etc/{{ item.src }}"
       dest: "~/{{ item.dest }}"
