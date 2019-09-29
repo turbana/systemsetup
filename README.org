@@ -123,7 +123,6 @@ tasks/apt_repos.yml
 #+END_SRC
 ** Packages
 tasks/packages.yml
-*** System
 #+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install aptitude
     apt:
@@ -136,19 +135,14 @@ tasks/packages.yml
         - linux-headers-amd64
         - gcc
         - perl
-#+END_SRC
-*** Utility
-#+BEGIN_SRC yaml :tangle tasks/packages.yml
+
   - name: install utility packages
     apt:
       name:
         - curl
         - screen
         - tree
-#+END_SRC
 
-*** xmonad
-#+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install xmonad packages
     apt:
       name:
@@ -161,22 +155,13 @@ tasks/packages.yml
         - dmenu
         - dzen2
         - xclip
-#+END_SRC
 
-*** Google chrome
-#+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install google chrome packages
     apt: name=google-chrome-stable
-#+END_SRC
 
-*** Python
-#+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install python packages
     apt: name=python-pip
-#+END_SRC
 
-*** Emacs
-#+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install emacs dependencies
     apt:
       name:
