@@ -222,6 +222,7 @@ tasks/misc.yml
       - { src: "dir_colors", dest: ".dir_colors" }
       - { src: "profile", dest: ".profile" }
       - { src: "screenrc", dest: ".screenrc" }
+      - { src: "spacemacs/dotspacemacs", dest: ".spacemacs"}
       - { src: "xsession", dest: ".xsession" }
       - { src: "xresources", dest: ".xresources" }
       - { src: "xresources", dest: ".xresources" }
@@ -282,4 +283,10 @@ tasks/emacs.yml
       make install
       chdir=~/apps/src/emacs
       creates=~/apps/bin/emacs
+
+
+  - name: checkout spacemacs repo
+    git:
+      repo: https://github.com/syl20bnr/spacemacs
+      dest: ~/.emacs.d
 #+END_SRC

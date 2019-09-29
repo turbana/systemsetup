@@ -46,3 +46,9 @@
     make install
     chdir=~/apps/src/emacs
     creates=~/apps/bin/emacs
+
+
+- name: checkout spacemacs repo
+  git:
+    repo: https://github.com/syl20bnr/spacemacs
+    dest: ~/.emacs.d
