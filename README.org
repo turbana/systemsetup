@@ -125,53 +125,54 @@ tasks/apt_repos.yml
 tasks/packages.yml
 *** System
 #+BEGIN_SRC yaml :tangle tasks/packages.yml
+  - name: install aptitude
+    apt:
+      name: aptitude
+      force_apt_get: yes
+
   - name: install system packages
-    apt: name={{item}}
-    with_items:
-      - linux-headers-amd64
-      - gcc
-      - perl
+    apt:
+      name:
+        - linux-headers-amd64
+        - gcc
+        - perl
 #+END_SRC
 *** Utility
 #+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install utility packages
-    apt: name={{item}}
-    with_items:
-      - curl
-      - screen
-      - tree
+    apt:
+      name:
+        - curl
+        - screen
+        - tree
 #+END_SRC
 
 *** xmonad
 #+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install xmonad packages
-    apt: name={{item}}
-    with_items:
-      - libx11-dev
-      - libxrandr2
-      - libxrandr-dev
-      - ghc
-      - xmonad
-      - cabal-install
-      - dmenu
-      - dzen2
-      - xclip
+    apt:
+      name:
+        - libx11-dev
+        - libxrandr2
+        - libxrandr-dev
+        - ghc
+        - xmonad
+        - cabal-install
+        - dmenu
+        - dzen2
+        - xclip
 #+END_SRC
 
 *** Google chrome
 #+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install google chrome packages
-    apt: name={{item}}
-    with_items:
-      - google-chrome-stable
+    apt: name=google-chrome-stable
 #+END_SRC
 
 *** Python
 #+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install python packages
-    apt: name={{item}}
-    with_items:
-      - python-pip
+    apt: name=python-pip
 #+END_SRC
 ** My github repos
 #+BEGIN_SRC yaml :tangle tasks/git.yml
@@ -237,20 +238,20 @@ tasks/misc.yml
 tasks/emacs.yml
 #+BEGIN_SRC yaml :tangle tasks/emacs.yml
   - name: install emacs dependencies
-    apt: name={{item}}
-    with_items:
-      - gcc
-      - automake
-      - autotools-dev
-      - libmagick++-dev
-      - libgtk2.0-dev
-      - libxft-dev
-      - libgnutls28-dev
-      - libdbus-1-dev
-      - libgif-dev
-      - texinfo
-      - libxmp4
-      - libxpm-dev
+    apt:
+      name:
+        - gcc
+        - automake
+        - autotools-dev
+        - libmagick++-dev
+        - libgtk2.0-dev
+        - libxft-dev
+        - libgnutls28-dev
+        - libdbus-1-dev
+        - libgif-dev
+        - texinfo
+        - libxmp4
+        - libxpm-dev
 
 
   - name: checkout emacs repo
