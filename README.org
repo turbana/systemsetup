@@ -279,4 +279,8 @@ tasks/emacs.yml
     git:
       repo: https://github.com/syl20bnr/spacemacs
       dest: ~/.emacs.d
+
+
+  - name: update emacs packages
+    command: ~/apps/bin/emacs --batch -l ~/.emacs.d/init.el --eval='(progn (configuration-layer/update-packages t) (server-force-delete))'
 #+END_SRC
