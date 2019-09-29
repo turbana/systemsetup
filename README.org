@@ -139,6 +139,7 @@ tasks/packages.yml
     with_items:
       - curl
       - screen
+      - tree
 #+END_SRC
 
 *** xmonad
