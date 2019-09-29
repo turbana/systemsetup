@@ -174,6 +174,26 @@ tasks/packages.yml
   - name: install python packages
     apt: name=python-pip
 #+END_SRC
+
+*** Emacs
+#+BEGIN_SRC yaml :tangle tasks/packages.yml
+  - name: install emacs dependencies
+    apt:
+      name:
+        - gcc
+        - automake
+        - autotools-dev
+        - libmagick++-dev
+        - libgtk2.0-dev
+        - libxft-dev
+        - libgnutls28-dev
+        - libdbus-1-dev
+        - libgif-dev
+        - texinfo
+        - libxmp4
+        - libxpm-dev
+#+END_SRC
+
 ** My github repos
 #+BEGIN_SRC yaml :tangle tasks/git.yml
   - name: add github.com to known_hosts
@@ -237,23 +257,6 @@ tasks/misc.yml
 ** Emacs
 tasks/emacs.yml
 #+BEGIN_SRC yaml :tangle tasks/emacs.yml
-  - name: install emacs dependencies
-    apt:
-      name:
-        - gcc
-        - automake
-        - autotools-dev
-        - libmagick++-dev
-        - libgtk2.0-dev
-        - libxft-dev
-        - libgnutls28-dev
-        - libdbus-1-dev
-        - libgif-dev
-        - texinfo
-        - libxmp4
-        - libxpm-dev
-
-
   - name: checkout emacs repo
     git:
       repo: git://git.savannah.gnu.org/emacs.git

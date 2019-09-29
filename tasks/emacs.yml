@@ -1,21 +1,3 @@
-- name: install emacs dependencies
-  become: true
-  apt:
-    name:
-      - gcc
-      - automake
-      - autotools-dev
-      - libmagick++-dev
-      - libgtk2.0-dev
-      - libxft-dev
-      - libgnutls28-dev
-      - libdbus-1-dev
-      - libgif-dev
-      - texinfo
-      - libxmp4
-      - libxpm-dev
-
-
 - name: checkout emacs repo
   git:
     repo: git://git.savannah.gnu.org/emacs.git
