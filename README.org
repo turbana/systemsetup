@@ -16,6 +16,8 @@ To bootstrap from a fresh Debian install run the following as root:
 ** TODO python virtualenv / libraries
 ** TODO setup new ssh key + load into github
 ** TODO setup sudoers
+** TODO cabal install / update
+for xmonad at least
 * Initial
 ** Bootstrap
 Before we can begin our Ansible playbook we need to do the following:
@@ -205,7 +207,7 @@ tasks/packages.yml
       repo: git://git.savannah.gnu.org/emacs.git
       dest: ~/apps/src/emacs
       depth: 1
-      version: emacs-26.1
+      version: emacs-26.3
 #+END_SRC
 ** Symlinks
 

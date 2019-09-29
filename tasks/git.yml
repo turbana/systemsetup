@@ -13,4 +13,4 @@
     repo: git://git.savannah.gnu.org/emacs.git
     dest: ~/apps/src/emacs
     depth: 1
-    version: emacs-26.1
+    version: emacs-26.3
