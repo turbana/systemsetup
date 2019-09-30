@@ -90,20 +90,24 @@ local.yml
   - hosts: localhost
     become: true
     pre_tasks:
-      # XXX skip updating repos while testing
-      # - name: update repositories
-      #   apt: update_cache=yes
-      #   changed_when: False
+      - name: update apt cache
+        apt: update_cache=yes
+        changed_when: False
+        tags: packages
 
     tasks:
       - import_tasks: tasks/apt_repos.yml
+        tags: packages
       - import_tasks: tasks/packages.yml
+        tags: packages
       - import_tasks: tasks/git.yml
         become_user: "{{ user }}"
+        tags: github
       - import_tasks: tasks/misc.yml
         become_user: "{{ user }}"
       - import_tasks: tasks/emacs.yml
         become_user: "{{ user }}"
+        tags: emacs
 
     handlers:
       - import_tasks: handlers/handlers.yml
