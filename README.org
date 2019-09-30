@@ -9,17 +9,13 @@ To bootstrap from a fresh Debian install run the following as root:
 #+END_SRC
 
 * Todo
-** TODO emacs from source
-** TODO spacemacs
 ** TODO hostname
 ** TODO auto login
 ** TODO python virtualenv / libraries
-** TODO setup new ssh key + load into github
 ** TODO setup sudoers
 ** TODO cabal install / update
 for xmonad at least
-* Initial
-** Bootstrap
+* Bootstrap
 Before we can begin our Ansible playbook we need to do the following:
 1. install ansible
 2. install git
@@ -84,8 +80,7 @@ bootstrap.sh
   echo " * start ansible"
   ansible-pull -U $GIT_REPO -e user=$USER
 #+END_SRC
-** Ansible
-local.yml
+* Ansible
 #+BEGIN_SRC yaml :tangle local.yml
   - hosts: localhost
     become: true
@@ -116,7 +111,6 @@ local.yml
 
 * Tasks
 ** Apt Repositories
-tasks/apt_repos.yml
 #+BEGIN_SRC yaml :tangle tasks/apt_repos.yml
   - name: add google apt signing key
     apt_key:
@@ -130,7 +124,6 @@ tasks/apt_repos.yml
       update_cache: yes
 #+END_SRC
 ** Packages
-tasks/packages.yml
 #+BEGIN_SRC yaml :tangle tasks/packages.yml
   - name: install aptitude
     apt:
@@ -203,9 +196,7 @@ tasks/packages.yml
       repo: git@github.com:turbana/dotfiles.git
       dest: ~/.etc
 #+END_SRC
-** Misc
-
-tasks/dotfiles.yml
+** Dotfiles
 #+BEGIN_SRC yaml :tangle tasks/dotfiles.yml
   - name: create user directories
     file:
@@ -253,7 +244,6 @@ tasks/dotfiles.yml
       - { src: "xmonad/xmonad.hs", dest: ".xmonad/xmonad.hs" }
 #+END_SRC
 ** Emacs
-tasks/emacs.yml
 #+BEGIN_SRC yaml :tangle tasks/emacs.yml
   - name: checkout emacs repo
     git:
@@ -311,8 +301,6 @@ tasks/emacs.yml
     notify: reload fc-cache
 #+END_SRC
 * Handlers
-handlers/handlers.yml
-
 #+BEGIN_SRC yaml :tangle handlers/handlers.yml
   - name: reload fc-cache
     command: fc-cache -fv
