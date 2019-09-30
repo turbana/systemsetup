@@ -84,14 +84,8 @@ bootstrap.sh
 #+BEGIN_SRC yaml :tangle local.yml
   - hosts: localhost
     become: true
-    pre_tasks:
-      - name: update apt cache
-        apt: update_cache=yes
-        changed_when: False
-        tags: packages
-
     tasks:
-      - import_tasks: tasks/apt_repos.yml
+      - import_tasks: tasks/apt.yml
         tags: packages
       - import_tasks: tasks/packages.yml
         tags: packages
@@ -110,8 +104,26 @@ bootstrap.sh
 #+END_SRC
 
 * Tasks
-** Apt Repositories
-#+BEGIN_SRC yaml :tangle tasks/apt_repos.yml
+** Apt
+#+BEGIN_SRC yaml :tangle tasks/apt.yml
+  - name: update apt cache
+    apt: update_cache=yes
+    changed_when: False
+
+  - name: install aptitude
+    apt:
+      name: aptitude
+      force_apt_get: yes
+
+  - name: perform apt dist-upgrade
+    apt:
+      upgrade: full
+
+  - name: perform apt update
+    apt:
+      name: "*"
+      state: latest
+
   - name: add google apt signing key
     apt_key:
       url: https://dl-ssl.google.com/linux/linux_signing_key.pub
@@ -123,13 +135,9 @@ bootstrap.sh
       state: present
       update_cache: yes
 #+END_SRC
+
 ** Packages
 #+BEGIN_SRC yaml :tangle tasks/packages.yml
-  - name: install aptitude
-    apt:
-      name: aptitude
-      force_apt_get: yes
-
   - name: install system packages
     apt:
       name:
