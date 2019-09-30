@@ -3,8 +3,9 @@
     path: "{{ item }}"
     state: directory
   with_items:
-    - "~/.xmonad"
-    - "~/downloads"
+    - ~/.xmonad
+    - ~/downloads
+    - ~/.fonts
 
 - name: remove cruft directories
   file:

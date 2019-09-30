@@ -39,4 +39,16 @@
 
 - name: update emacs packages
   command: ~/apps/bin/emacs --batch -l ~/.emacs.d/init.el --eval='(progn (configuration-layer/update-packages t) (server-force-delete))'
-  tags: dumb
+
+
+- name: checkout all-the-icons repo
+  git:
+    repo: https://github.com/domtronn/all-the-icons.el.git
+    dest: ~/apps/src/all-the-icons
+
+- name: copy all-the-icons fonts
+  copy:
+    remote_src: yes
+    src: ~/apps/src/all-the-icons/fonts/
+    dest: ~/.fonts/
+  notify: reload fc-cache

@@ -15,3 +15,6 @@
       become_user: "{{ user }}"
     - import_tasks: tasks/emacs.yml
       become_user: "{{ user }}"
+
+  handlers:
+    - import_tasks: handlers/handlers.yml

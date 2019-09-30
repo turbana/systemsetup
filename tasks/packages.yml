@@ -36,7 +36,7 @@
 - name: install python packages
   apt: name=python-pip
 
-- name: install emacs dependencies
+- name: install emacs packages
   apt:
     name:
       - gcc
@@ -51,3 +51,7 @@
       - texinfo
       - libxmp4
       - libxpm-dev
+
+- name: install font packages
+  apt:
+    name: fonts-adf-gillius
