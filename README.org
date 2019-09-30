@@ -103,8 +103,9 @@ local.yml
       - import_tasks: tasks/git.yml
         become_user: "{{ user }}"
         tags: github
-      - import_tasks: tasks/misc.yml
+      - import_tasks: tasks/dotfiles.yml
         become_user: "{{ user }}"
+        tags: dotfiles
       - import_tasks: tasks/emacs.yml
         become_user: "{{ user }}"
         tags: emacs
@@ -204,8 +205,8 @@ tasks/packages.yml
 #+END_SRC
 ** Misc
 
-tasks/misc.yml
-#+BEGIN_SRC yaml :tangle tasks/misc.yml
+tasks/dotfiles.yml
+#+BEGIN_SRC yaml :tangle tasks/dotfiles.yml
   - name: create user directories
     file:
       path: "{{ item }}"
