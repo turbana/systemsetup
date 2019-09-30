@@ -23,8 +23,8 @@
 
 - name: setup dotfile symlinks
   file:
-    src: "~/.etc/{{ item.src }}"
-    dest: "~/{{ item.dest }}"
+    src: "{{ etc_root }}/{{ item.src }}"
+    dest: ~/{{ item.dest }}
     state: link
     force: yes
   with_items:

@@ -103,6 +103,16 @@ bootstrap.sh
       - import_tasks: handlers/handlers.yml
 #+END_SRC
 
+* Variables
+#+BEGIN_SRC yaml :tangle group_vars/all.yml
+  etc_root: ~/.etc
+  app_root: ~/apps
+
+  emacs_version: 26.3
+  emacs_build_args: "--with-x-toolkit=yes"
+  emacs_build_dir: "{{ app_root }}/src/emacs"
+#+END_SRC
+
 * Tasks
 ** Apt
 #+BEGIN_SRC yaml :tangle tasks/apt.yml
@@ -202,7 +212,7 @@ bootstrap.sh
   - name: checkout dotfiles repo
     git:
       repo: git@github.com:turbana/dotfiles.git
-      dest: ~/.etc
+      dest: "{{ etc_root }}"
 #+END_SRC
 ** Dotfiles
 #+BEGIN_SRC yaml :tangle tasks/dotfiles.yml
@@ -231,8 +241,8 @@ bootstrap.sh
 
   - name: setup dotfile symlinks
     file:
-      src: "~/.etc/{{ item.src }}"
-      dest: "~/{{ item.dest }}"
+      src: "{{ etc_root }}/{{ item.src }}"
+      dest: ~/{{ item.dest }}
       state: link
       force: yes
     with_items:
@@ -256,34 +266,34 @@ bootstrap.sh
   - name: checkout emacs repo
     git:
       repo: git://git.savannah.gnu.org/emacs.git
-      dest: ~/apps/src/emacs
+      dest: "{{ emacs_build_dir }}"
       depth: 1
-      version: emacs-26.3
+      version: emacs-{{ emacs_version }}
 
 
   - name: build emacs - autogen.sh
-    command: >-
-      sh autogen.sh
-      chdir=~/apps/src/emacs
-      creates=~/apps/src/emacs/configure
+    command: sh autogen.sh
+    args:
+      chdir: "{{ emacs_build_dir }}"
+      creates: "{{ emacs_build_dir }}/configure"
 
   - name: build emacs - configure
-    command: >-
-      ./configure --prefix=$HOME/apps --with-x-toolkit=yes
-      chdir=~/apps/src/emacs
-      creates=~/apps/src/emacs/Makefile
+    command: ./configure --prefix={{ app_root | expanduser }} {{ emacs_build_args }}
+    args:
+      chdir: "{{ emacs_build_dir }}"
+      creates: "{{ emacs_build_dir }}/Makefile"
 
   - name: build emacs - make
-    command: >-
-      make
-      chdir=~/apps/src/emacs
-      creates=~/apps/src/emacs/src/emacs
+    command: make
+    args:
+      chdir: "{{ emacs_build_dir }}"
+      creates: "{{ emacs_build_dir }}/src/emacs"
 
   - name: build emacs - make install
-    command: >-
-      make install
-      chdir=~/apps/src/emacs
-      creates=~/apps/bin/emacs
+    command: make install
+    args:
+      chdir: "{{ emacs_build_dir }}"
+      creates: "{{ app_root }}/bin/emacs"
 
 
   - name: checkout spacemacs repo
@@ -293,18 +303,18 @@ bootstrap.sh
 
 
   - name: update emacs packages
-    command: ~/apps/bin/emacs --batch -l ~/.emacs.d/init.el --eval='(progn (configuration-layer/update-packages t) (server-force-delete))'
+    command: "{{ app_root }}/bin/emacs --batch -l ~/.emacs.d/init.el --eval='(progn (configuration-layer/update-packages t) (server-force-delete))'"
 
 
   - name: checkout all-the-icons repo
     git:
       repo: https://github.com/domtronn/all-the-icons.el.git
-      dest: ~/apps/src/all-the-icons
+      dest: "{{ app_root }}/src/all-the-icons"
 
   - name: copy all-the-icons fonts
     copy:
       remote_src: yes
-      src: ~/apps/src/all-the-icons/fonts/
+      src: "{{ app_root }}/src/all-the-icons/fonts/"
       dest: ~/.fonts/
     notify: reload fc-cache
 #+END_SRC

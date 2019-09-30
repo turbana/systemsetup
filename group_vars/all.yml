@@ -1,0 +1,6 @@
+etc_root: ~/.etc
+app_root: ~/apps
+
+emacs_version: 26.3
+emacs_build_args: "--with-x-toolkit=yes"
+emacs_build_dir: "{{ app_root }}/src/emacs"
