@@ -286,6 +286,7 @@ bootstrap.sh
   - name: checkout spacemacs repo
     git:
       repo: https://github.com/syl20bnr/spacemacs
+      depth: 1
       dest: ~/.emacs.d
 
 
@@ -296,6 +297,7 @@ bootstrap.sh
   - name: checkout all-the-icons repo
     git:
       repo: https://github.com/domtronn/all-the-icons.el.git
+      depth: 1
       dest: "{{ app_root }}/src/all-the-icons"
 
   - name: copy all-the-icons fonts
