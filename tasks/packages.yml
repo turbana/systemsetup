@@ -26,9 +26,6 @@
       - dzen2
       - xclip
 
-- name: install google chrome packages
-  apt: name=google-chrome-stable
-
 - name: install python packages
   apt: name=python-pip
 
