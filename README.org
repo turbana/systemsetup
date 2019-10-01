@@ -168,9 +168,10 @@ bootstrap.sh
         - libx11-dev
         - libxrandr2
         - libxrandr-dev
-        - ghc
-        - xmonad
-        - cabal-install
+        - libxss-dev
+        - libgmp-dev
+        - libghc-xmonad-dev
+        - libghc-xmonad-contrib-dev
         - dmenu
         - dzen2
         - xclip
