@@ -66,7 +66,7 @@ bootstrap.sh
   apt-get update > /dev/null
 
   echo " * install ansible/git/sudo"
-  apt-get install -y ansible python git sudo > /dev/null
+  apt-get install -y ansible python python-apt git sudo > /dev/null
 
   if [ ! -f $HOME/id_ecdsa ]; then
       echo " * generate ssh key"
@@ -117,7 +117,9 @@ bootstrap.sh
 ** Apt
 #+BEGIN_SRC yaml :tangle tasks/apt.yml
   - name: update apt cache
-    apt: update_cache=yes
+    apt:
+      update_cache: yes
+      force_apt_get: yes
     changed_when: False
 
   - name: install aptitude

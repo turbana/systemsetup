@@ -40,7 +40,7 @@ echo " * update packages"
 apt-get update > /dev/null
 
 echo " * install ansible/git/sudo"
-apt-get install -y ansible python git sudo > /dev/null
+apt-get install -y ansible python python-apt git sudo > /dev/null
 
 if [ ! -f $HOME/id_ecdsa ]; then
     echo " * generate ssh key"
