@@ -188,7 +188,9 @@ bootstrap.sh
 
   - name: install font packages
     apt:
-      name: fonts-adf-gillius
+      name:
+        - fonts-adf-gillius       # Gillius ADF
+        - texlive-fonts-extra     # Latin Modern Mono
 #+END_SRC
 
 ** My github repos
