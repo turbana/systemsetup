@@ -44,6 +44,7 @@
       - texinfo
       - libxmp4
       - libxpm-dev
+      - libgccjit-6-dev         # for native compilation
 
 - name: install font packages
   apt:

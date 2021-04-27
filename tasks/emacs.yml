@@ -29,14 +29,3 @@
   args:
     chdir: "{{ emacs_build_dir }}"
     creates: "{{ app_root }}/bin/emacs"
-
-
-- name: checkout spacemacs repo
-  git:
-    repo: https://github.com/syl20bnr/spacemacs
-    depth: 1
-    dest: ~/.emacs.d
-
-
-- name: update emacs packages
-  command: "{{ app_root }}/bin/emacs --batch -l ~/.emacs.d/init.el --eval='(progn (configuration-layer/update-packages t) (server-force-delete))'"

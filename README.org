@@ -111,7 +111,8 @@ bootstrap.sh
   etc_root: ~/.etc
   app_root: ~/apps
 
-  emacs_version: 26.3
+  emacs_version: 27.2
+  emacs_home: ~/.emacs.d
   emacs_build_args: "--with-x-toolkit=yes"
   emacs_build_dir: "{{ app_root }}/src/emacs"
 #+END_SRC
@@ -188,6 +189,7 @@ bootstrap.sh
         - texinfo
         - libxmp4
         - libxpm-dev
+        - libgccjit-6-dev         # for native compilation
 
   - name: install font packages
     apt:
@@ -207,6 +209,11 @@ bootstrap.sh
     git:
       repo: git@github.com:turbana/dotfiles.git
       dest: "{{ etc_root }}"
+
+  - name: checkout emacs.d repo
+    git:
+      repo: git@github.com:turbana/emacs-config.git
+      dest: "{{ emacs_home }}"
 #+END_SRC
 ** Dotfiles
 #+BEGIN_SRC yaml :tangle tasks/dotfiles.yml
@@ -288,17 +295,8 @@ bootstrap.sh
     args:
       chdir: "{{ emacs_build_dir }}"
       creates: "{{ app_root }}/bin/emacs"
+#+END_SRC
 
-
-  - name: checkout spacemacs repo
-    git:
-      repo: https://github.com/syl20bnr/spacemacs
-      depth: 1
-      dest: ~/.emacs.d
-
-
-  - name: update emacs packages
-    command: "{{ app_root }}/bin/emacs --batch -l ~/.emacs.d/init.el --eval='(progn (configuration-layer/update-packages t) (server-force-delete))'"
 ** Fonts
 #+BEGIN_SRC yaml :tangle tasks/fonts.yml
   - name: checkout all-the-icons repo
@@ -314,6 +312,7 @@ bootstrap.sh
       dest: ~/.fonts/
     notify: reload fc-cache
 #+END_SRC
+
 * Handlers
 #+BEGIN_SRC yaml :tangle handlers/handlers.yml
   - name: reload fc-cache

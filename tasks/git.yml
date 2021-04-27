@@ -7,3 +7,8 @@
   git:
     repo: git@github.com:turbana/dotfiles.git
     dest: "{{ etc_root }}"
+
+- name: checkout emacs.d repo
+  git:
+    repo: git@github.com:turbana/emacs-config.git
+    dest: "{{ emacs_home }}"
