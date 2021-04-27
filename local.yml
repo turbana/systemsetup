@@ -14,6 +14,9 @@
     - import_tasks: tasks/emacs.yml
       become_user: "{{ user }}"
       tags: emacs
+    - import_tasks: tasks/fonts.yml
+      become_user: "{{ user }}"
+      tags: fonts
 
   handlers:
     - import_tasks: handlers/handlers.yml

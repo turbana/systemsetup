@@ -98,6 +98,9 @@ bootstrap.sh
       - import_tasks: tasks/emacs.yml
         become_user: "{{ user }}"
         tags: emacs
+      - import_tasks: tasks/fonts.yml
+        become_user: "{{ user }}"
+        tags: fonts
 
     handlers:
       - import_tasks: handlers/handlers.yml
@@ -296,8 +299,8 @@ bootstrap.sh
 
   - name: update emacs packages
     command: "{{ app_root }}/bin/emacs --batch -l ~/.emacs.d/init.el --eval='(progn (configuration-layer/update-packages t) (server-force-delete))'"
-
-
+** Fonts
+#+BEGIN_SRC yaml :tangle tasks/fonts.yml
   - name: checkout all-the-icons repo
     git:
       repo: https://github.com/domtronn/all-the-icons.el.git
