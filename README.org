@@ -313,6 +313,41 @@ bootstrap.sh
     notify: reload fc-cache
 #+END_SRC
 
+** Xmonad (disabled)
+Putting this in to keep a record of what was tried.
+#+BEGIN_SRC yaml :tangle no
+  # - name: checkout ghc repo
+  #   git:
+  #     repo: https://github.com/ghc/ghc.git
+  #     # depth: 1
+  #     version: ghc-{{ ghc_version }}
+  #     dest: "{{ ghc_build_dir }}"
+
+
+  - name: cabal update
+    command: "{{ cabal }} update"
+
+  - name: cabal install stack
+    command: "{{ cabal }} install {{ cabal_install_opts }} stack"
+    register: output
+    changed_when:
+      - output.rc == 0
+      - "'Up to date' not in output.stdout"
+
+  - name: setup stack
+    command: stack setup
+
+
+  - name: cabal install xmonad
+    command: "{{ cabal }} install {{ cabal_install_opts }} xmonad-{{xmonad_version }} xmonad-contrib-{{ xmonad_version }}"
+    # tags: packages
+    register: output
+    changed_when:
+      - output.rc == 0
+      - "'Up to date' not in output.stdout"
+#+END_SRC
+
+
 * Handlers
 #+BEGIN_SRC yaml :tangle handlers/handlers.yml
   - name: reload fc-cache
