@@ -113,7 +113,7 @@ bootstrap.sh
 
   emacs_version: 27.2
   emacs_home: ~/.emacs.d
-  emacs_build_args: "--with-x-toolkit=yes"
+  emacs_build_args: "--with-x-toolkit=yes --with-json"
   emacs_build_dir: "{{ app_root }}/src/emacs"
 #+END_SRC
 
@@ -189,7 +189,7 @@ bootstrap.sh
         - texinfo
         - libxmp4
         - libxpm-dev
-        - libgccjit-6-dev         # for native compilation
+        - libgccjit-8-dev         # for native compilation
 
   - name: install font packages
     apt:
