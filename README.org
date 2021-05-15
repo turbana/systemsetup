@@ -1,355 +1,188 @@
 #+TITLE: System Setup
+#+PROPERTY: header-args :tangle no
 #+STARTUP: content
 
-Provide complete workstation provisioning through ansible.
+Going to try out a new distro / package manager [[https://guix.gnu.org/][Guix]]. It provides a declarative
+OS configuration system, transactional updates, and user level package
+management.
 
-To bootstrap from a fresh Debian install run the following as root:
-#+BEGIN_SRC shell :tangle no
-  wget -q https://raw.githubusercontent.com/turbana/systemsetup/master/bootstrap.sh && sh bootstrap.sh
+* Commands
+While learning Guix I'd like to keep some notes on how to run some commands.
+
+NOTE: these all assume the *.scm files are located under =~/.config/guix/=.
+
+#+BEGIN_SRC shell
+  # pull down updates
+  guix system pull
+
+  # update system
+  sudo guix system -L ~/.config/guix/systems reconfigure path/to/system.scm
+
+  # list system generations
+  guix system list-generations
+
+  # roll-back system
+  guix system switch-generation <n>
 #+END_SRC
 
-* Todo
-** TODO hostname
-** TODO auto login
-** TODO python virtualenv / libraries
-** TODO setup sudoers
-** TODO cabal install / update
-for xmonad at least
-* Bootstrap
-Before we can begin our Ansible playbook we need to do the following:
-1. install ansible
-2. install git
-3. initialize ssh key
-4. load ssh key into github
+* Systems
+Here we define the state of the base system. We'll start by defining the base
+operating system that the specific hosts will inherit from.
 
-bootstrap.sh
-#+BEGIN_SRC shell :tangle bootstrap.sh :tangle-mode (identity #o755)
-  #!/bin/sh
+** Base
+*guix/systems/base-system.scm:*
+#+BEGIN_SRC scheme :tangle guix/systems/base-system.scm
+  (define-module (base-system)
+    #:use-module (gnu))
+  (use-service-modules desktop networking ssh xorg)
 
-  set -e
+  (define-public base-operating-system
+    (operating-system
+     (locale "en_US.utf8")
+     (timezone "America/Los_Angeles")
+     (keyboard-layout (keyboard-layout "us"))
+     (host-name "changeme")
 
-  GIT_REPO=https://github.com/turbana/systemsetup.git
-  SOURCES=/etc/apt/sources.list
-  TMP_SOURCES=/tmp/$$.sources.list
+     (bootloader
+      (bootloader-configuration
+       (bootloader grub-efi-bootloader)
+       (target "/boot/efi")
+       (keyboard-layout keyboard-layout)))
 
-  if [ "$#" = "1" ]; then
-      USER=$1
-  else
-      echo " * finding user"
-      USER=$(id -un 1000)
-  fi
-  if [ -z "$USER" ]; then
-      echo "ERROR: could not determine user; run '$(basename $0) <user>'"
-      exit 2
-  fi
+     ;; should be overwritten in child OS
+     (file-systems (cons*
+                    (file-system
+                     (mount-point "/")
+                     (device "none")
+                     (type "tmpfs")
+                     (check? #f))
+                    %base-file-systems))
 
-  echo " * user is $USER"
+     (users (cons* (user-account
+                    (name "ian")
+                    (comment "Ian Clark")
+                    (group "users")
+                    (home-directory "/home/ian")
+                    (supplementary-groups
+                     '("wheel" "netdev" "audio" "video")))
+                   %base-user-accounts))
 
-  # add ansible repo
-  if ! grep -q ansible $SOURCES; then
-      echo " * add ansible apt repository"
-      cp $SOURCES $TMP_SOURCES
-      echo >> $TMP_SOURCES
-      echo "# ansible repo" >> $TMP_SOURCES
-      echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> $TMP_SOURCES
-      mv $TMP_SOURCES $SOURCES
-  fi
+     (packages
+      (append
+       (list (specification->package "i3-wm")
+             (specification->package "i3status")
+             (specification->package "dmenu")
+             (specification->package "st")
+             (specification->package "nss-certs"))
+       %base-packages))
 
-  # dirmngr needed for apt-key
-  echo " * install dirmngr"
-  apt-get install -y dirmngr > /dev/null
-
-  echo " * add ansible public apt key"
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 > /dev/null
-
-  echo " * update packages"
-  apt-get update > /dev/null
-
-  echo " * install ansible/git/sudo"
-  apt-get install -y ansible python python-apt git sudo > /dev/null
-
-  if [ ! -f $HOME/id_ecdsa ]; then
-      echo " * generate ssh key"
-      sudo -u $USER ssh-keygen -f /home/$USER/.ssh/id_ecdsa -t ecdsa -b 521
-      echo " * MANUALLY add the public key to github"
-      cat /home/$USER/.ssh/id_ecdsa.pub
-      echo "Press enter to continue..."
-      read ignore
-  fi
-
-  echo " * start ansible"
-  ansible-pull -U $GIT_REPO -e user=$USER
-#+END_SRC
-* Ansible
-#+BEGIN_SRC yaml :tangle local.yml
-  - hosts: localhost
-    become: true
-    tasks:
-      - import_tasks: tasks/apt.yml
-        tags: packages
-      - import_tasks: tasks/packages.yml
-        tags: packages
-      - import_tasks: tasks/git.yml
-        become_user: "{{ user }}"
-        tags: github
-      - import_tasks: tasks/dotfiles.yml
-        become_user: "{{ user }}"
-        tags: dotfiles
-      - import_tasks: tasks/emacs.yml
-        become_user: "{{ user }}"
-        tags: emacs
-      - import_tasks: tasks/fonts.yml
-        become_user: "{{ user }}"
-        tags: fonts
-
-    handlers:
-      - import_tasks: handlers/handlers.yml
+     (services
+      (append
+       (list (set-xorg-configuration
+              (xorg-configuration
+               (keyboard-layout keyboard-layout))))
+       %desktop-services))
+     ))
 #+END_SRC
 
-* Variables
-#+BEGIN_SRC yaml :tangle group_vars/all.yml
-  etc_root: ~/.etc
-  app_root: ~/apps
+** tornado
+*guix/systems/tornado.scm:*
+#+BEGIN_SRC scheme :tangle guix/systems/tornado.scm
+  (define-module (tornado)
+    #:export (tornado-system)
+    #:use-module (base-system)
+    #:use-module (gnu))
 
-  emacs_version: 27.2
-  emacs_home: ~/.emacs.d
-  emacs_build_args: "--with-x-toolkit=yes --with-json"
-  emacs_build_dir: "{{ app_root }}/src/emacs"
+  (use-service-modules ssh)
+
+  (operating-system
+    (inherit base-operating-system)
+    (host-name "tornado")
+
+    (swap-devices
+     (list (uuid "6e9af107-9d7b-4bc2-843c-9afe9d1a4660")))
+
+    (file-systems
+     (cons* (file-system
+              (mount-point "/boot/efi")
+              (device (uuid "5CD3-F7B5" 'fat32))
+              (type "vfat"))
+            (file-system
+              (mount-point "/")
+              (device
+               (uuid "39406bbf-01f9-4de2-88a9-d14a90fa2e75"
+                     'ext4))
+              (type "ext4"))
+            %base-file-systems))
+
+    (packages
+     (append
+      (list (specification->package "screen")
+            )
+      (operating-system-packages base-operating-system)))
+
+    (services
+     (append
+      (list (service openssh-service-type))
+      (operating-system-user-services base-operating-system)))
+    )
 #+END_SRC
 
-* Tasks
-** Apt
-#+BEGIN_SRC yaml :tangle tasks/apt.yml
-  - name: update apt cache
-    apt:
-      update_cache: yes
-      force_apt_get: yes
-    changed_when: False
+* Sanity Check
+I don't know of a way for =guix= to check that an operating system configuration is valid. So make a small file that just imports our system modules and if that doesn't raise any errors assume we're okay.
 
-  - name: install aptitude
-    apt:
-      name: aptitude
-      force_apt_get: yes
+*guix/sanity-check.scm:*
+#+BEGIN_SRC scheme :tangle guix/sanity-check.scm
+  (define-module (sanity-check)
+    #:use-module (gnu)
+    #:use-module (ice-9 pretty-print)
+    #:use-module ((base-system)
+                  #:select (base-operating-system)))
 
-  - name: perform apt dist-upgrade
-    apt:
-      upgrade: full
+  (define tornado (load "systems/tornado.scm"))
 
-  - name: perform apt update
-    apt:
-      name: "*"
-      state: latest
+  (define (pretty-print-list L)
+    (pretty-print (length L))
+    (map pretty-print L))
+
+  (define (services os)
+    (map (lambda (s)
+           (service-type-name (service-kind s)))
+         (operating-system-services os)))
+
+
+  (let* ((base-list (services base-operating-system))
+         (child-list (services tornado))
+         (only-base (filter (lambda (e) (not (memq e child-list)))
+                            base-list))
+         (only-child (filter (lambda (e) (not (memq e base-list)))
+                             child-list))
+         (common (filter (lambda (e) (memq e child-list))
+                         base-list))
+         )
+    (pretty-print "total child:")
+    (pretty-print (length child-list))
+    (pretty-print "total base:")
+    (pretty-print (length base-list))
+    (pretty-print "only child:")
+    (pretty-print-list only-child)
+    (pretty-print "only base:")
+    (pretty-print-list only-base)
+    (pretty-print "in common:")
+    (pretty-print-list common)
+    )
 #+END_SRC
 
-** Packages
-#+BEGIN_SRC yaml :tangle tasks/packages.yml
-  - name: install system packages
-    apt:
-      name:
-        - linux-headers-amd64
-        - gcc
-        - perl
+Push changes and test. Remember to =org-babel-tangle= first!
+#+BEGIN_SRC shell :results output file :file out.log
+  # push updates
+  scp -r guix/ guix:.config/
 
-  - name: install utility packages
-    apt:
-      name:
-        - curl
-        - screen
-        - tree
+  # check syntax errors
+  ssh guix -- guile --no-auto-compile -L ~/.config/guix/systems -s ~/.config/guix/sanity-check.scm
 
-  - name: install xmonad packages
-    apt:
-      name:
-        - libx11-dev
-        - libxrandr2
-        - libxrandr-dev
-        - libxss-dev
-        - libgmp-dev
-        - libghc-xmonad-dev
-        - libghc-xmonad-contrib-dev
-        - dmenu
-        - dzen2
-        - xclip
-
-  - name: install python packages
-    apt: name=python-pip
-
-  - name: install emacs packages
-    apt:
-      name:
-        - gcc
-        - automake
-        - autotools-dev
-        - libmagick++-dev
-        - libgtk2.0-dev
-        - libxft-dev
-        - libgnutls28-dev
-        - libdbus-1-dev
-        - libgif-dev
-        - texinfo
-        - libxmp4
-        - libxpm-dev
-        - libgccjit-8-dev         # for native compilation
-
-  - name: install font packages
-    apt:
-      name:
-        - fonts-adf-gillius       # Gillius ADF
-        - texlive-fonts-extra     # Latin Modern Mono
+  # check services
+  # ssh guix -- guix system -L ~/.config/guix/systems extension-graph ~/.config/guix/systems/tornado.scm
 #+END_SRC
 
-** My github repos
-#+BEGIN_SRC yaml :tangle tasks/git.yml
-  - name: add github.com to known_hosts
-    known_hosts:
-      name: github.com
-      key: "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
-
-  - name: checkout dotfiles repo
-    git:
-      repo: git@github.com:turbana/dotfiles.git
-      dest: "{{ etc_root }}"
-
-  - name: checkout emacs.d repo
-    git:
-      repo: git@github.com:turbana/emacs-config.git
-      dest: "{{ emacs_home }}"
-#+END_SRC
-** Dotfiles
-#+BEGIN_SRC yaml :tangle tasks/dotfiles.yml
-  - name: create user directories
-    file:
-      path: "{{ item }}"
-      state: directory
-    with_items:
-      - ~/.xmonad
-      - ~/downloads
-      - ~/.fonts
-
-  - name: remove cruft directories
-    file:
-      path: "{{ item }}"
-      state: absent
-    with_items:
-      - "~/Desktop"
-      - "~/Documents"
-      - "~/Downloads"
-      - "~/Music"
-      - "~/Pictures"
-      - "~/Public"
-      - "~/Templates"
-      - "~/Videos"
-
-  - name: setup dotfile symlinks
-    file:
-      src: "{{ etc_root }}/{{ item.src }}"
-      dest: ~/{{ item.dest }}
-      state: link
-      force: yes
-    with_items:
-      - { src: "bash_logout", dest: ".bash_logout" }
-      - { src: "bashrc", dest: ".bashrc" }
-      - { src: "dir_colors", dest: ".dir_colors" }
-      - { src: "profile", dest: ".profile" }
-      - { src: "screenrc", dest: ".screenrc" }
-      - { src: "spacemacs/dotspacemacs", dest: ".spacemacs"}
-      - { src: "xsession", dest: ".xsession" }
-      - { src: "xresources", dest: ".xresources" }
-      - { src: "xresources", dest: ".xresources" }
-      - { src: "xmonad/black.png", dest: ".xmonad/black.png" }
-      - { src: "xmonad/cpugraph.py", dest: ".xmonad/cpugraph.py" }
-      - { src: "xmonad/dzen2-left-bar.sh", dest: ".xmonad/dzen2-left-bar.sh" }
-      - { src: "xmonad/dzen2-right-bar.sh", dest: ".xmonad/dzen2-right-bar.sh" }
-      - { src: "xmonad/xmonad.hs", dest: ".xmonad/xmonad.hs" }
-#+END_SRC
-** Emacs
-#+BEGIN_SRC yaml :tangle tasks/emacs.yml
-  - name: checkout emacs repo
-    git:
-      repo: git://git.savannah.gnu.org/emacs.git
-      dest: "{{ emacs_build_dir }}"
-      depth: 1
-      version: emacs-{{ emacs_version }}
-
-
-  - name: build emacs - autogen.sh
-    command: sh autogen.sh
-    args:
-      chdir: "{{ emacs_build_dir }}"
-      creates: "{{ emacs_build_dir }}/configure"
-
-  - name: build emacs - configure
-    command: ./configure --prefix={{ app_root | expanduser }} {{ emacs_build_args }}
-    args:
-      chdir: "{{ emacs_build_dir }}"
-      creates: "{{ emacs_build_dir }}/Makefile"
-
-  - name: build emacs - make
-    command: make
-    args:
-      chdir: "{{ emacs_build_dir }}"
-      creates: "{{ emacs_build_dir }}/src/emacs"
-
-  - name: build emacs - make install
-    command: make install
-    args:
-      chdir: "{{ emacs_build_dir }}"
-      creates: "{{ app_root }}/bin/emacs"
-#+END_SRC
-
-** Fonts
-#+BEGIN_SRC yaml :tangle tasks/fonts.yml
-  - name: checkout all-the-icons repo
-    git:
-      repo: https://github.com/domtronn/all-the-icons.el.git
-      depth: 1
-      dest: "{{ app_root }}/src/all-the-icons"
-
-  - name: copy all-the-icons fonts
-    copy:
-      remote_src: yes
-      src: "{{ app_root }}/src/all-the-icons/fonts/"
-      dest: ~/.fonts/
-    notify: reload fc-cache
-#+END_SRC
-
-** Xmonad (disabled)
-Putting this in to keep a record of what was tried.
-#+BEGIN_SRC yaml :tangle no
-  # - name: checkout ghc repo
-  #   git:
-  #     repo: https://github.com/ghc/ghc.git
-  #     # depth: 1
-  #     version: ghc-{{ ghc_version }}
-  #     dest: "{{ ghc_build_dir }}"
-
-
-  - name: cabal update
-    command: "{{ cabal }} update"
-
-  - name: cabal install stack
-    command: "{{ cabal }} install {{ cabal_install_opts }} stack"
-    register: output
-    changed_when:
-      - output.rc == 0
-      - "'Up to date' not in output.stdout"
-
-  - name: setup stack
-    command: stack setup
-
-
-  - name: cabal install xmonad
-    command: "{{ cabal }} install {{ cabal_install_opts }} xmonad-{{xmonad_version }} xmonad-contrib-{{ xmonad_version }}"
-    # tags: packages
-    register: output
-    changed_when:
-      - output.rc == 0
-      - "'Up to date' not in output.stdout"
-#+END_SRC
-
-
-* Handlers
-#+BEGIN_SRC yaml :tangle handlers/handlers.yml
-  - name: reload fc-cache
-    command: fc-cache -fv
-#+END_SRC
+#+RESULTS:
