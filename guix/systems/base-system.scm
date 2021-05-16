@@ -9,15 +9,11 @@
    (keyboard-layout (keyboard-layout "us"))
    (host-name "changeme")
 
-   ;; should be overwritten in child OS
-   ;; (file-systems (cons*
-   ;;                (file-system
-   ;;                 (mount-point "/")
-   ;;                 (device "none")
-   ;;                 (type "tmpfs")
-   ;;                 (check? #f))
-   ;;                %base-file-systems))
-
+   (bootloader
+    (bootloader-configuration
+     (bootloader grub-efi-bootloader)
+     (target "/boot/efi")
+     (keyboard-layout keyboard-layout)))
 
    (file-systems
     (cons* (file-system
@@ -34,12 +30,6 @@
    (swap-devices
     (list (uuid swap-uuid)))
 
-   (bootloader
-    (bootloader-configuration
-     (bootloader grub-efi-bootloader)
-     (target "/boot/efi")
-     (keyboard-layout keyboard-layout)))
-
    (users (cons* (user-account
                   (name "ian")
                   (comment "Ian Clark")
@@ -51,17 +41,21 @@
 
    (packages
     (append
-     (list (specification->package "i3-wm")
-           (specification->package "i3status")
-           (specification->package "dmenu")
-           (specification->package "st")
-           (specification->package "nss-certs"))
+     (map specification->package
+          '("i3-wm"
+            "i3status"
+            "dmenu"
+            "st"
+            "nss-certs"))
      %base-packages))
 
    (services
-    (append
-     (list (set-xorg-configuration
+    (cons* (set-xorg-configuration
             (xorg-configuration
-             (keyboard-layout keyboard-layout))))
-     %desktop-services))
+             (keyboard-layout keyboard-layout)))
+           %desktop-services)
+    ;; (append
+    ;;  (list )
+    ;;  %desktop-services)
+    )
    ))

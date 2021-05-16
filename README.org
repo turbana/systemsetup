@@ -75,20 +75,19 @@ operating system that the specific hosts will inherit from.
 
      (packages
       (append
-       (list (specification->package "i3-wm")
-             (specification->package "i3status")
-             (specification->package "dmenu")
-             (specification->package "st")
-             (specification->package "nss-certs"))
+       (map specification->package
+            '("i3-wm"
+              "i3status"
+              "dmenu"
+              "st"
+              "nss-certs"))
        %base-packages))
 
      (services
-      (append
-       (list (set-xorg-configuration
+      (cons* (set-xorg-configuration
               (xorg-configuration
-               (keyboard-layout keyboard-layout))))
-       %desktop-services))
-     ))
+               (keyboard-layout keyboard-layout)))
+             %desktop-services))))
 #+END_SRC
 
 ** tornado
@@ -112,15 +111,13 @@ operating system that the specific hosts will inherit from.
 
       (packages
        (append
-        (list (specification->package "screen")
-              )
+        (map specification->package
+             '("screen"))
         (operating-system-packages parent)))
 
       (services
-       (append
-        (list (service openssh-service-type))
-        (operating-system-user-services parent)))
-      ))
+       (cons* (service openssh-service-type)
+              (operating-system-user-services parent)))))
 #+END_SRC
 
 * Sanity Check
