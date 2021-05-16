@@ -36,7 +36,7 @@ operating system that the specific hosts will inherit from.
     #:use-module (gnu))
   (use-service-modules desktop networking ssh xorg)
 
-  (define-public base-operating-system
+  (define-public (base-operating-system boot-uuid root-uuid swap-uuid)
     (operating-system
      (locale "en_US.utf8")
      (timezone "America/Los_Angeles")
@@ -49,14 +49,20 @@ operating system that the specific hosts will inherit from.
        (target "/boot/efi")
        (keyboard-layout keyboard-layout)))
 
-     ;; should be overwritten in child OS
-     (file-systems (cons*
-                    (file-system
-                     (mount-point "/")
-                     (device "none")
-                     (type "tmpfs")
-                     (check? #f))
-                    %base-file-systems))
+     (file-systems
+      (cons* (file-system
+               (mount-point "/boot/efi")
+               (device (uuid boot-uuid 'fat32))
+               (type "vfat"))
+             (file-system
+               (mount-point "/")
+               (device
+                (uuid root-uuid 'ext4))
+               (type "ext4"))
+             %base-file-systems))
+
+     (swap-devices
+      (list (uuid swap-uuid)))
 
      (users (cons* (user-account
                     (name "ian")
@@ -95,37 +101,26 @@ operating system that the specific hosts will inherit from.
 
   (use-service-modules ssh)
 
-  (operating-system
-    (inherit base-operating-system)
-    (host-name "tornado")
 
-    (swap-devices
-     (list (uuid "6e9af107-9d7b-4bc2-843c-9afe9d1a4660")))
+  (let ((parent (base-operating-system
+                 "5CD3-F7B5" ;; boot uuid
+                 "39406bbf-01f9-4de2-88a9-d14a90fa2e75" ;; root uuid
+                 "6e9af107-9d7b-4bc2-843c-9afe9d1a4660"))) ;; swap uuid
+    (operating-system
+      (inherit parent)
+      (host-name "tornado")
 
-    (file-systems
-     (cons* (file-system
-              (mount-point "/boot/efi")
-              (device (uuid "5CD3-F7B5" 'fat32))
-              (type "vfat"))
-            (file-system
-              (mount-point "/")
-              (device
-               (uuid "39406bbf-01f9-4de2-88a9-d14a90fa2e75"
-                     'ext4))
-              (type "ext4"))
-            %base-file-systems))
+      (packages
+       (append
+        (list (specification->package "screen")
+              )
+        (operating-system-packages parent)))
 
-    (packages
-     (append
-      (list (specification->package "screen")
-            )
-      (operating-system-packages base-operating-system)))
-
-    (services
-     (append
-      (list (service openssh-service-type))
-      (operating-system-user-services base-operating-system)))
-    )
+      (services
+       (append
+        (list (service openssh-service-type))
+        (operating-system-user-services parent)))
+      ))
 #+END_SRC
 
 * Sanity Check
@@ -134,6 +129,7 @@ I don't know of a way for =guix= to check that an operating system configuration
 *guix/sanity-check.scm:*
 #+BEGIN_SRC scheme :tangle guix/sanity-check.scm
   (define-module (sanity-check)
+    #:declarative? #f
     #:use-module (gnu)
     #:use-module (ice-9 pretty-print)
     #:use-module ((base-system)
@@ -151,26 +147,29 @@ I don't know of a way for =guix= to check that an operating system configuration
          (operating-system-services os)))
 
 
-  (let* ((base-list (services base-operating-system))
-         (child-list (services tornado))
-         (only-base (filter (lambda (e) (not (memq e child-list)))
-                            base-list))
-         (only-child (filter (lambda (e) (not (memq e base-list)))
-                             child-list))
-         (common (filter (lambda (e) (memq e child-list))
-                         base-list))
-         )
-    (pretty-print "total child:")
-    (pretty-print (length child-list))
-    (pretty-print "total base:")
-    (pretty-print (length base-list))
-    (pretty-print "only child:")
-    (pretty-print-list only-child)
-    (pretty-print "only base:")
-    (pretty-print-list only-base)
-    (pretty-print "in common:")
-    (pretty-print-list common)
-    )
+  ;; (let* (
+  ;;        (base-list (services base-operating-system))
+  ;;        (child-list (services tornado))
+  ;;        (only-base (filter (lambda (e) (not (memq e child-list)))
+  ;;                           base-list))
+  ;;        (only-child (filter (lambda (e) (not (memq e base-list)))
+  ;;                            child-list))
+  ;;        (common (filter (lambda (e) (memq e child-list))
+  ;;                        base-list))
+  ;;        )
+  ;;   (pretty-print "total child:")
+  ;;   (pretty-print (length child-list))
+  ;;   (pretty-print "total base:")
+  ;;   (pretty-print (length base-list))
+  ;;   (pretty-print "only child:")
+  ;;   (pretty-print-list only-child)
+  ;;   (pretty-print "only base:")
+  ;;   (pretty-print-list only-base)
+  ;;   (pretty-print "in common:")
+  ;;   (pretty-print-list common)
+  ;;   )
+
+  (pretty-print-list (services tornado))
 #+END_SRC
 
 Push changes and test. Remember to =org-babel-tangle= first!
@@ -186,3 +185,4 @@ Push changes and test. Remember to =org-babel-tangle= first!
 #+END_SRC
 
 #+RESULTS:
+[[file:out.log]]
