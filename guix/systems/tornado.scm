@@ -14,12 +14,6 @@
     (inherit parent)
     (host-name "tornado")
 
-    (packages
-     (append
-      (map specification->package
-           '("screen"))
-      (operating-system-packages parent)))
-
     (services
      (cons* (service openssh-service-type)
             (operating-system-user-services parent)))))

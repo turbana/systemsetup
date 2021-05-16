@@ -42,10 +42,13 @@
    (packages
     (append
      (map specification->package
-          '("i3-wm"
+          '("git"
+            ;; use i3 as a "bootstrap" wm
+            "i3-wm"
             "i3status"
             "dmenu"
             "st"
+            ;; ssl certs
             "nss-certs"))
      %base-packages))
 
@@ -53,9 +56,4 @@
     (cons* (set-xorg-configuration
             (xorg-configuration
              (keyboard-layout keyboard-layout)))
-           %desktop-services)
-    ;; (append
-    ;;  (list )
-    ;;  %desktop-services)
-    )
-   ))
+           %desktop-services))))

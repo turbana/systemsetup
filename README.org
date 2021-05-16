@@ -76,10 +76,13 @@ operating system that the specific hosts will inherit from.
      (packages
       (append
        (map specification->package
-            '("i3-wm"
+            '("git"
+              ;; use i3 as a "bootstrap" wm
+              "i3-wm"
               "i3status"
               "dmenu"
               "st"
+              ;; ssl certs
               "nss-certs"))
        %base-packages))
 
@@ -108,12 +111,6 @@ operating system that the specific hosts will inherit from.
     (operating-system
       (inherit parent)
       (host-name "tornado")
-
-      (packages
-       (append
-        (map specification->package
-             '("screen"))
-        (operating-system-packages parent)))
 
       (services
        (cons* (service openssh-service-type)
