@@ -1,4 +1,5 @@
 (define-module (base-system)
+  #:use-module (gnu services xorg)
   #:use-module (gnu))
 (use-service-modules desktop networking ssh xorg)
 
@@ -53,7 +54,12 @@
      %base-packages))
 
    (services
-    (cons* (set-xorg-configuration
-            (xorg-configuration
-             (keyboard-layout keyboard-layout)))
-           %desktop-services))))
+    (cons*
+     (service slim-service-type
+              (slim-configuration
+               (xorg-configuration
+                (xorg-configuration
+                 (keyboard-layout keyboard-layout)))))
+     (modify-services %desktop-services
+       (delete gdm-service-type))))
+   ))

@@ -33,6 +33,7 @@ operating system that the specific hosts will inherit from.
 *guix/systems/base-system.scm:*
 #+BEGIN_SRC scheme :tangle guix/systems/base-system.scm
   (define-module (base-system)
+    #:use-module (gnu services xorg)
     #:use-module (gnu))
   (use-service-modules desktop networking ssh xorg)
 
@@ -87,19 +88,24 @@ operating system that the specific hosts will inherit from.
        %base-packages))
 
      (services
-      (cons* (set-xorg-configuration
-              (xorg-configuration
-               (keyboard-layout keyboard-layout)))
-             %desktop-services))))
+      (cons*
+       (service slim-service-type
+                (slim-configuration
+                 (xorg-configuration
+                  (xorg-configuration
+                   (keyboard-layout keyboard-layout)))))
+       (modify-services %desktop-services
+         (delete gdm-service-type))))
+     ))
 #+END_SRC
 
 ** tornado
 *guix/systems/tornado.scm:*
 #+BEGIN_SRC scheme :tangle guix/systems/tornado.scm
   (define-module (tornado)
-    #:export (tornado-system)
-    #:use-module (base-system)
-    #:use-module (gnu))
+    #:use-module (gnu)
+    #:use-module (gnu services xorg)
+    #:use-module (base-system))
 
   (use-service-modules ssh)
 
@@ -113,8 +119,17 @@ operating system that the specific hosts will inherit from.
       (host-name "tornado")
 
       (services
-       (cons* (service openssh-service-type)
-              (operating-system-user-services parent)))))
+       (cons*
+        ;; run an ssh server while bootstraping
+        (service openssh-service-type)
+        (modify-services (operating-system-user-services parent)
+          ;; auto log into my wm
+          (slim-service-type config =>
+                             (slim-configuration
+                              (inherit config)
+                              (auto-login? #t)
+                              (default-user "ian"))))))
+      ))
 #+END_SRC
 
 * Sanity Check

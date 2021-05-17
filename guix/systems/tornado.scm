@@ -1,7 +1,7 @@
 (define-module (tornado)
-  #:export (tornado-system)
-  #:use-module (base-system)
-  #:use-module (gnu))
+  #:use-module (gnu)
+  #:use-module (gnu services xorg)
+  #:use-module (base-system))
 
 (use-service-modules ssh)
 
@@ -15,5 +15,14 @@
     (host-name "tornado")
 
     (services
-     (cons* (service openssh-service-type)
-            (operating-system-user-services parent)))))
+     (cons*
+      ;; run an ssh server while bootstraping
+      (service openssh-service-type)
+      (modify-services (operating-system-user-services parent)
+        ;; auto log into my wm
+        (slim-service-type config =>
+                           (slim-configuration
+                            (inherit config)
+                            (auto-login? #t)
+                            (default-user "ian"))))))
+    ))
