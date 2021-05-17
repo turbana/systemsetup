@@ -38,7 +38,7 @@ repo https://github.com/turbana/themian.git ~/src/themian
 echo "* setup symlinks"
 sh ~/src/etc/setup.sh
 mkdir -p ~/.config/guix
-ln -sf ~/src/systemsetup/guix/systems ~/.config/guix/systems
+ln -sf ~/src/systemsetup/guix/systems ~/.config/guix/
 
 # add new machine
 echo "* create new guix config"

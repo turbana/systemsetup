@@ -277,7 +277,7 @@ This is the main entry point for creating a new machine. This will need to be do
   echo "* setup symlinks"
   sh ~/src/etc/setup.sh
   mkdir -p ~/.config/guix
-  ln -sf ~/src/systemsetup/guix/systems ~/.config/guix/systems
+  ln -sf ~/src/systemsetup/guix/systems ~/.config/guix/
 
   # add new machine
   echo "* create new guix config"
