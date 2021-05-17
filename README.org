@@ -132,6 +132,28 @@ operating system that the specific hosts will inherit from.
       ))
 #+END_SRC
 
+** template
+Here is the template we'll use for new machines. This is used with =bin/add-new-guix-maching.sh=
+#+BEGIN_SRC scheme :tangle guix/systems/template.scm
+  (define-module (<HOSTNAME>)
+    #:use-module (gnu)
+    #:use-module (gnu services xorg)
+    #:use-module (base-system))
+
+  (use-service-modules ssh)
+
+
+  (let ((parent (base-operating-system
+                 "<BOOT_UUID>" ;; boot uuid
+                 "<ROOT_UUID>" ;; root uuid
+                 "<SWAP_UUID>"))) ;; swap uuid
+    (operating-system
+      (inherit parent)
+      (host-name "<HOSTNAME>")
+      ))
+#+END_SRC
+
+
 * Sanity Check
 I don't know of a way for =guix= to check that an operating system configuration is valid. So make a small file that just imports our system modules and if that doesn't raise any errors assume we're okay.
 
@@ -195,3 +217,159 @@ Push changes and test. Remember to =org-babel-tangle= first!
 
 #+RESULTS:
 [[file:out.log]]
+
+* Setup steps
+- pull/run bootstrap.sh
+- check git installed
+- generate ssh key
+- manually add to github
+- pull all git repos
+- setup symlinks
+- add new machine
+- guix reconfigure new machine
+
+* Scripts
+** bootstrap.sh
+This is the main entry point for creating a new machine. This will need to be downloaded and executed with something like:
+#+BEGIN_SRC shell :tangle no
+  wget -qO ~/bootstrap.sh https://raw.githubusercontent.com/turbana/systemsetup/master/bin/bootstrap.sh && sh ~/bootstrap.sh
+#+END_SRC
+
+*bin/bootstrap.sh*
+#+BEGIN_SRC shell :tangle bin/bootstrap.sh
+  #!/bin/sh
+
+  set -e
+
+  # check for git and install
+  if [ ! `which git` ]; then
+      echo "* git not found, installing"
+      guix package --install git
+      if [ "$?" -ne "0" -o ! `which git` ]; then
+          echo "* ERROR: git failed to install"
+          exit 2
+      fi
+  fi
+
+  repo() {
+      url=$1
+      path=$2
+      if [ -e "$path/.git" ]; then
+          echo "** repo $path already exists"
+      else
+          echo "** cloning repo $path"
+          git clone $url $path
+          if [ "$?" -eq "0" ]; then
+              echo $path >> ~/github-repos-need-origin-change
+          fi
+      fi
+  }
+
+  # clone git repos
+  echo "* clone github repos"
+  repo https://github.com/turbana/systemsetup.git ~/src/systemsetup
+  repo https://github.com/turbana/dotfiles.git ~/src/etc
+  repo https://github.com/turbana/cpu.git ~/src/cpu
+  repo https://github.com/turbana/emacs-config.git ~/src/emacs
+  repo https://github.com/turbana/themian.git ~/src/themian
+
+  # setup symlinks
+  echo "* setup symlinks"
+  sh ~/src/etc/setup.sh
+  mkdir -p ~/.config/guix
+  ln -sf ~/src/systemsetup/guix/systems ~/.config/guix/systems
+
+  # add new machine
+  echo "* create new guix config"
+  sh ~/src/systemsetup/bin/add-new-guix-machine.sh 
+
+  # reconfigure
+  echo "* manually run the following commands to complete bootstrap:"
+  echo "guix pull"
+  echo "sudo guix system -L ~/.config/guix/systems reconfigure ~/.config/guix/systems/`hostname`.scm"
+  echo "sudo reboot"
+#+END_SRC
+
+** add-new-guix-machine.sh
+Here we add a new guix =operating-system= configuration.
+#+BEGIN_SRC shell :tangle bin/add-new-guix-machine.sh
+  #!/bin/sh
+
+  set -e
+
+  cd `dirname $0`
+  template=../guix/systems/template.scm
+  config=../guix/systems/`hostname`.scm
+
+  if [ -f "$config" ]; then
+      echo "* config for `hostname` already exists"
+      exit 0
+  fi
+
+  find_uuid() {
+      # device=`mount | grep "on $1 " | cut -f1 -d' '`
+      device=/dev/`lsblk -l | grep "part ${1}$" | cut -f1 -d' '`
+      for uuid in /dev/disk/by-uuid/*; do
+          if [ "$device" -ef "$uuid" ]; then
+              echo `basename $uuid`
+              return 0
+          fi
+      done
+      >&2 echo "* ERROR could not find UUID for mount point $1"
+      return 1
+  }
+
+  HOSTNAME=`hostname`
+  ROOT_UUID=`find_uuid /`
+  BOOT_UUID=`find_uuid /boot/efi`
+  SWAP_UUID=`find_uuid '\\[SWAP\]'`
+
+  echo "* creating config for $HOSTNAME"
+  sed -e "s/<HOSTNAME>/$HOSTNAME/g" \
+      -e "s/<ROOT_UUID>/$ROOT_UUID/g" \
+      -e "s/<BOOT_UUID>/$BOOT_UUID/g" \
+      -e "s/<SWAP_UUID>/$SWAP_UUID/g" \
+      $template > $config
+
+  if [ ! -z "$EDITOR" ]; then
+      echo "* editing config for $HOSTNAME"
+      $EDITOR $config
+  else
+      echo "* \$EDITOR not found, manually edit file at:"
+      path=`pwd`/$config
+      echo `readlink -f $path`
+  fi
+#+END_SRC
+
+** change-github-origin.sh
+When we first checkout the github repos we use =https= rather than =ssh=. This is because we don't have a good way to add our new public ssh key into github (as we lack a web browser). So this script will go through and update the repo origins to let us commit through =ssh=.
+
+*bin/change-github-origin.sh*
+#+BEGIN_SRC shell :tangle bin/change-github-origin.sh
+  #!/bin/sh
+
+  set -e
+
+  if [ ! -f ~/github-repos-need-origin-change ]; then
+      echo "* no repos found that need origin change"
+      exit 0
+  fi
+
+  # check for ssh-keygen
+  if [ ! `which ssh-keygen` ]; then
+      echo "* ERROR: ssh-keygen not found"
+      exit 2
+  fi
+
+  # generate ssh key
+  if [ ! -f $HOME/id_ecdsa ]; then
+      echo " * generate ssh key"
+      sudo -u $USER ssh-keygen -f /home/$USER/.ssh/id_ecdsa -t ecdsa -b 521
+      echo " * MANUALLY add the public key to github"
+      cat /home/$USER/.ssh/id_ecdsa.pub
+      echo "Press enter to continue..."
+      read ignore
+  fi
+
+  # TODO
+#+END_SRC
