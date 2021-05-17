@@ -134,7 +134,11 @@ operating system that the specific hosts will inherit from.
 
 ** template
 Here is the template we'll use for new machines. This is used with =bin/add-new-guix-maching.sh=
-#+BEGIN_SRC scheme :tangle guix/systems/template.scm
+
+NOTE: This file must not end with =.scm= as =guile= will try and execute it when found on it's load path.
+
+*guix/systems/new-machine.scm.tmpl:*
+#+BEGIN_SRC scheme :tangle guix/systems/new-machine.scm.tmpl
   (define-module (<HOSTNAME>)
     #:use-module (gnu)
     #:use-module (gnu services xorg)
@@ -298,11 +302,11 @@ Here we add a new guix =operating-system= configuration.
   set -e
 
   cd `dirname $0`
-  template=../guix/systems/template.scm
+  template=../guix/systems/new-machine.scm.tmpl
   config=../guix/systems/`hostname`.scm
 
   if [ -f "$config" ]; then
-      echo "* config for `hostname` already exists"
+      echo "** config for `hostname` already exists"
       exit 0
   fi
 

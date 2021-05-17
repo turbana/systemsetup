@@ -3,11 +3,11 @@
 set -e
 
 cd `dirname $0`
-template=../guix/systems/template.scm
+template=../guix/systems/new-machine.scm.tmpl
 config=../guix/systems/`hostname`.scm
 
 if [ -f "$config" ]; then
-    echo "* config for `hostname` already exists"
+    echo "** config for `hostname` already exists"
     exit 0
 fi
 
