@@ -39,6 +39,7 @@ echo "* setup symlinks"
 sh ~/src/etc/setup.sh
 mkdir -p ~/.config/guix/{profiles,auto-start-profiles}
 ln -sf ~/src/systemsetup/guix/systems ~/.config/guix/
+ln -sf ~/src/systemsetup/guix/manifests ~/.config/guix/
 
 # add new machine
 echo "* create new guix config"

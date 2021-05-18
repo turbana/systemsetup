@@ -282,6 +282,7 @@ This is the main entry point for creating a new machine. This will need to be do
   sh ~/src/etc/setup.sh
   mkdir -p ~/.config/guix/{profiles,auto-start-profiles}
   ln -sf ~/src/systemsetup/guix/systems ~/.config/guix/
+  ln -sf ~/src/systemsetup/guix/manifests ~/.config/guix/
 
   # add new machine
   echo "* create new guix config"
@@ -479,4 +480,61 @@ Mark each profile to auto start. Those profiles will then be sourced from =.prof
   done
 
   exit $failed
+#+END_SRC
+
+* Profiles
+** core
+This is where I have a set of core / misc packages
+
+*guix/manifests/core.scm:*
+#+BEGIN_SRC scheme :tangle guix/manifests/core.scm
+  (specifications->manifest
+   '(
+     ;; network tools
+     "rsync"
+     "curl"
+     "wget"
+     ;; shell tools
+     "screen"
+     "tmux"
+     ;; gcc
+     "gcc-toolchain"
+     "make"
+     ;; python
+     "python"
+     ))
+#+END_SRC
+
+** desktop
+Here are the packages I need for my desktop environment.
+
+*guix/manifests/desktop.scm:*
+#+BEGIN_SRC scheme :tangle guix/manifests/desktop.scm
+  (specifications->manifest
+   '(
+     "xmonad"
+     "ghc-xmonad-contrib"
+     "ghc@8.6.5"
+     ;; "ghc-x11"
+     ;; "cabal-install"
+     ;; "libx11"
+     "dmenu"
+     "dzen"
+     "xclip"
+     "xrandr"
+     ;; for cpugraph.py
+     "python2"
+     "python2-dbus"
+     ))
+#+END_SRC
+
+** emacs
+The packages I need to run =emacs=.
+
+*guix/manifests/emacs.scm:*
+#+BEGIN_SRC scheme :tangle guix/manifests/emacs.scm
+  (specifications->manifest
+   '(
+     "emacs-next"
+     ))
 #+END_SRC
