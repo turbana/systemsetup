@@ -11,7 +11,7 @@ While learning Guix I'd like to keep some notes on how to run some commands.
 
 NOTE: these all assume the *.scm files are located under =~/.config/guix/=.
 
-#+BEGIN_SRC shell
+#+BEGIN_SRC sh
   # pull down updates
   guix system pull
 
@@ -208,7 +208,7 @@ I don't know of a way for =guix= to check that an operating system configuration
 #+END_SRC
 
 Push changes and test. Remember to =org-babel-tangle= first!
-#+BEGIN_SRC shell :results output file :file out.log
+#+BEGIN_SRC sh :results output file :file out.log
   # push updates
   scp -r guix/ guix:.config/
 
@@ -235,12 +235,12 @@ Push changes and test. Remember to =org-babel-tangle= first!
 * Scripts
 ** bootstrap.sh
 This is the main entry point for creating a new machine. This will need to be downloaded and executed with something like:
-#+BEGIN_SRC shell :tangle no
+#+BEGIN_SRC sh :tangle no
   wget -qO ~/bootstrap.sh https://raw.githubusercontent.com/turbana/systemsetup/master/bin/bootstrap.sh && sh ~/bootstrap.sh
 #+END_SRC
 
 *bin/bootstrap.sh*
-#+BEGIN_SRC shell :tangle bin/bootstrap.sh
+#+BEGIN_SRC sh :tangle bin/bootstrap.sh
   #!/bin/sh
 
   set -e
@@ -296,7 +296,7 @@ This is the main entry point for creating a new machine. This will need to be do
 
 ** add-new-guix-machine.sh
 Here we add a new guix =operating-system= configuration.
-#+BEGIN_SRC shell :tangle bin/add-new-guix-machine.sh
+#+BEGIN_SRC sh :tangle bin/add-new-guix-machine.sh
   #!/bin/sh
 
   set -e
@@ -349,7 +349,7 @@ Here we add a new guix =operating-system= configuration.
 When we first checkout the github repos we use =https= rather than =ssh=. This is because we don't have a good way to add our new public ssh key into github (as we lack a web browser). So this script will go through and update the repo origins to let us commit through =ssh=.
 
 *bin/change-github-origin.sh*
-#+BEGIN_SRC shell :tangle bin/change-github-origin.sh
+#+BEGIN_SRC sh :tangle bin/change-github-origin.sh
   #!/bin/sh
 
   set -e
