@@ -280,7 +280,7 @@ This is the main entry point for creating a new machine. This will need to be do
   # setup symlinks
   echo "* setup symlinks"
   sh ~/src/etc/setup.sh
-  mkdir -p ~/.config/guix
+  mkdir -p ~/.config/guix/{profiles,auto-start-profiles}
   ln -sf ~/src/systemsetup/guix/systems ~/.config/guix/
 
   # add new machine
@@ -376,4 +376,106 @@ When we first checkout the github repos we use =https= rather than =ssh=. This i
   fi
 
   # TODO
+#+END_SRC
+
+** update-profiles
+This will take a list of profiles and install / update them.
+
+*bin/update-profiles:*
+#+begin_src sh :tangle bin/update-profiles :shebang "#!/usr/bin/env bash"
+  if [ $# -eq 0 ]; then
+      echo "usage: $(basename $0) profile1 [profile2 profile3 ...]"
+      echo "will update/install specific guix profiles"
+      exit 2
+  fi
+
+  GUIX_PROFILES=~/.config/guix/profiles
+  GUIX_MANIFESTS=~/.config/guix/manifests
+  failed=0
+
+  for name in $*; do
+      manifest=${GUIX_MANIFESTS}/${name}.scm
+      profile_dir=${GUIX_PROFILES}/${name}
+      profile=${profile_dir}/${name}
+
+      if [ -f "$manifest" ]; then
+          echo "* generating profile $name"
+          mkdir -p $profile_dir
+          guix package --manifest="$manifest" --profile="$profile"
+          [ "$?" -eq "0" ] || failed=1
+      else
+          echo "* error: Manifest not found for profile ${name}"
+          failed=1
+      fi
+  done
+
+  exit $failed
+#+end_src
+
+** activate-profiles
+Here we take a list of one or more profiles and source their respective =etc/profile= ensuring they are active for the current sh.
+
+*bin/activate-profiles:*
+#+begin_src sh :tangle bin/activate-profiles :shebang "#!/usr/bin/env bash"
+  if [ $# -eq 0 ]; then
+      >&2 echo "usage: source \$($(basename $0) profile1 [profile2 profile3 ...])"
+      >&2 echo "when sourced: will active specific guix profiles"
+      exit 2
+  fi
+
+  GUIX_PROFILES=~/.config/guix/profiles
+  failed=0
+
+  for name in $*; do
+      base=${GUIX_PROFILES}/${name}/${name}
+      profile=${base}/etc/profile
+      if [ -f "$profile" ]; then
+          >&2 echo "* loading profile $name"
+          GUIX_PROFILE=$base ; source $profile
+          [ "$?" -eq "0" ] || failed=1
+      else
+          >&2 echo "* could not locate profile $name"
+          failed=1
+      fi
+  done
+
+  rm -f /tmp/$(basename $0).*
+  tempfile=$(mktemp "/tmp/$(basename $0).XXXXXXXX")
+  echo "# source this file to activate these guix profiles: $*" > $tempfile
+  echo export PATH=$PATH >> $tempfile
+  echo $tempfile
+
+  exit $failed
+#+end_src
+
+** auto-start-profiles
+Mark each profile to auto start. Those profiles will then be sourced from =.profile=.
+
+*bin/auto-start-profiles:*
+#+BEGIN_SRC sh :tangle bin/auto-start-profiles :shebang "#!/usr/bin/env bash"
+  if [ $# -eq 0 ]; then
+      echo "usage: $(basename $0) profile1 [profile2 profile3 ...]"
+      echo "will mark specific guix profiles to auto start"
+      echo "they will then be sourced from ~/.profile"
+      exit 2
+  fi
+
+  GUIX_PROFILES=~/.config/guix/profiles
+  GUIX_AUTO_PROFILES=~/.config/guix/auto-start-profiles
+  failed=0
+
+  for name in $*; do
+      profile="${GUIX_PROFILES}/${name}/${name}"
+      if [ -d "$profile" ]; then
+          echo "* enabling auto-start for profile $name"
+          mkdir -p $GUIX_AUTO_PROFILES
+          ln -sf $profile ${GUIX_AUTO_PROFILES}/
+          [ "$?" -eq "0" ] || failed=1
+      else
+          echo "* could not locate profile $name"
+          failed=1
+      fi
+  done
+
+  exit $failed
 #+END_SRC

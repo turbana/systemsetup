@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+if [ $# -eq 0 ]; then
+    echo "usage: $(basename $0) profile1 [profile2 profile3 ...]"
+    echo "will update/install specific guix profiles"
+    exit 2
+fi
+
+GUIX_PROFILES=~/.config/guix/profiles
+GUIX_MANIFESTS=~/.config/guix/manifests
+failed=0
+
+for name in $*; do
+    manifest=${GUIX_MANIFESTS}/${name}.scm
+    profile_dir=${GUIX_PROFILES}/${name}
+    profile=${profile_dir}/${name}
+
+    if [ -f "$manifest" ]; then
+        echo "* generating profile $name"
+        mkdir -p $profile_dir
+        guix package --manifest="$manifest" --profile="$profile"
+        [ "$?" -eq "0" ] || failed=1
+    else
+        echo "* error: Manifest not found for profile ${name}"
+        failed=1
+    fi
+done
+
+exit $failed

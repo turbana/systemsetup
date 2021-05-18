@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+if [ $# -eq 0 ]; then
+    >&2 echo "usage: source \$($(basename $0) profile1 [profile2 profile3 ...])"
+    >&2 echo "when sourced: will active specific guix profiles"
+    exit 2
+fi
+
+GUIX_PROFILES=~/.config/guix/profiles
+failed=0
+
+for name in $*; do
+    base=${GUIX_PROFILES}/${name}/${name}
+    profile=${base}/etc/profile
+    if [ -f "$profile" ]; then
+        >&2 echo "* loading profile $name"
+        GUIX_PROFILE=$base ; source $profile
+        [ "$?" -eq "0" ] || failed=1
+    else
+        >&2 echo "* could not locate profile $name"
+        failed=1
+    fi
+done
+
+rm -f /tmp/$(basename $0).*
+tempfile=$(mktemp "/tmp/$(basename $0).XXXXXXXX")
+echo "# source this file to activate these guix profiles: $*" > $tempfile
+echo export PATH=$PATH >> $tempfile
+echo $tempfile
+
+exit $failed
