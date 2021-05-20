@@ -346,28 +346,28 @@ Here we add a new guix =operating-system= configuration.
   fi
 #+END_SRC
 
-** change-github-origin.sh
+** change-github-origin
 When we first checkout the github repos we use =https= rather than =ssh=. This is because we don't have a good way to add our new public ssh key into github (as we lack a web browser). So this script will go through and update the repo origins to let us commit through =ssh=.
 
-*bin/change-github-origin.sh*
-#+BEGIN_SRC sh :tangle bin/change-github-origin.sh
-  #!/bin/sh
-
+*bin/change-github-origin*
+#+BEGIN_SRC sh :tangle bin/change-github-origin :shebang "#!/usr/bin/env bash"
   set -e
 
-  if [ ! -f ~/github-repos-need-origin-change ]; then
+  REPO_FILE=~/github-repos-need-origin-change
+
+  if [ ! -f $REPO_FILE ]; then
       echo "* no repos found that need origin change"
       exit 0
   fi
 
   # check for ssh-keygen
-  if [ ! `which ssh-keygen` ]; then
+  if [ ! $(which ssh-keygen) ]; then
       echo "* ERROR: ssh-keygen not found"
       exit 2
   fi
 
   # generate ssh key
-  if [ ! -f $HOME/id_ecdsa ]; then
+  if [ ! -f $HOME/.ssh/id_ecdsa ]; then
       echo " * generate ssh key"
       sudo -u $USER ssh-keygen -f /home/$USER/.ssh/id_ecdsa -t ecdsa -b 521
       echo " * MANUALLY add the public key to github"
@@ -376,7 +376,18 @@ When we first checkout the github repos we use =https= rather than =ssh=. This i
       read ignore
   fi
 
-  # TODO
+  for repo in $(cat $REPO_FILE); do
+      cd $repo
+      remote=$(git remote get-url origin)
+      if $(echo $remote | grep -q '^https'); then
+          echo " * updating $repo"
+          suffix=${remote#https://github.com/}
+          user_name=${suffix%/*}
+          repo_name=${suffix#*/}
+          new_remote="git@github.com:${user_name}/${repo_name}"
+          git remote set-url origin $new_remote
+      fi
+  done
 #+END_SRC
 
 ** update-profiles
