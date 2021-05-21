@@ -157,7 +157,6 @@ NOTE: This file must not end with =.scm= as =guile= will try and execute it when
       ))
 #+END_SRC
 
-
 * Sanity Check
 I don't know of a way for =guix= to check that an operating system configuration is valid. So make a small file that just imports our system modules and if that doesn't raise any errors assume we're okay.
 
@@ -222,6 +221,26 @@ Push changes and test. Remember to =org-babel-tangle= first!
 #+RESULTS:
 [[file:out.log]]
 
+* Channels
+Here we define the channels (think "repositories" in other distrobutions) where =guix= will pull down package configurations from.
+
+*guix/channels.scm:*
+#+BEGIN_SRC scheme :tangle guix/channels.scm
+  (list
+   ;; base guix channel
+   (channel
+    (name 'guix)
+    (url "https://git.savannah.gnu.org/git/guix.git")
+    ;; (commit
+    ;;  "696cf48b98ad4ef03c88cdb5a83c739618c8fa16")
+    (introduction
+     (make-channel-introduction
+      "9edb3f66fd807b096b48283debdcddccfea34bad"
+      (openpgp-fingerprint
+       "BBB0 2DDF 2CEA F6A8 0D1D  E643 A2A0 6DF2 A33A 54FA"))))
+   )
+#+END_SRC
+
 * Setup steps
 - pull/run bootstrap.sh
 - check git installed
@@ -283,6 +302,7 @@ This is the main entry point for creating a new machine. This will need to be do
   mkdir -p ~/.config/guix/{profiles,auto-start-profiles}
   ln -sf ~/src/systemsetup/guix/systems ~/.config/guix/
   ln -sf ~/src/systemsetup/guix/manifests ~/.config/guix/
+  ln -sf ~/src/systemsetup/guix/channels.scm ~/.config/guix/
 
   # add new machine
   echo "* create new guix config"
@@ -554,3 +574,8 @@ The packages I need to run =emacs=.
      "ispell"
      ))
 #+END_SRC
+
+* Tasks
+** TODO ~/.gitconfig
+** TODO ati-fonts
+** TODO 
