@@ -12,4 +12,6 @@
    "make"
    ;; python
    "python"
+   ;; misc
+   "unzip"
    ))

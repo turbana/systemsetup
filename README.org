@@ -513,6 +513,8 @@ This is where I have a set of core / misc packages
      "make"
      ;; python
      "python"
+     ;; misc
+     "unzip"
      ))
 #+END_SRC
 
@@ -522,20 +524,22 @@ Here are the packages I need for my desktop environment.
 *guix/manifests/desktop.scm:*
 #+BEGIN_SRC scheme :tangle guix/manifests/desktop.scm
   (specifications->manifest
-   '(
+   '(;; X11
      "xmonad"
      "ghc-xmonad-contrib"
      "ghc@8.6.5"
-     ;; "ghc-x11"
-     ;; "cabal-install"
-     ;; "libx11"
      "dmenu"
      "dzen"
      "xclip"
      "xrandr"
+     "xrdb"
      ;; for cpugraph.py
      "python2"
      "python2-dbus"
+     ;; for colorwheel.py
+     "python-colour"
+     ;; fonts
+     "font-dejavu"
      ))
 #+END_SRC
 
@@ -547,5 +551,6 @@ The packages I need to run =emacs=.
   (specifications->manifest
    '(
      "emacs-next"
+     "ispell"
      ))
 #+END_SRC
