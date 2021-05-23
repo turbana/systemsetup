@@ -545,19 +545,18 @@ Here are the packages I need for my desktop environment.
 #+BEGIN_SRC scheme :tangle guix/manifests/desktop.scm
   (specifications->manifest
    '(;; X11
-     "xmonad"
-     "ghc-xmonad-contrib"
-     "ghc@8.6.5"
-     "dmenu"
-     "dzen"
-     "xclip"
-     "xrandr"
-     "xrdb"
-     ;; for cpugraph.py
-     "python2"
-     "python2-dbus"
-     ;; for colorwheel.py
-     "python-colour"
+     "xmonad"                             ; window mananger
+     "ghc-xmonad-contrib"                 ; xmonad goodies
+     "ghc@8.6.5"                          ; needed to recompile xmonad
+     "dmenu"                              ; application launcher
+     "dzen"                               ; status bars
+     "xclip"                              ; clipboard management
+     "xrandr"                             ; screen management
+     "xrdb"                               ; Xresource manangement
+     "gnome-terminal"                     ; terminal
+     "glib:bin"                           ; for 'gsettings' program (used to change color scheme)
+     "python-dbus"                        ; for cpugraph.py
+     "python-colour"                      ; for colorwheel.py
      ;; fonts
      "font-dejavu"
      ))
