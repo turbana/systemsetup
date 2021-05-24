@@ -7,6 +7,8 @@
    ;; shell tools
    "screen"
    "tmux"
+   ;; misc
+   "expect"
    ;; gcc
    "gcc-toolchain"
    "make"
