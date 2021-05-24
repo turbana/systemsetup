@@ -10,6 +10,7 @@
    "xrdb"                               ; Xresource manangement
    "gnome-terminal"                     ; terminal
    "glib:bin"                           ; for 'gsettings' program (used to change color scheme)
+   "python"
    "python-dbus"                        ; for cpugraph.py
    "python-colour"                      ; for colorwheel.py
    ;; fonts
