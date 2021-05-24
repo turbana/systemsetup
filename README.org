@@ -545,6 +545,14 @@ This is where I have a set of core / misc packages
      "make"
      ;; python
      "python"
+     "python-language-server"
+     ;; "python-flake8"
+     ;; "python-jedi"
+     ;; "python-nose"
+     ;; "python-pyflakes"
+     ;; "python-rope"
+     ;; "python-pytest"
+     ;; "python-autopep8"
      ;; misc
      "unzip"
      ))
@@ -598,6 +606,13 @@ Firefox takes /forever/ to build, so split it out into it's own profile.
 #+END_SRC
 
 ** cloud
+
+*guix/manifests/cloud.scm:*
+#+BEGIN_SRC scheme :tangle guix/manifests/cloud.scm
+  (specifications->manifest
+   '("dbxfs" ;; dropbox
+     ))
+#+END_SRC
 
 * Tasks
 ** TODO ~/.gitconfig
