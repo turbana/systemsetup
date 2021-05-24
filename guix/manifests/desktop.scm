@@ -14,4 +14,5 @@
    "python-colour"                      ; for colorwheel.py
    ;; fonts
    "font-dejavu"
+   "dbxfs"
    ))

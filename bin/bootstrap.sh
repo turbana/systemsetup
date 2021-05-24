@@ -41,6 +41,7 @@ mkdir -p ~/.config/guix/{profiles,auto-start-profiles}
 ln -sf ~/src/systemsetup/guix/systems ~/.config/guix/
 ln -sf ~/src/systemsetup/guix/manifests ~/.config/guix/
 ln -sf ~/src/systemsetup/guix/channels.scm ~/.config/guix/
+ln -sf ~/src/systemsetup/shepherd ~/.config/
 
 # add new machine
 echo "* create new guix config"

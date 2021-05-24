@@ -303,6 +303,7 @@ This is the main entry point for creating a new machine. This will need to be do
   ln -sf ~/src/systemsetup/guix/systems ~/.config/guix/
   ln -sf ~/src/systemsetup/guix/manifests ~/.config/guix/
   ln -sf ~/src/systemsetup/guix/channels.scm ~/.config/guix/
+  ln -sf ~/src/systemsetup/shepherd ~/.config/
 
   # add new machine
   echo "* create new guix config"
@@ -559,6 +560,7 @@ Here are the packages I need for my desktop environment.
      "python-colour"                      ; for colorwheel.py
      ;; fonts
      "font-dejavu"
+     "dbxfs"
      ))
 #+END_SRC
 
@@ -578,3 +580,66 @@ The packages I need to run =emacs=.
 ** TODO ~/.gitconfig
 ** TODO ati-fonts
 ** TODO 
+
+* Shepherd
+=guix= uses GNU =shepherd= as a replacement for =sysv.init= / =systemd=. Here we have my custom setup for it.
+
+** Init
+This is the entry point for =shepherd= into our configuration. All it does is look for any files matching =init.d/*.scm= and loads them. It was taken from [[https://guix.gnu.org/de/blog/2020/gnu-shepherd-user-services/][here]].
+
+*shepherd/init.scm:*
+#+BEGIN_SRC scheme :tangle shepherd/init.scm
+  (use-modules (shepherd service)
+               ((ice-9 ftw) #:select (scandir)))
+
+  ;; Load all the files in the directory 'init.d' with a suffix '.scm'.
+  (for-each
+    (lambda (file)
+      (load (string-append "init.d/" file)))
+    (scandir (string-append (dirname (current-filename)) "/init.d")
+             (lambda (file)
+               (string-suffix? ".scm" file))))
+
+  ;; Send shepherd into the background
+  (action 'shepherd 'daemonize)
+#+END_SRC
+
+** Emacs
+Here is our emacs service.
+
+*shepherd/init.d/emacs.scm:*
+#+BEGIN_SRC scheme :tangle shepherd/init.d/emacs.scm
+  (define emacs
+    (make <service>
+      #:provides '(emacs)
+      #:docstring "Emacs Daemon"
+      #:start (make-forkexec-constructor
+               '("emacs" "--fg-daemon"))
+      #:stop (make-kill-destructor)
+      #:respawn? #f))
+
+  (register-services emacs)
+  (start emacs)
+#+END_SRC
+
+** Dropbox
+I use =dbxfs= to connect to dropbox through =FUSE=, let's make it a daemon.
+
+*shepherd/init.d/dropbox.scm:*
+#+BEGIN_SRC scheme :tangle shepherd/init.d/dropbox.scm
+  (define dropbox
+    (let ((directory (string-append (getenv "HOME")
+                                    "/dropbox")))
+      (make <service>
+        #:provides '(dropbox)
+        #:docstring "Dropbox Daemon"
+        #:start (make-system-constructor
+                 "dbxfs " directory)
+        #:stop (make-system-destructor
+                "fusermount -u " directory)
+        #:respawn? #t)))
+  (register-services dropbox)
+  (start dropbox)
+#+END_SRC
+
+
