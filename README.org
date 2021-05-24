@@ -537,6 +537,7 @@ This is where I have a set of core / misc packages
      "rsync"
      "curl"
      "wget"
+     "bind:utils" ;; for dig
      ;; shell tools
      "screen"
      "tmux"

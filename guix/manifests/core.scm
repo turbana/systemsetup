@@ -4,6 +4,7 @@
    "rsync"
    "curl"
    "wget"
+   "bind:utils" ;; for dig
    ;; shell tools
    "screen"
    "tmux"
