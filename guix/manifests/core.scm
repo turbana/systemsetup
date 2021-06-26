@@ -23,6 +23,7 @@
    ;; "python-rope"
    ;; "python-pytest"
    ;; "python-autopep8"
+   "perl"
    ;; misc
    "unzip"
    ))

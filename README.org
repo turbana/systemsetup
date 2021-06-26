@@ -556,6 +556,7 @@ This is where I have a set of core / misc packages
      ;; "python-rope"
      ;; "python-pytest"
      ;; "python-autopep8"
+     "perl"
      ;; misc
      "unzip"
      ))
@@ -582,7 +583,11 @@ Here are the packages I need for my desktop environment.
      "python-dbus"                        ; for cpugraph.py
      "python-colour"                      ; for colorwheel.py
      ;; fonts
+     "fontconfig"
      "font-dejavu"
+     "font-google-roboto"
+     "font-gnu-freefont"
+     "gs-fonts"
      "dbxfs"
      ))
 #+END_SRC
@@ -596,6 +601,7 @@ The packages I need to run =emacs=.
    '(
      "emacs-next"
      "ispell"
+     "ripgrep"
      ))
 #+END_SRC
 

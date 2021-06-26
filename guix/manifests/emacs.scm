@@ -2,4 +2,5 @@
  '(
    "emacs-next"
    "ispell"
+   "ripgrep"
    ))

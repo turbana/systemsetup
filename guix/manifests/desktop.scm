@@ -14,6 +14,10 @@
    "python-dbus"                        ; for cpugraph.py
    "python-colour"                      ; for colorwheel.py
    ;; fonts
+   "fontconfig"
    "font-dejavu"
+   "font-google-roboto"
+   "font-gnu-freefont"
+   "gs-fonts"
    "dbxfs"
    ))
