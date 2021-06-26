@@ -1,7 +1,7 @@
 (define-module (base-system)
   #:use-module (gnu services xorg)
   #:use-module (gnu))
-(use-service-modules desktop networking ssh xorg)
+(use-service-modules desktop networking ssh syncthing xorg)
 
 (define-public (base-operating-system boot-uuid root-uuid swap-uuid)
   (operating-system
@@ -60,6 +60,8 @@
                (xorg-configuration
                 (xorg-configuration
                  (keyboard-layout keyboard-layout)))))
+     (service syncthing-service-type
+              (syncthing-configuration (user "ian")))
      (modify-services %desktop-services
        (delete gdm-service-type))))
    ))
