@@ -13,7 +13,7 @@ NOTE: these all assume the *.scm files are located under =~/.config/guix/=.
 
 #+BEGIN_SRC sh
   # pull down updates
-  guix system pull
+  guix pull
 
   # update system
   sudo guix system -L ~/.config/guix/systems reconfigure path/to/system.scm
