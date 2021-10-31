@@ -10,9 +10,14 @@
    "tmux"
    ;; misc
    "expect"
+   "gnupg"
    ;; gcc
    "gcc-toolchain"
    "make"
+   "automake"
+   "autoconf"
+   "pkg-config"
+   "libtool"
    ;; python
    "python"
    "python-language-server"
