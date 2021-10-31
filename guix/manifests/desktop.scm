@@ -13,6 +13,9 @@
    "python"
    "python-dbus"                        ; for cpugraph.py
    "python-colour"                      ; for colorwheel.py
+   "offlineimap"                        ; for fetching email
+   "mu"                                 ; for indexing email
+   "pandoc"                             ; documentation tool (I use for html2txt)
    ;; fonts
    "fontconfig"
    "font-dejavu"
