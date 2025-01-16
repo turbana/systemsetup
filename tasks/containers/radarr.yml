@@ -1,0 +1,14 @@
+- name: Create radarr container
+  # become: true
+  community.general.lxc_container:
+    name: radarr-container
+    container_log: true
+    # template: ubuntu
+    template: download
+    template_options: "--dist debian --release {{ lxc_debian_release }} --arch amd64"
+    state: started
+    backing_store: dir
+    # directory: "{{ container_root }}"
+    fs_size: "8G"
+    fs_type: "ext4"
+    # lxc_path: "{{ container_dir }}"

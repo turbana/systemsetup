@@ -1,0 +1,7 @@
+---
+# container_root: /opt/roots
+# container_dir: /opt/containers
+# lxc_user: lxc
+# lxc_group: lxc
+# lxc_debian_release: bookworm
+

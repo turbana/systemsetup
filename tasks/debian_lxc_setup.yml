@@ -1,0 +1,73 @@
+# - name: Ensure LXC group exists
+#   ansible.builtin.group:
+#     name: "{{ lxc_group }}"
+#     state: present
+
+# - name: Ensure LXC user exists
+#   ansible.builtin.user:
+#     name: "{{ lxc_user }}"
+#     group: "{{ lxc_group }}"
+#     state: present
+
+- name: Install LXC required system packages
+  ansible.builtin.apt:
+    update_cache: yes
+    pkg:
+      - lxc
+      - python3
+      - python3-lxc
+      - libvirt0
+      # - libpam-cgfs
+      - bridge-utils
+      - uidmap
+
+# - name: Setup user-level config directory
+#   become: false
+#   ansible.builtin.file:
+#     dest: ~/.config/lxc/
+#     state: directory
+
+# - name: Copy user-level config file
+#   become: false
+#   ansible.builtin.copy:
+#     src: files/lxc_default.conf
+#     dest: ~/.config/lxc/default.conf
+
+# - name: Ensure LXC directories exist
+#   ansible.builtin.file:
+#     dest: "{{ item }}"
+#     state: directory
+#     # owner: "{{ lxc_user }}"
+#     # group: "{{ lxc_group }}"
+#   loop:
+#     - "{{ container_dir }}"
+#     - "{{ container_root }}"
+#     # - "~{{ lxc_user }}/.config/lxc"
+
+# - name: Copy LXC system configuration
+#   ansible.builtin.copy:
+#     src: files/lxc_system.conf
+#     dest: /etc/lxc/default.conf
+
+- name: Copy LXC system-wide configuration files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - { src: files/lxc_default.conf, dest: /etc/lxc/default.conf }
+    - { src: files/lxc_dhcp.conf, dest: /etc/lxc/dhcp.conf }
+    - { src: files/lxc_net.conf, dest: /etc/default/lxc-net }
+    - { src: files/subuid, dest: /etc/subuid }
+    - { src: files/subgid, dest: /etc/subgid }
+    
+# - name: Copy LXC user configuration
+#   become: yes
+#   become_user: "{{ lxc_user }}"
+#   ansible.builtin.copy:
+#     src: files/lxc_user.conf
+#     dest: ~/.config/lxc/default.conf
+
+- name: Check host LXC config
+  ansible.builtin.command: lxc-checkconfig
+  # ignore changed
+  changed_when: false
