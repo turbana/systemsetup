@@ -1,12 +1,15 @@
-- name: Home labs common setup
-  hosts: labs
-  become: true
-  tasks:
-    - import_tasks: tasks/debian_lxc_setup.yml
-    - import_tasks: tasks/labs.yml
+# - name: Home labs common setup
+#   hosts: labs
+#   become: true
+#   tasks:
+#     - import_tasks: tasks/debian_lxc_setup.yml
+#     - import_tasks: tasks/labs.yml
 
 # - name: Setup lab0
 #   hosts: lab0
 #   become: false
 #   tasks:
 #     - import_tasks: tasks/lab0.yml
+
+# - import_playbook: lxc-hosts.yml
+- import_playbook: media-servers.yml

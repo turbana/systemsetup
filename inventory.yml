@@ -1,24 +1,24 @@
 labs:
-  vars:
-    lxc_dist: debian
-    lxc_release: bookworm
-    lxc_arch: amd64
-    lxc_fs_size: "8G"
-    lxc_fs_type: "ext4"
-    lxc_bridge: lxcbr0
+  # vars:
+  #   lxc_dist: debian
+  #   lxc_release: bookworm
+  #   lxc_arch: amd64
+  #   lxc_fs_size: "8G"
+  #   lxc_fs_type: "ext4"
+  #   lxc_bridge: lxcbr0
   hosts:
     lab0:
       ansible_host: 192.168.0.123
-      containers:
-        - name: radarr-container
-          ip: 10.0.0.110
-          container_config_extra:
-            - "# test"
-            - "# test2"
-        - name: sonarr-container
-          ip: 10.0.0.111
-          container_config_extra:
-            - "# test3"
+      # containers:
+      #   - name: radarr-container
+      #     ip: 10.0.0.110
+      #     container_config_extra:
+      #       - "# test"
+      #       - "# test2"
+      #   - name: sonarr-container
+      #     ip: 10.0.0.111
+      #     container_config_extra:
+      #       - "# test3"
 
 home:
   children:

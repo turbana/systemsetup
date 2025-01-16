@@ -1,0 +1,10 @@
+containers:
+  - name: radarr-container
+    ip: 10.0.0.160
+    container_config_extra:
+      - "# test"
+      - "# test2"
+  - name: sonarr-container
+    ip: 10.0.0.161
+    container_config_extra:
+      - "# test3"

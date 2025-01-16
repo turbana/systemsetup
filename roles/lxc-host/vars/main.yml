@@ -1,0 +1,6 @@
+lxc_dist: debian
+lxc_release: bookworm
+lxc_arch: amd64
+lxc_fs_size: "8G"
+lxc_fs_type: "ext4"
+lxc_bridge: lxcbr0

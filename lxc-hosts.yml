@@ -1,0 +1,4 @@
+- hosts: labs
+  become: true
+  roles:
+    - lxc-host
