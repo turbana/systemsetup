@@ -1,5 +1,1 @@
-# containers:
-#   con1:
-#     ip: 10.0.3.100
-#   con2:
-#     ip: 10.0.3.101
+ansible_host: 192.168.0.123

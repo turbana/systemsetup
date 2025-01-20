@@ -1,0 +1,4 @@
+docker_root: /opt/docker
+media_root: /opt/media
+docker_user: admin
+docker_group: docker

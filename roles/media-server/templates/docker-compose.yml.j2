@@ -1,0 +1,12 @@
+networks:
+  default:
+    driver: bridge
+  socket_proxy:
+    name: socket_proxy
+    driver: bridge
+    ipam:
+      config:
+        - subnet: {{ docker_subnet }}
+
+include:
+  - compose/socket-proxy.yml

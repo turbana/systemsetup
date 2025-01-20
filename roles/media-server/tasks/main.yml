@@ -1,38 +1,37 @@
-- name: Update LXC DHCP reservations
-  become: true
-  ansible.builtin.lineinfile:
-    create: true
-    line: "dhcp-host={{ item.name }},{{ item.ip }}"
-    regex: "^dhcp-host={{ item.name }},.*$"
-    path: /etc/lxc/dhcp.conf
-    state: present
-  loop: "{{ containers }}"
-  notify: restart lxc-net
+- name: Setup systcl tweaks
+  ansible.builtin.copy:
+    src: files/sysctl.conf
+    dest: /etc/sysctl.conf
+    mode: 0644
 
-- name: Force possible restart of lxc-net
-  ansible.builtin.meta: flush_handlers
+- name: Create root docker directories
+  ansible.builtin.file:
+    dest: "{{ docker_root }}/{{ item }}"
+    state: directory
+    owner: "{{ docker_user }}"
+    group: "{{ docker_group }}"
+    mode: 0750
+  loop:
+    - data
+    - compose
+    - logs
+    - scripts
+    - secrets
 
-- name: Create containers
-  become: true
-  community.general.lxc_container:
-    name: "{{ item.name }}"
-    container_log: true
-    template: download
-    template_options: "--dist {{ lxc_dist }} --release {{ lxc_release }} --arch {{ lxc_arch }}"
-    state: started
-    backing_store: dir
-    fs_size: "{{ lxc_fs_size }}"
-    fs_type: "{{ lxc_fs_type }}"
-    # container_config:
-    #   - "lxc.start.auto = 1"
-    #   - "lxc.net.0.type = veth"
-    #   - "lxc.net.0.link = {{ lxc_bridge }}"
-    #   - "lxc.net.0.veth.mode = bridge"
-    #   - "lxc.net.0.flags = up"
-    #   - "lxc.net.0.name = eth0"
-    #   - "lxc.net.0.ipv4.address = {{ item.ip }}/24 255.255.255.255"
-      # - "lxc.net.0.ipv4.gateway = 10.0.3.1"
-      # - "lxc.net.0.ipv4.gateway = auto"
-      # - "{{ item.container_config_extra }}"
-  loop: "{{ containers }}"
+- name: Copy docker env file
+  ansible.builtin.template:
+    src: templates/_env.j2
+    dest: "{{ docker_root }}/.env"
+    mode: 0640
 
+- name: Copy docker compose file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ docker_root }}/docker-compose.yml"
+    mode: 0640
+
+- name: Copy socket-proxy compose file
+  ansible.builtin.template:
+    src: templates/socket-proxy.yml.j2
+    dest: "{{ docker_root }}/compose/socket-proxy.yml"
+    mode: 0640

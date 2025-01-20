@@ -1,15 +1,17 @@
-# - name: Home labs common setup
-#   hosts: labs
-#   become: true
-#   tasks:
-#     - import_tasks: tasks/debian_lxc_setup.yml
-#     - import_tasks: tasks/labs.yml
+- hosts: lab_hosts
+  become: true
+  roles:
+    - role: lab-host
+      tags: lab-host
 
-# - name: Setup lab0
-#   hosts: lab0
-#   become: false
-#   tasks:
-#     - import_tasks: tasks/lab0.yml
+- hosts: docker_hosts
+  become: true
+  roles:
+    - role: docker-host
+      tags: docker-host
 
-# - import_playbook: lxc-hosts.yml
-- import_playbook: media-servers.yml
+- hosts: media_servers
+  become: true
+  roles:
+    - role: media-server
+      tags: media-server
