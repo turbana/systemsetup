@@ -4,5 +4,6 @@
     pkg:
       - ca-certificates
       - curl
+      - net-tools
 
 # TODO setup sshd

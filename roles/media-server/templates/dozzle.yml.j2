@@ -1,0 +1,24 @@
+services:
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["apps", "all"]
+    networks:
+      - socket_proxy
+      - default
+    ports:
+      - "127.0.0.1:{{ docker_services.dozzle.port }}:8080"
+    environment:
+      DOZZLE_LEVEL: info
+      DOZZLE_TAILSIZE: 300
+      DOZZLE_FILTER: "status=running"
+      # DOZZLE_FILTER: "label=log_me"
+      DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
+    labels:
+      - homepage.group=Docker
+      - homepage.name=Dozzle
+      - homepage.href=https://{{ media_server_host }}:{{ docker_services.dozzle.port }}/
+      - homepage.description=View Docker log files for all containers

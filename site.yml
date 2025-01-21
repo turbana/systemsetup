@@ -11,7 +11,7 @@
       tags: docker-host
 
 - hosts: media_servers
-  become: true
+  become: false
   roles:
     - role: media-server
       tags: media-server

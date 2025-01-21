@@ -9,4 +9,6 @@ networks:
         - subnet: {{ docker_subnet }}
 
 include:
-  - compose/socket-proxy.yml
+{% for service in docker_services %}
+  - compose/{{ service }}.yml
+{% endfor %}

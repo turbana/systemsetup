@@ -1,4 +1,0 @@
-- hosts: lab0
-  become: true
-  roles:
-    - media-server

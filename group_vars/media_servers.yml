@@ -1,4 +1,19 @@
-docker_root: /opt/docker
+media_server_host: localhost
 media_root: /opt/media
-docker_user: admin
+docker_root: /opt/docker
+docker_app_root: "{{ docker_root }}/data"
+docker_user: lab-admin
 docker_group: docker
+docker_subnet: 10.0.0.0/24
+docker_timezone: "{{ timezone }}"
+
+docker_services:
+  socket_proxy:
+    addr: 10.0.0.254
+    port: 2375
+  portainer:
+    port: 9000
+  dozzle:
+    port: 8082
+  homepage:
+    port: 3000

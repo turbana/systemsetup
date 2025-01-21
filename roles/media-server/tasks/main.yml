@@ -1,10 +1,24 @@
 - name: Setup systcl tweaks
+  become: true
   ansible.builtin.copy:
     src: files/sysctl.conf
     dest: /etc/sysctl.conf
     mode: 0644
 
-- name: Create root docker directories
+- name: Create docker root directories
+  become: true
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: directory
+    owner: "{{ docker_user }}"
+    group: "{{ docker_group }}"
+    mode: 0750 # maybe setgid bit?
+  loop:
+    - "{{ docker_root }}"
+    - "{{ media_root }}"
+
+- name: Create docker sub-directories
+  become: true
   ansible.builtin.file:
     dest: "{{ docker_root }}/{{ item }}"
     state: directory
@@ -18,20 +32,21 @@
     - scripts
     - secrets
 
-- name: Copy docker env file
-  ansible.builtin.template:
-    src: templates/_env.j2
-    dest: "{{ docker_root }}/.env"
-    mode: 0640
-
 - name: Copy docker compose file
   ansible.builtin.template:
     src: templates/docker-compose.yml.j2
     dest: "{{ docker_root }}/docker-compose.yml"
     mode: 0640
 
-- name: Copy socket-proxy compose file
+- name: Copy docker services compose files
   ansible.builtin.template:
-    src: templates/socket-proxy.yml.j2
-    dest: "{{ docker_root }}/compose/socket-proxy.yml"
+    src: templates/{{ item.key }}.yml.j2
+    dest: "{{ docker_root }}/compose/{{ item.key }}.yml"
     mode: 0640
+  loop: "{{ docker_services | dict2items }}"
+
+- name: Start all docker containers
+  community.docker.docker_compose_v2:
+    project_src: "{{ docker_root }}"
+    files: "docker-compose.yml"
+    state: present

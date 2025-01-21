@@ -1,7 +1,2 @@
 host_release: bookworm
 host_arch: amd64
-docker_subnet: 10.0.0.0/24
-services:
-  socket_proxy:
-    addr: 10.0.0.254
-    port: 2375

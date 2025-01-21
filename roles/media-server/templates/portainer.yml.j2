@@ -1,0 +1,22 @@
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:latest
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["core", "all"]
+    networks:
+      - socket_proxy
+    command: -H tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
+    ports:
+      - "127.0.0.1:{{ docker_services.portainer.port }}:9443"
+    volumes:
+      - {{ docker_app_root }}/portainer/data:/data
+    environment:
+      - TZ={{ docker_timezone }}
+    labels:
+      - homepage.group=Docker
+      - homepage.name=Portainer
+      - homepage.href=https://{{ media_server_host }}:{{ docker_services.portainer.port }}/
+      - homepage.description=Manage Docker containers

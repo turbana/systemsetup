@@ -1,0 +1,14 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["apps", "all"]
+    networks:
+      - socket_proxy
+    ports:
+      - "127.0.0.1:{{ docker_services.homepage.port }}:3000"
+    volumes:
+      - "{{ docker_app_root }}/homepage:/app/config"

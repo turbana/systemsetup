@@ -1,5 +1,4 @@
 services:
-  # Docker Socket Proxy - Security Enchanced Proxy for Docker Socket
   socket-proxy:
     container_name: socket-proxy
     image: tecnativa/docker-socket-proxy
@@ -9,14 +8,15 @@ services:
     # profiles: ["core", "all"] 
     networks:
       socket_proxy:
-        ipv4_address: {{ services.socket_proxy.addr }} # You can specify a static IP
-    privileged: true # true for VM. false for unprivileged LXC container on Proxmox.
+        ipv4_address: {{ docker_services.socket_proxy.addr }}
+    privileged: true
     ports:
-      - "127.0.0.1:{{ services.socket_proxy.port}}:2375" # Do not expose this to the internet with port forwarding
+      - "127.0.0.1:{{ docker_services.socket_proxy.port }}:2375" # Do not expose this to the internet with port forwarding
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     environment:
-      - LOG_LEVEL=info # debug,info,notice,warning,err,crit,alert,emerg
+      # debug,info,notice,warning,err,crit,alert,emerg
+      - LOG_LEVEL=debug
       ## Variables match the URL prefix (i.e. AUTH blocks access to /auth/* parts of the API, etc.).
       # 0 to revoke access.
       # 1 to grant access.
@@ -47,3 +47,7 @@ services:
       - SYSTEM=0
       - TASKS=1 # Portainer
       - VOLUMES=1 # Portainer
+    labels:
+      - homepage.group=Docker
+      - homepage.name=Socket Proxy
+      - homepage.description=Socket proxy for Docker
