@@ -5,6 +5,40 @@
     dest: /etc/sysctl.conf
     mode: 0644
 
+- name: Ensure group {{ media_group }} exists
+  become: true
+  ansible.builtin.group:
+    name: "{{ media_group }}"
+    state: present
+
+- name: Ensure user {{ docker_user }} has group {{ media_group }}
+  become: true
+  ansible.builtin.user:
+    name: "{{ docker_user }}"
+    groups: "{{ media_group }}"
+    append: true
+
+- name: Create media root directories
+  become: true
+  ansible.builtin.file:
+    dest: "{{ media_root }}/{{ item }}"
+    state: directory
+    group: "{{ media_group }}"
+    mode: "2770"
+  loop:
+    - tv
+    - movies
+    - music
+    - books
+
+- name: Create download directory
+  become: true
+  ansible.builtin.file:
+    dest: "{{ media_download_root }}"
+    state: directory
+    group: "{{ media_group }}"
+    mode: "2770"
+
 - name: Create docker root directories
   become: true
   ansible.builtin.file:
@@ -12,10 +46,9 @@
     state: directory
     owner: "{{ docker_user }}"
     group: "{{ docker_group }}"
-    mode: 0750 # maybe setgid bit?
+    mode: "0750"
   loop:
     - "{{ docker_root }}"
-    - "{{ media_root }}"
 
 - name: Create docker sub-directories
   become: true
@@ -44,6 +77,22 @@
     dest: "{{ docker_root }}/compose/{{ item.key }}.yml"
     mode: 0640
   loop: "{{ docker_services | dict2items }}"
+
+# - name: Ensure all required service config directories exist
+#   # use root as the containers also run as root
+#   become: true
+#   ansible.builtin.file:
+#     dest: "{{ docker_app_root }}/{{ item }}"
+#     state: directory
+#   loop: "{{ docker_data_files | map('dirname') | unique | list }}"
+
+# - name: Copy docker services config files
+#   # use root as the containers also run as root
+#   become: true
+#   ansible.builtin.template:
+#     src: "data/{{ item }}"
+#     dest: "{{ docker_app_root }}/{{ item }}"
+#   loop: "{{ docker_data_files }}"
 
 - name: Start all docker containers
   community.docker.docker_compose_v2:

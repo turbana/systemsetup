@@ -1,5 +1,8 @@
 media_server_host: localhost
 media_root: /opt/media
+media_download_root: /opt/download
+media_group: media
+
 docker_root: /opt/docker
 docker_app_root: "{{ docker_root }}/data"
 docker_user: lab-admin
@@ -17,3 +20,5 @@ docker_services:
     port: 8082
   homepage:
     port: 3000
+  jellyfin:
+    port: 8096
