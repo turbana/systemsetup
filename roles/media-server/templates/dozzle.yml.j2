@@ -8,7 +8,6 @@ services:
     # profiles: ["apps", "all"]
     networks:
       - socket_proxy
-      - default
     ports:
       - "127.0.0.1:{{ docker_services.dozzle.port }}:8080"
     environment:
