@@ -22,3 +22,5 @@ docker_services:
     port: 3000
   jellyfin:
     port: 8096
+  sabnzbd:
+    port: 8084
