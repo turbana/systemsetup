@@ -1,0 +1,23 @@
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["apps", "all"]
+    networks:
+      - socket_proxy
+    ports:
+      - "127.0.0.1:{{ docker_services.qbittorrent.port }}:8080"
+    volumes:
+      - {{ docker_app_root }}/qbittorrent/config:/config
+      - {{ media_download_root }}:/data/downloads
+    environment:
+      UMASK_SET: "002"
+      DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
+    labels:
+      - homepage.group=Download
+      - homepage.name=Qbittorrent
+      - homepage.href=https://{{ media_server_host }}:{{ docker_services.qbittorrent.port }}/
+      - homepage.description=Torrent downloader

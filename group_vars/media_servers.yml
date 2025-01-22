@@ -24,3 +24,5 @@ docker_services:
     port: 8096
   sabnzbd:
     port: 8084
+  qbittorrent:
+    port: 8081
