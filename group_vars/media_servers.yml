@@ -29,3 +29,5 @@ docker_services:
   gluetun:
   radarr:
     port: 7878
+  prowlarr:
+    port: 9696

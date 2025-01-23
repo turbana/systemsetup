@@ -1,0 +1,21 @@
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["apps", "all"]
+    networks:
+      - socket_proxy
+    ports:
+      - "127.0.0.1:{{ docker_services.prowlarr.port }}:9696"
+    volumes:
+      - {{ docker_app_root }}/prowlarr/config:/config
+    environment:
+      DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
+    labels:
+      - homepage.group=Download
+      - homepage.name=Prowlarr
+      - homepage.href=https://{{ media_server_host }}:{{ docker_services.prowlarr.port }}/
+      - homepage.description=Tracker aggregator
