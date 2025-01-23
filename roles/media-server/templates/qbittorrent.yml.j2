@@ -11,6 +11,7 @@ services:
       - {{ docker_app_root }}/qbittorrent/config:/config
       - {{ media_download_root }}:/data/downloads
     environment:
+      PGID: 1001
       WEBUI_PORT: {{ docker_services.qbittorrent.port }}
       UMASK_SET: "002"
       DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}

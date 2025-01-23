@@ -11,10 +11,11 @@ services:
     ports:
       - "127.0.0.1:{{ docker_services.radarr.port }}:7878"
     volumes:
-      - {{ docker_app_root }}/radarr/data:/data
+      - {{ docker_app_root }}/radarr/config:/config
       - {{ media_download_root }}:/data/downloads
-      - {{ media_root }}:/media
+      - {{ media_root }}:/data/media
     environment:
+      PGID: 1001
       DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
     labels:
       - homepage.group=Download

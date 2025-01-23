@@ -31,13 +31,16 @@
     - music
     - books
 
-- name: Create download directory
+- name: Create download directories
   become: true
   ansible.builtin.file:
-    dest: "{{ media_download_root }}"
+    dest: "{{ media_download_root }}/{{ item }}"
     state: directory
     group: "{{ media_group }}"
     mode: "2770"
+  loop:
+    - torrents
+    - nzbs
 
 - name: Create docker root directories
   become: true
