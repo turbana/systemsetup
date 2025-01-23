@@ -1,0 +1,23 @@
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["apps", "all"]
+    networks:
+      - socket_proxy
+    ports:
+      - "127.0.0.1:{{ docker_services.radarr.port }}:7878"
+    volumes:
+      - {{ docker_app_root }}/radarr/data:/data
+      - {{ media_download_root }}:/data/downloads
+      - {{ media_root }}:/media
+    environment:
+      DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
+    labels:
+      - homepage.group=Download
+      - homepage.name=Radarr
+      - homepage.href=https://{{ media_server_host }}:{{ docker_services.radarr.port }}/
+      - homepage.description=Movie PVR
