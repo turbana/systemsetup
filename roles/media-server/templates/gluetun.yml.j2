@@ -1,0 +1,24 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    # profiles: ["apps", "all"]
+    networks:
+      - default
+    ports:
+      - "127.0.0.1:{{ docker_services.qbittorrent.port }}:8080"
+    volumes:
+      - {{ docker_app_root }}/gluetun:/gluetun
+    environment:
+      VPN_SERVICE_PROVIDER: private internet access
+      OPENVPN_USER: "{{ vpn_user}}"
+      OPENVPN_PASSWORD: "{{ vpn_password }}"
+    labels:
+      - homepage.group=Download
+      - homepage.name=Gluetun
+      - homepage.description=VPN tunnel provider

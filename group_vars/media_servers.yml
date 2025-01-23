@@ -26,3 +26,4 @@ docker_services:
     port: 8084
   qbittorrent:
     port: 8081
+  gluetun:

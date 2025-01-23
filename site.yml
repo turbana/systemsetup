@@ -12,6 +12,8 @@
 
 - hosts: media_servers
   become: false
+  pre_tasks:
+    - include_vars: secrets/media_servers.yml
   roles:
     - role: media-server
       tags: media-server
