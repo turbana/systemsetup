@@ -10,8 +10,11 @@ services:
     # profiles: ["apps", "all"]
     networks:
       - default
+      - socket_proxy
     ports:
-      - "127.0.0.1:{{ docker_services.qbittorrent.port }}:8080"
+      # NOTE: due to CSRF we need to change the qbittorrent webui port inside the container along with the external. See qbittorrent.yml.j2 to set WEBUI_PORT.
+      # https://docs.linuxserver.io/images/docker-qbittorrent/#webui_port-variable
+      - "127.0.0.1:{{ docker_services.qbittorrent.port }}:{{ docker_services.qbittorrent.port }}"
     volumes:
       - {{ docker_app_root }}/gluetun:/gluetun
     environment:
