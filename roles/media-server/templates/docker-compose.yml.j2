@@ -10,5 +10,5 @@ networks:
 
 include:
 {% for service in docker_services %}
-  - compose/{{ service }}.yml
+  - {{ service }}.yml
 {% endfor %}

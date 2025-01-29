@@ -1,33 +1,46 @@
+# directories
+app_root: /opt/media
+media_files_root: "{{ app_root }}/library"
+media_download_root: "{{ app_root }}/download"
+docker_root: "{{ app_root }}/docker"
+docker_app_root: "{{ app_root }}/volumes"
+docker_log_root: "{{ app_root }}/logs"
+
 media_server_host: localhost
-media_root: /opt/media
-media_download_root: /opt/download
+
+# all media libraries and downloads should be accessible by this host group
 media_group: media
 
-docker_root: /opt/docker
-docker_app_root: "{{ docker_root }}/data"
 docker_user: lab-admin
 docker_group: docker
 docker_subnet: 10.0.0.0/24
 docker_timezone: "{{ timezone }}"
 
 docker_services:
+  # core services
   socket_proxy:
     addr: 10.0.0.254
-    port: 2375
-  portainer:
-    port: 9000
-  dozzle:
-    port: 8082
-  homepage:
     port: 3000
-  jellyfin:
-    port: 8096
-  sabnzbd:
-    port: 8084
-  qbittorrent:
-    port: 8081
   gluetun:
+  portainer:
+    port: 3001
+  dozzle:
+    port: 3002
+  homepage:
+    port: 3003
+    
+  # downloaders
+  sabnzbd:
+    port: 4000
+  qbittorrent:
+    port: 4001
+    
+  # feeders
   radarr:
-    port: 7878
+    port: 5000
   prowlarr:
-    port: 9696
+    port: 5001
+    
+  # media apps
+  jellyfin:
+    port: 6000

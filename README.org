@@ -1,5 +1,5 @@
 #+TITLE: System Setup
-#+STARTUP: content
+#+STARTUP: all
 
 Provide complete workstation provisioning through ansible.
 
@@ -29,3 +29,38 @@ Provide complete workstation provisioning through ansible.
 - ? :: system monitoring
 - handbrake :: video transcoder
 - ampache :: music streamer
+
+*** Host Directories
+- /opt/media/volumes/<app> :: app data files
+- /opt/media/logs/<app> :: app log files
+- /opt/media/docker :: main docker config directory
+- /opt/media/downloads :: directory for completed downloads
+- /opt/media/downloads/nzbs :: usenet download directory
+- /opt/media/downloads/torrent :: torrent download directory
+- /opt/media/library/<format> :: data files for movies/tv/books/etc
+  
+  
+*** Container Directories
+- /media/downloads :: main download directory
+- /media/library :: main media file directory
+
+*** Ports
+
+**** Core Internal
+- socket-proxy :: 3000
+- portainer :: 3001
+- dozzle :: 3002
+- homepage :: 3003
+- reverse proxy (tbd) :: 3080
+- reverse proxy (tbd) :: 3443
+
+**** Downloaders
+- qbittorrent :: 4000
+- sabnzbd :: 4001
+  
+**** Feeders
+- prowlarr :: 5000
+- radarr :: 5001
+
+**** Media Apps
+- jellyfin :: 6000

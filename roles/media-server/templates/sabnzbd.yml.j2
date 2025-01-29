@@ -12,7 +12,7 @@ services:
       - "127.0.0.1:{{ docker_services.sabnzbd.port }}:8080"
     volumes:
       - {{ docker_app_root }}/sabnzbd/config:/config
-      - {{ media_download_root }}:/data/downloads
+      - {{ media_download_root }}:/media/downloads
     environment:
       DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
     labels:

@@ -11,4 +11,4 @@ services:
     ports:
       - "127.0.0.1:{{ docker_services.homepage.port }}:3000"
     volumes:
-      - "{{ docker_app_root }}/homepage:/app/config"
+      - "{{ docker_app_root }}/homepage/config:/app/config"
