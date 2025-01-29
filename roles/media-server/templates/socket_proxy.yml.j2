@@ -11,7 +11,8 @@ services:
         ipv4_address: {{ docker_services.socket_proxy.addr }}
     privileged: true
     ports:
-      - "127.0.0.1:{{ docker_services.socket_proxy.port }}:2375" # Do not expose this to the internet with port forwarding
+      # NOTE: containers need the container port so set both the host and container port
+      - "127.0.0.1:{{ docker_services.socket_proxy.port }}:{{ docker_services.socket_proxy.port }}"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     environment:
@@ -48,6 +49,6 @@ services:
       - TASKS=1 # Portainer
       - VOLUMES=1 # Portainer
     labels:
-      - homepage.group=Docker
+      - homepage.group=Core
       - homepage.name=Socket Proxy
       - homepage.description=Socket proxy for Docker

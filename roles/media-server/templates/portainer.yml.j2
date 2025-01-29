@@ -16,7 +16,7 @@ services:
     environment:
       - TZ={{ docker_timezone }}
     labels:
-      - homepage.group=Docker
+      - homepage.group=Core
       - homepage.name=Portainer
-      - homepage.href=https://{{ media_server_host }}:{{ docker_services.portainer.port }}/
+      - homepage.href={{ media_server_href }}:{{ docker_services.portainer.port }}/
       - homepage.description=Manage Docker containers

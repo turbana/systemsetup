@@ -16,7 +16,7 @@ services:
     environment:
       DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
     labels:
-      - homepage.group=Download
+      - homepage.group=Downloaders
       - homepage.name=Sabnzbd
-      - homepage.href=https://{{ media_server_host }}:{{ docker_services.sabnzbd.port }}/
+      - homepage.href={{ media_server_href }}:{{ docker_services.sabnzbd.port }}/
       - homepage.description=Binary newsgrabber (NZB downloader)

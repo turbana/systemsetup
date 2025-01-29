@@ -17,5 +17,5 @@ services:
     labels:
       - homepage.group=Xxx
       - homepage.name=Xxx
-      - homepage.href=https://{{ media_server_host }}:{{ docker_services.xxx.port }}/
+      - homepage.href={{ media_server_href }}:{{ docker_services.xxx.port }}/
       - homepage.description=xxx

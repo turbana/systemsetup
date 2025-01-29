@@ -17,7 +17,7 @@ services:
       # DOZZLE_FILTER: "label=log_me"
       DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
     labels:
-      - homepage.group=Docker
+      - homepage.group=Core
       - homepage.name=Dozzle
-      - homepage.href=https://{{ media_server_host }}:{{ docker_services.dozzle.port }}/
+      - homepage.href={{ media_server_href }}:{{ docker_services.dozzle.port }}/
       - homepage.description=View Docker log files for all containers

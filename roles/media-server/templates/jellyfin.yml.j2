@@ -24,5 +24,5 @@ services:
     labels:
       - homepage.group=Media
       - homepage.name=Jellyfin
-      - homepage.href=https://{{ media_server_host }}:{{ docker_services.jellyfin.port }}/
+      - homepage.href={{ media_server_href }}:{{ docker_services.jellyfin.port }}/
       - homepage.description=Media library
