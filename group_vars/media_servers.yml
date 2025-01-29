@@ -21,14 +21,15 @@ docker_services:
   # core services
   socket_proxy:
     addr: 10.0.0.254
-    port: 3000
+    # socket-proxy does not support setting a different container port, so use the default here
+    port: 2375
   gluetun:
+  homepage:
+    port: 3000
   portainer:
     port: 3001
   dozzle:
     port: 3002
-  homepage:
-    port: 3003
     
   # downloaders
   sabnzbd:
