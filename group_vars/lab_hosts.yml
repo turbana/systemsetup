@@ -1,2 +1,22 @@
 ansible_user: lab-admin
 scripts_root: ~/scripts
+
+dns:
+  auth_email: "{{ secret_dns_auth_email }}"
+  auth_method: "{{ secret_dns_auth_method }}"
+  auth_key: "{{ secret_dns_auth_key }}"
+  zone_id: "{{ secret_dns_zone_id }}"
+  record_name: "{{ dns_record_name }}"
+  ttl: "{{ secret_dns_ttl }}"
+  proxy: "{{ secret_dns_proxy }}"
+  sitename: "{{ secret_dns_sitename }}"
+  slackchannel: "{{ secret_dns_slackchannel }}"
+  slackuri: "{{ secret_dns_slackuri }}"
+  discorduri: "{{ secret_dns_discorduri }}"
+  use_cron: true
+  cron:
+    minute: "18"
+    hour: "*"
+    day: "*"
+    month: "*"
+    weekday: "*"

@@ -1,2 +1,5 @@
+site_name: lab0.turbana.dev
+dns_record_name: lab0.turbana.dev
+update_cf_dns: true
 ansible_host: 192.168.0.10
 timezone: America/Los_Angeles

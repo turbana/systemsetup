@@ -1,5 +1,8 @@
 - hosts: lab_hosts
   become: true
+  pre_tasks:
+    - include_vars: secrets/lab_hosts.yml
+      tags: lab-host
   roles:
     - role: lab-host
       tags: lab-host
