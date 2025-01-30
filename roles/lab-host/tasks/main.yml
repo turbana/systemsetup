@@ -6,4 +6,10 @@
       - curl
       - net-tools
 
+- name: Create root scripts directory
+  become: false
+  ansible.builtin.file:
+    dest: "{{ scripts_root }}"
+    state: directory
+
 # TODO setup sshd
