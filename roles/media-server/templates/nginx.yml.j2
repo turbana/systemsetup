@@ -1,0 +1,23 @@
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["apps", "all"]
+    networks:
+      - socket_proxy
+    ports:
+      # NOTE: these ports are exposed on the host
+      - "0.0.0.0:{{ docker_services.nginx.port_http }}:80"
+      - "0.0.0.0:{{ docker_services.nginx.port_https }}:443"
+    volumes:
+      - {{ docker_app_root }}/nginx/config:/etc/nginx
+    environment:
+      DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
+    labels:
+      - homepage.group=Core
+      - homepage.name=Nginx
+      - homepage.href={{ media_server_href }}/
+      - homepage.description=HTTP server and reverse proxy

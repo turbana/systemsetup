@@ -30,6 +30,9 @@ docker_services:
     port: 3001
   dozzle:
     port: 3002
+  nginx:
+    port_http: 3080
+    port_https: 3443
     
   # downloaders
   sabnzbd:

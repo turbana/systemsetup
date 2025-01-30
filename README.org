@@ -51,8 +51,8 @@ Provide complete workstation provisioning through ansible.
 - portainer :: 3001
 - dozzle :: 3002
 - homepage :: 3003
-- reverse proxy (tbd) :: 3080
-- reverse proxy (tbd) :: 3443
+- ngnix (http) :: 3080
+- ngnix (https) :: 3443
 
 **** Downloaders
 - qbittorrent :: 4000
@@ -64,3 +64,8 @@ Provide complete workstation provisioning through ansible.
 
 **** Media Apps
 - jellyfin :: 6000
+
+* Public URLs
+- xxx.com :: main public url
+- home.xxx.com :: server located at home
+- media.home.xxx.com :: media server at home

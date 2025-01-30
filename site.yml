@@ -11,7 +11,7 @@
       tags: docker-host
 
 - hosts: media_servers
-  become: false
+  become: true
   pre_tasks:
     - include_vars: secrets/media_servers.yml
       tags: media-server
