@@ -1,0 +1,20 @@
+- name: Copy docker main compose file
+  become: false
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ docker_root }}/docker-compose.yml"
+    mode: 0640
+
+- name: Copy docker services compose files
+  become: false
+  ansible.builtin.template:
+    src: templates/{{ item.key }}.yml.j2
+    dest: "{{ docker_root }}/{{ item.key }}.yml"
+    mode: 0640
+  loop: "{{ docker_services | dict2items }}"
+
+- name: Start all docker containers
+  community.docker.docker_compose_v2:
+    project_src: "{{ docker_root }}"
+    files: "docker-compose.yml"
+    state: present

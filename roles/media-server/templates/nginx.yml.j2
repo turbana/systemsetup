@@ -10,8 +10,8 @@ services:
       - socket_proxy
     ports:
       # NOTE: these ports are exposed on the host
-      - "0.0.0.0:{{ docker_services.nginx.port_http }}:80"
-      - "0.0.0.0:{{ docker_services.nginx.port_https }}:443"
+      - "0.0.0.0:{{ docker_services.nginx.port_http }}:{{ docker_services.nginx.port_http }}"
+      - "0.0.0.0:{{ docker_services.nginx.port_https }}:{{ docker_services.nginx.port_https }}"
     volumes:
       - {{ docker_app_root }}/nginx/config:/etc/nginx
     environment:

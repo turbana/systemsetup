@@ -1,0 +1,35 @@
+- name: Create media root directories
+  ansible.builtin.file:
+    dest: "{{ media_files_root }}/{{ item }}"
+    state: directory
+    group: "{{ media_group }}"
+    mode: "2770"
+  loop:
+    - tv
+    - movies
+    - music
+    - books
+
+- name: Create download directories
+  ansible.builtin.file:
+    dest: "{{ media_download_root }}/{{ item }}"
+    state: directory
+    group: "{{ media_group }}"
+    mode: "2770"
+  loop:
+    - torrents
+    - nzbs
+
+- name: Create docker root directory
+  ansible.builtin.file:
+    dest: "{{ docker_root }}"
+    state: directory
+    owner: "{{ docker_user }}"
+    group: "{{ docker_group }}"
+    mode: "0750"
+
+- name: Create container directories
+  ansible.builtin.file:
+    dest: "{{ docker_app_root }}/{{ item.key }}"
+    state: directory
+  loop: "{{ docker_services | dict2items }}"
