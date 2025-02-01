@@ -1,6 +1,5 @@
 - name: Install docker dependencies
   ansible.builtin.apt:
-    update_cache: true
     pkg:
       - ca-certificates
 

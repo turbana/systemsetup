@@ -21,7 +21,7 @@ docker_services:
   # core services
   socket_proxy:
     addr: 10.0.0.254
-    # socket-proxy does not support setting a different container port, so use the default here
+    # socket-proxy does not support setting a different container port, so use the default here as all the containers will need to reference it
     port: 2375
   gluetun:
   homepage:
