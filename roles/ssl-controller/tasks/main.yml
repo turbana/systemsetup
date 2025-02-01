@@ -1,0 +1,64 @@
+- name: Setup SSL directory
+  ansible.builtin.file:
+    dest: "{{ ssl_root }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+    
+- name: Write Cloudflare credential file(s)
+  ansible.builtin.copy:
+    dest: "{{ ssl_root }}/cf_creds-{{ item }}.ini"
+    content: "dns_cloudflare_api_token = {{ dns[item].auth_key }}"
+    mode: 0600
+  loop: "{{ certificates.keys() }}"
+
+- name: Check for existing certificate(s)
+  ansible.builtin.stat:
+    path: "{{ ssl_root }}/live/{{ item }}/cert.pem"
+  register: cert_files
+  loop: "{{ certificates.keys() }}"
+
+- name: Generate new SSL certificate(s)
+  community.docker.docker_container:
+    name: certbot
+    image: certbot/dns-cloudflare
+      # --test-cert
+    command: |
+      certonly
+      -n
+      --agree-tos
+      --email "{{ certificates[item].admin_email }}"
+      --dns-cloudflare
+      --dns-cloudflare-credentials /etc/letsencrypt/cf_creds-{{ item }}.ini
+      --cert-name "{{ item }}"
+      --domains "{{ certificates[item].domains | join(',') }}"
+    # remove image after execution
+    detach: false
+    cleanup: true
+    volumes:
+      - "{{ ssl_root }}:/etc/letsencrypt"
+  when: not cert_files.results[index].stat.exists
+  loop: "{{ certificates.keys() }}"
+  loop_control:
+    index_var: index
+
+- name: Create renewal shell script
+  ansible.builtin.copy:
+    dest: "{{ ssl_root }}/renew-all-certs.sh"
+    content: |
+      #!/bin/env sh
+      exec docker run -it --rm --name certbot \
+           -v {{ ssl_root }}:/etc/letsencrypt \
+           certbot/dns-cloudflare renew -n -q
+    mode: 0700
+
+- name: Setup crontab for auto renewal of certificate(s)
+  ansible.builtin.cron:
+    name: "Auto renewal of all SSL certificates"
+    job: "{{ ssl_root }}/renew-all-certs.sh"
+    minute: "{{ certificates_renewal.minute }}"
+    hour: "{{ certificates_renewal.hour }}"
+    day: "{{ certificates_renewal.day }}"
+    month: "{{ certificates_renewal.month }}"
+    weekday: "{{ certificates_renewal.weekday }}"

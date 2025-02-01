@@ -23,6 +23,17 @@
       tags: dns-host
       when: dns_records
 
+- hosts: ssl_controllers
+  become: true
+  pre_tasks:
+    - include_vars: secrets/ssl.yml
+      tags: ssl-controller
+    - include_vars: secrets/dns.yml
+      tags: ssl-controller
+  roles:
+    - role: ssl-controller
+      tags: ssl-controller
+
 - hosts: media_servers
   become: true
   pre_tasks:

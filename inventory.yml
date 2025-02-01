@@ -10,6 +10,10 @@ media_servers:
   hosts:
     lab0:
 
+ssl_controllers:
+  hosts:
+    lab0:
+
 at_home:
   hosts:
     lab0:

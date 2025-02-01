@@ -1,0 +1,2 @@
+root_site_name: turbana.dev
+site_name: "{{ inventory_hostname }}.{{ root_site_name }}"

@@ -38,7 +38,7 @@ Provide complete workstation provisioning through ansible.
 - /opt/media/downloads/nzbs :: usenet download directory
 - /opt/media/downloads/torrent :: torrent download directory
 - /opt/media/library/<format> :: data files for movies/tv/books/etc
-  
+- /opt/ssl :: SSL certificates  
   
 *** Container Directories
 - /media/downloads :: main download directory
