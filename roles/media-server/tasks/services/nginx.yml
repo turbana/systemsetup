@@ -1,9 +1,0 @@
-- name: Copy CF origin SSL certificate
-  ansible.builtin.copy:
-    src: ../../../../secrets/cf_origin.crt
-    dest: "{{ docker_app_root }}/nginx/config/cf_origin.crt"
-    
-- name: Copy CF origin SSL key
-  ansible.builtin.copy:
-    src: ../../../../secrets/cf_origin.key
-    dest: "{{ docker_app_root }}/nginx/config/cf_origin.key"

@@ -1,5 +1,4 @@
 - import_tasks: base.yml
 - import_tasks: directories.yml
 - import_tasks: configs.yml
-- import_tasks: services/nginx.yml
 - import_tasks: docker.yml  
