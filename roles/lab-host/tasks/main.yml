@@ -13,7 +13,3 @@
     state: directory
 
 # TODO setup sshd
-
-- name: Update Cloudflare DNS records
-  include_tasks: cf-dns-update.yml
-  when: "update_cf_dns"

@@ -1,0 +1,7 @@
+- name: Update Cloudflare DNS records
+  include_tasks: cloudflare.yml
+  vars:
+    dns_name: "{{ item }}"
+    dns_record: "{{ dns[item] }}"
+  loop: "{{ dns_records }}"
+  when: dns[item].registrar.lower() == "cloudflare"
