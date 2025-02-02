@@ -1,0 +1,4 @@
+---
+my-docker:
+  host: socket-proxy
+  port: {{ docker_services.socket_proxy.port }}
