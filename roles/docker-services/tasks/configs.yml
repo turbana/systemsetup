@@ -1,3 +1,6 @@
+# NOTE: we iterate over *all* files in ../configs so we need to filter them to only
+# the services inside the current 'docker_services' dictionary.
+
 - name: Create app config directories
   # no_log: true
   ansible.builtin.file:
@@ -7,7 +10,7 @@
     group: root
     mode: "{{ item.mode }}"
   with_community.general.filetree: ../configs
-  when: item.state == "directory"
+  when: item.state == "directory" and item.path | split('/') | first in docker_services.keys() 
   loop_control:
     label: "{{ item.path }}"
 
@@ -19,7 +22,7 @@
     group: root
     mode: "{{ item.mode }}"
   with_community.general.filetree: ../configs
-  when: item.state == "file"
+  when: item.state == "file" and item.path | split('/') | first in docker_services.keys() 
   loop_control:
     label: "{{ item.path }}"
 
@@ -35,6 +38,6 @@
     group: root
     mode: "{{ item.mode }}"
   with_community.general.filetree: ../configs
-  when: item.state == "link"
+  when: item.state == "link" and item.path | split('/') | first in docker_services.keys() 
   loop_control:
     label: "{{ item.path }}"
