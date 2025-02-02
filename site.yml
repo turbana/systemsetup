@@ -1,44 +1,5 @@
-- hosts: lab_hosts
-  become: true
-  pre_tasks:
-    - include_vars: secrets/lab_hosts.yml
-      tags: lab-host
-  roles:
-    - role: lab-host
-      tags: lab-host
-
-- hosts: docker_hosts
-  become: true
-  roles:
-    - role: docker-host
-      tags: docker-host
-
-- hosts: all
-  become: true
-  pre_tasks:
-    - include_vars: secrets/dns.yml
-      tags: dns-host
-  roles:
-    - role: dns-host
-      tags: dns-host
-      when: dns_records
-
-- hosts: ssl_controllers
-  become: true
-  pre_tasks:
-    - include_vars: secrets/ssl.yml
-      tags: ssl-controller
-    - include_vars: secrets/dns.yml
-      tags: ssl-controller
-  roles:
-    - role: ssl-controller
-      tags: ssl-controller
-
-- hosts: media_servers
-  become: true
-  pre_tasks:
-    - include_vars: secrets/media_servers.yml
-      tags: media-server
-  roles:
-    - role: media-server
-      tags: media-server
+- import_playbook: playbook_deploy-lab-hosts.yml
+- import_playbook: playbook_deploy-docker-hosts.yml
+- import_playbook: playbook_deploy-dns-hosts.yml
+- import_playbook: playbook_deploy-ssl-controllers.yml
+- import_playbook: playbook_deploy-media-servers.yml

@@ -1,0 +1,10 @@
+- name: Deploy DNS hosts
+  hosts: all
+  become: true
+  pre_tasks:
+    - include_vars: secrets/dns.yml
+      tags: dns-host
+  roles:
+    - role: dns-host
+      tags: dns-host
+      when: dns_records

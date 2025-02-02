@@ -7,9 +7,7 @@ Provide complete workstation provisioning through ansible.
 - fanghorn :: main pc desktop; windows
 - gladden :: main laptop; guix linux
 - tv-basement :: raspberry 5 media pc; located in the basement
-- lab-host :: main vm host server
-- media-services :: host for all multi media services; vm on lab-host
-- fence-gate :: ssh server, reverse http proxy; only publicly accessible host; vm on lab-host
+- lab0 :: main vm host server (located at home)
 
 ** media-services
 
