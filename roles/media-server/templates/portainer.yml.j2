@@ -18,5 +18,5 @@ services:
     labels:
       - homepage.group=Core
       - homepage.name=Portainer
-      - homepage.href={{ media_server_href }}:{{ docker_services.portainer.port }}/
+      - homepage.href={{ docker_services.portainer.proxy.base | default("") }}
       - homepage.description=Manage Docker containers

@@ -51,4 +51,5 @@ services:
     labels:
       - homepage.group=Core
       - homepage.name=Socket Proxy
+      - homepage.href={{ docker_services.socket_proxy.proxy.base | default("") }}
       - homepage.description=Socket proxy for Docker

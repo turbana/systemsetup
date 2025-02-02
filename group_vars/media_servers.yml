@@ -26,10 +26,16 @@ docker_services:
   gluetun:
   homepage:
     port: 3000
+    proxy:
+      base: https://homepage.{{ site_name }}
   portainer:
     port: 3001
+    proxy:
+      base: https://portainer.{{ site_name }}
   dozzle:
     port: 3002
+    proxy:
+      base: https://dozzle.{{ site_name }}
   nginx:
     port_http: 3080
     port_https: 3443
@@ -37,15 +43,23 @@ docker_services:
   # downloaders
   sabnzbd:
     port: 4000
+    proxy:
+      base: https://sabnzbd.{{ site_name }}
   qbittorrent:
     port: 4001
     
   # feeders
   radarr:
     port: 5000
+    proxy:
+      base: https://radarr.{{ site_name }}
   prowlarr:
     port: 5001
+    proxy:
+      base: https://prowlarr.{{ site_name }}
     
   # media apps
   jellyfin:
     port: 6000
+    proxy:
+      base: https://jellyfin.{{ site_name }}

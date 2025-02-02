@@ -19,5 +19,5 @@ services:
     labels:
       - homepage.group=Core
       - homepage.name=Dozzle
-      - homepage.href={{ media_server_href }}:{{ docker_services.dozzle.port }}/
+      - homepage.href={{ docker_services.dozzle.proxy.base | default("") }}
       - homepage.description=View Docker log files for all containers

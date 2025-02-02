@@ -24,4 +24,5 @@ services:
     labels:
       - homepage.group=Core
       - homepage.name=Gluetun
+      - homepage.href={{ docker_services.gluetun.proxy.base | default("") }}
       - homepage.description=VPN tunnel provider
