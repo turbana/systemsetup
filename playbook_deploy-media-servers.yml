@@ -3,7 +3,6 @@
   become: true
   pre_tasks:
     - include_vars: secrets/media_servers.yml
-      tags: media-server
   roles:
-    - role: media-server
-      tags: media-server
+    - media-server
+    - docker-services

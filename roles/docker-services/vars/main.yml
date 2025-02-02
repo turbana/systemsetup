@@ -1,0 +1,9 @@
+docker_user: lab-admin
+docker_group: docker
+docker_subnet: 10.0.0.0/24
+docker_timezone: "{{ timezone }}"
+
+docker_root: /opt/docker
+docker_compose_root: "{{ docker_root }}/compose"
+docker_volumes_root: "{{ docker_root }}/volumes"
+docker_log_root: "{{ docker_root }}/logs"

@@ -13,8 +13,8 @@ services:
     devices:
       - /dev/dri:/dev/dri
     volumes:
-      - {{ docker_app_root }}/jellyfin/config:/config
-      - {{ docker_app_root }}/jellyfin/cache:/cache
+      - {{ docker_volumes_root }}/jellyfin/config:/config
+      - {{ docker_volumes_root }}/jellyfin/cache:/cache
       - {{ media_download_root }}:/media/downloads
       - {{ media_files_root }}:/media/library
       - /dev/shm:/data/transcode

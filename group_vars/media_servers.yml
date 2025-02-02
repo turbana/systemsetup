@@ -2,20 +2,11 @@
 app_root: /opt/media
 media_files_root: "{{ app_root }}/library"
 media_download_root: "{{ app_root }}/download"
-docker_root: "{{ app_root }}/docker"
-docker_app_root: "{{ app_root }}/volumes"
-docker_log_root: "{{ app_root }}/logs"
-
-# externally visible URL for the media server
-media_server_href: http://localhost
 
 # all media libraries and downloads should be accessible by this host group
 media_group: media
 
-docker_user: lab-admin
-docker_group: docker
-docker_subnet: 10.0.0.0/24
-docker_timezone: "{{ timezone }}"
+docker_name: media-server
 
 docker_services:
   # core services

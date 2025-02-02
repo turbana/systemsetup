@@ -13,7 +13,7 @@ services:
       - "0.0.0.0:{{ docker_services.nginx.port_http }}:{{ docker_services.nginx.port_http }}"
       - "0.0.0.0:{{ docker_services.nginx.port_https }}:{{ docker_services.nginx.port_https }}"
     volumes:
-      - {{ docker_app_root }}/nginx/config:/etc/nginx
+      - {{ docker_volumes_root }}/nginx/config:/etc/nginx
       - {{ ssl_root }}:/opt/ssl:ro
     environment:
       DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}

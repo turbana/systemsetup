@@ -1,4 +1,38 @@
-- import_tasks: base.yml
-- import_tasks: directories.yml
-- import_tasks: configs.yml
-- import_tasks: docker.yml  
+- name: Setup systcl tweaks
+  ansible.builtin.copy:
+    src: files/sysctl.conf
+    dest: /etc/sysctl.conf
+    mode: 0644
+
+- name: Ensure group {{ media_group }} exists
+  ansible.builtin.group:
+    name: "{{ media_group }}"
+    state: present
+
+- name: Ensure user {{ docker_user }} has group {{ media_group }}
+  ansible.builtin.user:
+    name: "{{ docker_user }}"
+    groups: "{{ media_group }}"
+    append: true
+    
+- name: Create media root directories
+  ansible.builtin.file:
+    dest: "{{ media_files_root }}/{{ item }}"
+    state: directory
+    group: "{{ media_group }}"
+    mode: "2770"
+  loop:
+    - tv
+    - movies
+    - music
+    - books
+
+- name: Create download directories
+  ansible.builtin.file:
+    dest: "{{ media_download_root }}/{{ item }}"
+    state: directory
+    group: "{{ media_group }}"
+    mode: "2770"
+  loop:
+    - torrents
+    - nzbs

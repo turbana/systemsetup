@@ -1,0 +1,13 @@
+- name: Create docker root directory
+  ansible.builtin.file:
+    dest: "{{ docker_root }}"
+    state: directory
+    owner: "{{ docker_user }}"
+    group: "{{ docker_group }}"
+    mode: "0750"
+
+- name: Create container directories
+  ansible.builtin.file:
+    dest: "{{ docker_volumes_root }}/{{ item }}"
+    state: directory
+  loop: "{{ docker_services.keys() }}"

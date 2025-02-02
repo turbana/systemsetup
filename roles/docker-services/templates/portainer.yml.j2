@@ -12,7 +12,7 @@ services:
     ports:
       - "127.0.0.1:{{ docker_services.portainer.port }}:{{ docker_services.portainer.port }}"
     volumes:
-      - {{ docker_app_root }}/portainer/data:/data
+      - {{ docker_volumes_root }}/portainer/data:/data
     environment:
       - TZ={{ docker_timezone }}
     labels:
