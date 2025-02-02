@@ -1,0 +1,51 @@
+docker_name: media-server
+
+docker_services:
+  # core services
+  socket_proxy:
+    addr: 10.0.0.254
+    port: 2375
+  gluetun:
+  homepage:
+    port: 3000
+    proxy:
+      base: https://homepage.{{ site_name }}
+  portainer:
+    port: 9443
+    proxy:
+      base: https://portainer.{{ site_name }}
+  dozzle:
+    port: 8080
+    proxy:
+      base: https://dozzle.{{ site_name }}
+  nginx:
+    port_http: 3080
+    port_https: 3443
+    
+  # downloaders
+  sabnzbd:
+    port: 8081
+    proxy:
+      base: https://sabnzbd.{{ site_name }}
+  qbittorrent:
+    port: 8082
+    proxy:
+      base: https://qbittorrent.{{ site_name }}
+      # ports for qbittorrent are bound in the gluetun container
+      host: gluetun
+    
+  # feeders
+  radarr:
+    port: 7878
+    proxy:
+      base: https://radarr.{{ site_name }}
+  prowlarr:
+    port: 9696
+    proxy:
+      base: https://prowlarr.{{ site_name }}
+    
+  # media apps
+  jellyfin:
+    port: 8096
+    proxy:
+      base: https://jellyfin.{{ site_name }}

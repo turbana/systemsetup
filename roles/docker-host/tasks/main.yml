@@ -6,3 +6,16 @@
     name: "{{ ansible_user }}"
     groups: "{{ docker_group }}"
     append: true
+
+- name: Create docker directories
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: directory
+    owner: "{{ docker_user }}"
+    group: "{{ docker_group }}"
+    mode: "0750"
+  loop:
+    - "{{ docker_root }}"
+    - "{{ docker_compose_root }}"
+    - "{{ docker_volumes_root }}"
+    - "{{ docker_log_root }}"
