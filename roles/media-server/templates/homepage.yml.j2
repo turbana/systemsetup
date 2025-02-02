@@ -9,6 +9,6 @@ services:
     networks:
       - socket_proxy
     ports:
-      - "127.0.0.1:{{ docker_services.homepage.port }}:3000"
+      - "127.0.0.1:{{ docker_services.homepage.port }}:{{ docker_services.homepage.port }}"
     volumes:
       - "{{ docker_app_root }}/homepage/config:/app/config"

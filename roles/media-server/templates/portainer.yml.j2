@@ -10,7 +10,7 @@ services:
       - socket_proxy
     command: -H tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
     ports:
-      - "127.0.0.1:{{ docker_services.portainer.port }}:9443"
+      - "127.0.0.1:{{ docker_services.portainer.port }}:{{ docker_services.portainer.port }}"
     volumes:
       - {{ docker_app_root }}/portainer/data:/data
     environment:

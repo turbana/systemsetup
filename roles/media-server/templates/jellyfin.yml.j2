@@ -9,7 +9,7 @@ services:
     networks:
       - socket_proxy
     ports:
-      - "127.0.0.1:{{ docker_services.jellyfin.port }}:8096"
+      - "127.0.0.1:{{ docker_services.jellyfin.port }}:{{ docker_services.jellyfin.port }}"
     devices:
       - /dev/dri:/dev/dri
     volumes:

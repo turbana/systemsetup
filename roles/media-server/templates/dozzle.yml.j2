@@ -9,11 +9,11 @@ services:
     networks:
       - socket_proxy
     ports:
-      - "127.0.0.1:{{ docker_services.dozzle.port }}:8080"
+      - "127.0.0.1:{{ docker_services.dozzle.port }}:{{ docker_services.dozzle.port }}"
     environment:
       DOZZLE_LEVEL: info
       DOZZLE_TAILSIZE: 300
-      DOZZLE_FILTER: "status=running"
+      # DOZZLE_FILTER: "status=running"
       # DOZZLE_FILTER: "label=log_me"
       DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
     labels:

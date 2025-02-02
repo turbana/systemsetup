@@ -7,7 +7,6 @@ services:
     restart: unless-stopped
     # profiles: ["apps", "all"]
     networks:
-      # - default
       - socket_proxy
     ports:
       # NOTE: these ports are exposed on the host

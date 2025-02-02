@@ -9,7 +9,7 @@ services:
     networks:
       - socket_proxy
     ports:
-      - "127.0.0.1:{{ docker_services.xxx.port }}:xxx"
+      - "127.0.0.1:{{ docker_services.xxx.port }}:{{ docker_services.xxx.port }}"
     volumes:
       - {{ docker_app_root }}/xxx/data:/data
     environment:

@@ -21,7 +21,6 @@ docker_services:
   # core services
   socket_proxy:
     addr: 10.0.0.254
-    # socket-proxy does not support setting a different container port, so use the default here as all the containers will need to reference it
     port: 2375
   gluetun:
   homepage:
@@ -29,11 +28,11 @@ docker_services:
     proxy:
       base: https://homepage.{{ site_name }}
   portainer:
-    port: 3001
+    port: 9443
     proxy:
       base: https://portainer.{{ site_name }}
   dozzle:
-    port: 3002
+    port: 8080
     proxy:
       base: https://dozzle.{{ site_name }}
   nginx:
@@ -42,24 +41,28 @@ docker_services:
     
   # downloaders
   sabnzbd:
-    port: 4000
+    port: 8081
     proxy:
       base: https://sabnzbd.{{ site_name }}
   qbittorrent:
-    port: 4001
+    port: 8082
+    proxy:
+      base: https://qbittorrent.{{ site_name }}
+      # ports for qbittorrent are bound in the gluetun container
+      host: gluetun
     
   # feeders
   radarr:
-    port: 5000
+    port: 7878
     proxy:
       base: https://radarr.{{ site_name }}
   prowlarr:
-    port: 5001
+    port: 9696
     proxy:
       base: https://prowlarr.{{ site_name }}
     
   # media apps
   jellyfin:
-    port: 6000
+    port: 8096
     proxy:
       base: https://jellyfin.{{ site_name }}

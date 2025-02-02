@@ -9,7 +9,7 @@ services:
     networks:
       - socket_proxy
     ports:
-      - "127.0.0.1:{{ docker_services.prowlarr.port }}:9696"
+      - "127.0.0.1:{{ docker_services.prowlarr.port }}:{{ docker_services.prowlarr.port }}"
     volumes:
       - {{ docker_app_root }}/prowlarr/config:/config
     environment:
