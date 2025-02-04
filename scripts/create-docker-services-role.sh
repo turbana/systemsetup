@@ -51,7 +51,7 @@ cat >>site.yml <<EOF
 - import_playbook: playbook_deploy-${role}.yml
 EOF
 
-cat >secrets/${role}.yml <<EOF
+cat >secrets/${role_lower}.yml <<EOF
 # ansible secrets for '$role'
 EOF
 
