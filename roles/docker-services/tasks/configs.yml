@@ -4,32 +4,37 @@
 - name: Create app config directories
   # no_log: true
   ansible.builtin.file:
-    path: "{{ docker_volumes_root }}/{{ item.path }}"
+    path: "{{ docker_volumes_root }}/{{ docker_site }}/{{ item.path }}"
     state: directory
     owner: root
     group: root
     mode: "{{ item.mode }}"
-  with_community.general.filetree: ../configs
+  with_community.general.filetree: ../configs/{{ docker_site }}
   when: item.state == "directory" and item.path | split('/') | first in docker_services.keys() 
   loop_control:
-    label: "{{ item.path }}"
+    label: "{{ docker_site }}/{{ item.path }}"
 
 - name: Copy app config template files
+  vars:
+    container_name: "{{ docker_site }}_{{ item.path | split('/') | first }}"
+    container_sp_name: "{{ docker_site }}_sp-{{ item.path | split('/') | first }}"
+    container_net_name: "{{ docker_site }}_net-{{ item.path | split('/') | first }}"
+    container_volume_root: "{{ docker_volumes_root }}/{{ docker_site }}/{{ item.path | split('/') | first}}"
   ansible.builtin.template:
     src: "{{ item.src }}"
-    dest: "{{ docker_volumes_root }}/{{ item.path }}"
+    dest: "{{ docker_volumes_root }}/{{ docker_site }}/{{ item.path }}"
     owner: root
     group: root
     mode: "{{ item.mode }}"
-  with_community.general.filetree: ../configs
+  with_community.general.filetree: ../configs/{{ docker_site }}
   when: item.state == "file" and item.path | split('/') | first in docker_services.keys() 
   loop_control:
-    label: "{{ item.path }}"
+    label: "{{ docker_site }}/{{ item.path }}"
 
 - name: Recreate app config symlinks
   ansible.builtin.file:
     src: "{{ item.src }}"
-    dest: "{{ docker_volumes_root }}/{{ item.path }}"
+    dest: "{{ docker_volumes_root }}/{{ docker_site }}/{{ item.path }}"
     state: link
     # avoid corrupting target files if the link already exists
     follow: false
@@ -37,7 +42,7 @@
     owner: root
     group: root
     mode: "{{ item.mode }}"
-  with_community.general.filetree: ../configs
+  with_community.general.filetree: ../configs/{{ docker_site }}
   when: item.state == "link" and item.path | split('/') | first in docker_services.keys() 
   loop_control:
-    label: "{{ item.path }}"
+    label: "{{ docker_site }}/{{ item.path }}"

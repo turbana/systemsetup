@@ -1,0 +1,4 @@
+---
+my-docker:
+  host: {{ container_sp_name }}
+  port: 2375

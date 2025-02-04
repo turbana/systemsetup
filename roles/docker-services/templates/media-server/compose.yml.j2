@@ -3,12 +3,6 @@ name: {{ docker_site }}
 networks:
   {{ docker_site }}_host:
     driver: bridge
-  # socket_proxy:
-  #   name: socket_proxy
-  #   driver: bridge
-  #   ipam:
-  #     config:
-  #       - subnet: {{ docker_subnet }}
 
 include:
 {% for service in docker_services %}

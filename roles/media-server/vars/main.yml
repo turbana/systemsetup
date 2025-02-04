@@ -1,6 +1,16 @@
-docker_name: media-server
+docker_site: media-server
 
 docker_services:
+  homepage:
+    port: 3000
+    proxy:
+      base:
+        https://homepage.{{ site_name }}
+  nginx:
+    port_http: 3080
+    port_https: 3443
+
+XXX_docker_services:
   # core services
   socket_proxy:
     addr: 10.0.0.254

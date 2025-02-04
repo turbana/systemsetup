@@ -1,4 +1,4 @@
 # name of this suite of docker services
-docker_name: DOCKER_NAME_CHANGEME
+docker_site: DOCKER_NAME_CHANGEME
 # by default this role will install no apps
 docker_services:

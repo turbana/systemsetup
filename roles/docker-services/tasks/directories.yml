@@ -1,3 +1,14 @@
+- name: Create docker site directories
+  ansible.builtin.file:
+    dest: "{{ item }}/{{ docker_site }}"
+    state: directory
+  loop:
+    - "{{ docker_compose_root }}"
+    - "{{ docker_volumes_root }}"
+    - "{{ docker_log_root }}"
+  loop_control:
+    label: "{{ item }}/{{ docker_site }}"
+
 - name: Create container directories
   ansible.builtin.file:
     dest: "{{ docker_volumes_root }}/{{ item }}"
