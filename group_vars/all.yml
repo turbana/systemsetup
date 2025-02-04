@@ -1,2 +1,2 @@
-root_site_name: turbana.dev
+root_site_name: ianclark.dev
 site_name: "{{ inventory_hostname }}.{{ root_site_name }}"

@@ -3,3 +3,6 @@ timezone: America/Los_Angeles
 dns_records:
   - turbana.dev
   - lab0.turbana.dev
+  - ianclark.dev
+  - lab0.ianclark.dev
+  - auth.ianclark.dev
