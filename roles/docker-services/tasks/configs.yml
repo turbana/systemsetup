@@ -9,7 +9,7 @@
     owner: root
     group: root
     mode: "{{ item.mode }}"
-  with_community.general.filetree: ../configs/{{ docker_site }}
+  with_community.general.filetree: ../configs
   when: item.state == "directory" and item.path | split('/') | first in docker_services.keys() 
   loop_control:
     label: "{{ docker_site }}/{{ item.path }}"
@@ -26,7 +26,7 @@
     owner: root
     group: root
     mode: "{{ item.mode }}"
-  with_community.general.filetree: ../configs/{{ docker_site }}
+  with_community.general.filetree: ../configs
   when: item.state == "file" and item.path | split('/') | first in docker_services.keys() 
   loop_control:
     label: "{{ docker_site }}/{{ item.path }}"
@@ -42,7 +42,7 @@
     owner: root
     group: root
     mode: "{{ item.mode }}"
-  with_community.general.filetree: ../configs/{{ docker_site }}
+  with_community.general.filetree: ../configs
   when: item.state == "link" and item.path | split('/') | first in docker_services.keys() 
   loop_control:
     label: "{{ docker_site }}/{{ item.path }}"

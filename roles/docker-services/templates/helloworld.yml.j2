@@ -1,33 +1,29 @@
 services:
+  ### main service
   {{ container_name }}:
-    image: nginx
-    container_name: "{{ container_name }}"
+    image: crccheck/hello-world:latest
+    container_name: {{ container_name }}
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
     networks:
-      # include *all* service networks
-{% for service in docker_services.keys() %}
-      - {{ docker_site }}_net-{{ service }}
-{% endfor %}
+      - {{ container_net_name }}
     ports:
-      # NOTE: these ports are exposed on the host
-      - "0.0.0.0:{{ docker_services.nginx.port_http }}:{{ docker_services.nginx.port_http }}"
-      - "0.0.0.0:{{ docker_services.nginx.port_https }}:{{ docker_services.nginx.port_https }}"
+      - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
+    environment:
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+      PORT: {{ docker_service.port }}
     volumes:
-      - {{ container_volume_root }}/config:/etc/nginx
-      - {{ ssl_root }}:/opt/ssl:ro
-    # environment:
-    #   DOCKER_HOST: tcp://{{ container_sp_name }}:2375
+      - "{{ container_volume_root }}/config:/app/config"
     labels:
-      - homepage.group=Core
-      - homepage.name=Nginx
-      - homepage.href=https://{{ site_name }}
-      - homepage.description=HTTP server and reverse proxy
-      
+      - homepage.group=Test
+      - homepage.name=Hello world
+      - homepage.description=Shows an HTTP "hello world" page
+      - homepage.href={{ docker_service.proxy.base | default("") }}
+
   ### custom socket proxy for main service
   {{ container_sp_name }}:
-    image: tecnativa/docker-socket-proxy
+    image: {{ socket_proxy_image }}:{{ socket_proxy_version }}
     container_name: {{ container_sp_name }}
     security_opt:
       - no-new-privileges:true
@@ -36,17 +32,17 @@ services:
     networks:
       - {{ container_net_name }}
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "{{ socket_proxy_host_socket }}:/var/run/docker.sock"
     environment:
       ## possible values: debug,info,notice,warning,err,crit,alert,emerg
-      - LOG_LEVEL=debug
+      - LOG_LEVEL=notice
       ## socket proxy security settings follow; 1 to allow, 0 to deny
       ## see here for all possible settings: https://github.com/Tecnativa/docker-socket-proxy
       ## example to allow /containers/* access:
       # - CONTAINERS=1
     labels:
       - homepage.group=Docker Socket Proxies
-      - homepage.name=Nginx
+      - homepage.name={{ container_sp_name }}
       - homepage.description=Socket proxy for {{ container_name }} container
 
 ### custom socket proxy network

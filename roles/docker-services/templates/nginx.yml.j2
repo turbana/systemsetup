@@ -1,24 +1,52 @@
 services:
-  nginx:
+  {{ container_name }}:
     image: nginx
-    container_name: nginx
+    container_name: "{{ container_name }}"
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    # profiles: ["apps", "all"]
-    networks:
-      - socket_proxy
-    ports:
-      # NOTE: these ports are exposed on the host
-      - "0.0.0.0:{{ docker_services.nginx.port_http }}:{{ docker_services.nginx.port_http }}"
-      - "0.0.0.0:{{ docker_services.nginx.port_https }}:{{ docker_services.nginx.port_https }}"
+    # NOTE: we are using the host network driver so we have to access docker
+    # containers through their local ports and any ports our container exposes
+    # will also be exposed on the host.
+    network_mode: host
     volumes:
-      - {{ docker_volumes_root }}/nginx/config:/etc/nginx
+      - {{ container_volume_root }}/config:/etc/nginx
+      - {{ docker_volumes_root }}/.reverse_proxy_configs:/etc/nginx/sites
       - {{ ssl_root }}:/opt/ssl:ro
-    environment:
-      DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
+    # environment:
+    #   DOCKER_HOST: tcp://{{ container_sp_name }}:2375
     labels:
       - homepage.group=Core
       - homepage.name=Nginx
       - homepage.href=https://{{ site_name }}
       - homepage.description=HTTP server and reverse proxy
+      
+  ### custom socket proxy for main service
+  {{ container_sp_name }}:
+    image: tecnativa/docker-socket-proxy
+    container_name: {{ container_sp_name }}
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - {{ container_net_name }}
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      ## possible values: debug,info,notice,warning,err,crit,alert,emerg
+      - LOG_LEVEL=debug
+      ## socket proxy security settings follow; 1 to allow, 0 to deny
+      ## see here for all possible settings: https://github.com/Tecnativa/docker-socket-proxy
+      ## example to allow /containers/* access:
+      # - CONTAINERS=1
+    labels:
+      - homepage.group=Docker Socket Proxies
+      - homepage.name=Nginx
+      - homepage.description=Socket proxy for {{ container_name }} container
+
+### custom socket proxy network
+networks:
+  {{ container_net_name }}:
+    driver: bridge
+    name: {{ container_net_name }}

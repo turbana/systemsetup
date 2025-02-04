@@ -14,6 +14,10 @@ ssl_controllers:
   hosts:
     lab0:
 
+reverse_proxy:
+  hosts:
+    lab0:
+      
 at_home:
   hosts:
     lab0:

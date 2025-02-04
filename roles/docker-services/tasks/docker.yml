@@ -5,8 +5,9 @@
     container_sp_name: "{{ docker_site }}_sp-{{ item }}"
     container_net_name: "{{ docker_site }}_net-{{ item }}"
     container_volume_root: "{{ docker_volumes_root }}/{{ docker_site }}/{{ item }}"
+    docker_service: "{{ docker_services[item] }}"
   ansible.builtin.template:
-    src: templates/{{ docker_site }}/{{ item }}.yml.j2
+    src: templates/{{ item }}.yml.j2
     dest: "{{ docker_compose_root }}/{{ docker_site }}_{{ item }}.yml"
     mode: 0640
   loop: "{{ docker_services.keys() }}"
@@ -14,7 +15,7 @@
 - name: Copy docker main compose file
   become: false
   ansible.builtin.template:
-    src: templates/{{ docker_site }}/compose.yml.j2
+    src: templates/compose.yml.j2
     dest: "{{ docker_compose_root }}/compose_{{ docker_site }}.yml"
     mode: 0640
 

@@ -1,3 +1,4 @@
 - import_tasks: directories.yml
 - import_tasks: configs.yml
+- import_tasks: nginx_app_proxies.yml
 - import_tasks: docker.yml  

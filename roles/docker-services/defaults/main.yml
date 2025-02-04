@@ -2,3 +2,9 @@
 docker_site: DOCKER_NAME_CHANGEME
 # by default this role will install no apps
 docker_services:
+
+# socket proxy setup
+socket_proxy_image: tecnativa/docker-socket-proxy
+socket_proxy_version: latest
+socket_proxy_host_socket: /var/run/docker.sock
+socket_proxy_port: 2375

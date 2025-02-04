@@ -6,9 +6,10 @@ docker_services:
     proxy:
       base:
         https://homepage.{{ site_name }}
-  nginx:
-    port_http: 3080
-    port_https: 3443
+  helloworld:
+    port: 9011
+    proxy:
+      base: https://hello1.{{ site_name }}
 
 XXX_docker_services:
   # core services

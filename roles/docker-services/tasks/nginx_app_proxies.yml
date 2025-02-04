@@ -1,0 +1,12 @@
+- name: Create shared reverse proxy config directory
+  ansible.builtin.file:
+    dest: "{{ docker_volumes_root }}/.reverse_proxy_configs"
+    state: directory
+
+- name: Add reverse proxy app configs
+  ansible.builtin.template:
+    dest: "{{ docker_volumes_root }}/.reverse_proxy_configs/{{ docker_site }}_{{ item.key }}.conf"
+    src: templates/reverse-proxy.conf.j2
+  loop: "{{ docker_services | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"

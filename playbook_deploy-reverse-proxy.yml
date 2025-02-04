@@ -1,0 +1,8 @@
+- name: Deploy reverse-proxy
+  hosts: reverse_proxy
+  become: true
+  pre_tasks:
+    - include_vars: secrets/reverse_proxy.yml
+  roles:
+    - reverse-proxy
+    - docker-services
