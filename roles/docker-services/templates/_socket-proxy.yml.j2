@@ -1,0 +1,28 @@
+services:
+  {{ container_sp_name }}:
+    image: {{ socket_proxy_image }}:{{ socket_proxy_version }}
+    container_name: {{ container_sp_name }}
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - {{ container_net_name }}
+    volumes:
+      - "{{ socket_proxy_host_socket }}:/var/run/docker.sock"
+    environment:
+      ## possible values: debug,info,notice,warning,err,crit,alert,emerg
+      - LOG_LEVEL=notice
+{% for line in docker_service.socket_proxy_env | default("") %}
+      - {{ line }}
+{% endfor %}
+    labels:
+      - homepage.group=Docker Socket Proxies
+      - homepage.name={{ container_sp_name }}
+      - homepage.description=Socket proxy for {{ container_name }} container
+
+### custom socket proxy network
+networks:
+  {{ container_net_name }}:
+    driver: bridge
+    name: {{ container_net_name }}

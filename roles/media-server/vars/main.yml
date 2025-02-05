@@ -6,6 +6,8 @@ docker_services:
     proxy:
       base:
         https://homepage.{{ site_name }}
+    socket_proxy_env:
+      - CONTAINERS=1
   helloworld:
     port: 9011
     proxy:

@@ -1,5 +1,4 @@
 services:
-  ### main service
   {{ container_name }}:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: {{ container_name }}
@@ -11,36 +10,6 @@ services:
     ports:
       - "127.0.0.1:{{ docker_services.homepage.port }}:{{ docker_services.homepage.port }}"
     environment:
-      DOCKER_HOST: tcp://{{ container_sp_name }}:2375
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
     volumes:
       - "{{ container_volume_root }}/config:/app/config"
-
-  ### custom socket proxy for main service
-  {{ container_sp_name }}:
-    image: tecnativa/docker-socket-proxy
-    container_name: {{ container_sp_name }}
-    security_opt:
-      - no-new-privileges:true
-    restart: unless-stopped
-    privileged: true
-    networks:
-      - {{ container_net_name }}
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    environment:
-      ## possible values: debug,info,notice,warning,err,crit,alert,emerg
-      - LOG_LEVEL=debug
-      ## socket proxy security settings follow; 1 to allow, 0 to deny
-      ## see here for all possible settings: https://github.com/Tecnativa/docker-socket-proxy
-      ## example to allow /containers/* access:
-      - CONTAINERS=1
-    labels:
-      - homepage.group=Docker Socket Proxies
-      - homepage.name=Homepage
-      - homepage.description=Socket proxy for {{ container_name }} container
-
-### custom socket proxy network
-networks:
-  {{ container_net_name }}:
-    driver: bridge
-    name: {{ container_net_name }}

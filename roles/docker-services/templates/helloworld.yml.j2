@@ -1,5 +1,4 @@
 services:
-  ### main service
   {{ container_name }}:
     image: crccheck/hello-world:latest
     container_name: {{ container_name }}
@@ -20,33 +19,3 @@ services:
       - homepage.name=Hello world
       - homepage.description=Shows an HTTP "hello world" page
       - homepage.href={{ docker_service.proxy.base | default("") }}
-
-  ### custom socket proxy for main service
-  {{ container_sp_name }}:
-    image: {{ socket_proxy_image }}:{{ socket_proxy_version }}
-    container_name: {{ container_sp_name }}
-    security_opt:
-      - no-new-privileges:true
-    restart: unless-stopped
-    privileged: true
-    networks:
-      - {{ container_net_name }}
-    volumes:
-      - "{{ socket_proxy_host_socket }}:/var/run/docker.sock"
-    environment:
-      ## possible values: debug,info,notice,warning,err,crit,alert,emerg
-      - LOG_LEVEL=notice
-      ## socket proxy security settings follow; 1 to allow, 0 to deny
-      ## see here for all possible settings: https://github.com/Tecnativa/docker-socket-proxy
-      ## example to allow /containers/* access:
-      # - CONTAINERS=1
-    labels:
-      - homepage.group=Docker Socket Proxies
-      - homepage.name={{ container_sp_name }}
-      - homepage.description=Socket proxy for {{ container_name }} container
-
-### custom socket proxy network
-networks:
-  {{ container_net_name }}:
-    driver: bridge
-    name: {{ container_net_name }}

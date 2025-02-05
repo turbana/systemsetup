@@ -13,40 +13,10 @@ services:
       - {{ container_volume_root }}/config:/etc/nginx
       - {{ docker_volumes_root }}/.reverse_proxy_configs:/etc/nginx/sites
       - {{ ssl_root }}:/opt/ssl:ro
-    # environment:
-    #   DOCKER_HOST: tcp://{{ container_sp_name }}:2375
+    environment:
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
     labels:
       - homepage.group=Core
-      - homepage.name=Nginx
+      - homepage.name=Nginx ({{ site_name }})
       - homepage.href=https://{{ site_name }}
-      - homepage.description=HTTP server and reverse proxy
-      
-  ### custom socket proxy for main service
-  {{ container_sp_name }}:
-    image: tecnativa/docker-socket-proxy
-    container_name: {{ container_sp_name }}
-    security_opt:
-      - no-new-privileges:true
-    restart: unless-stopped
-    privileged: true
-    networks:
-      - {{ container_net_name }}
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    environment:
-      ## possible values: debug,info,notice,warning,err,crit,alert,emerg
-      - LOG_LEVEL=debug
-      ## socket proxy security settings follow; 1 to allow, 0 to deny
-      ## see here for all possible settings: https://github.com/Tecnativa/docker-socket-proxy
-      ## example to allow /containers/* access:
-      # - CONTAINERS=1
-    labels:
-      - homepage.group=Docker Socket Proxies
-      - homepage.name=Nginx
-      - homepage.description=Socket proxy for {{ container_name }} container
-
-### custom socket proxy network
-networks:
-  {{ container_net_name }}:
-    driver: bridge
-    name: {{ container_net_name }}
+      - homepage.description=HTTP server and reverse proxy for {{ site_name }}

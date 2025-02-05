@@ -7,4 +7,5 @@ networks:
 include:
 {% for service in docker_services %}
   - {{ docker_site }}_{{ service }}.yml
+  - {{ docker_site }}_sp_{{ service }}.yml
 {% endfor %}
