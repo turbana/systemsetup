@@ -13,3 +13,8 @@ services:
       DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
     volumes:
       - "{{ container_volume_root }}/config:/app/config"
+    labels:
+      - homepage.group=Core
+      - homepage.name=Homepage
+      - homepage.description=Collects links to every docker service (what you're seeing right now!)
+      - homepage.href={{ docker_service.proxy.base | default("") }}
