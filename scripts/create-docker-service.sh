@@ -40,3 +40,5 @@ services:
       - homepage.description=CHANGEME
       - homepage.href={{ docker_service.proxy.base | default("") }}
 EOF
+
+echo "created '$service' docker service."
