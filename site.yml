@@ -4,3 +4,4 @@
 - import_playbook: playbook_deploy-ssl-controllers.yml
 - import_playbook: playbook_deploy-media-servers.yml
 - import_playbook: playbook_deploy-reverse-proxy.yml
+- import_playbook: playbook_deploy-docker-core-services.yml

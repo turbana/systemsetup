@@ -1,20 +1,20 @@
 services:
-  portainer:
-    container_name: portainer
-    image: portainer/portainer-ce:latest
+  {{ container_name }}:
+    image: portainer/portainer-ce:2.21.5
+    container_name: {{ container_name }}
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    # profiles: ["core", "all"]
     networks:
-      - socket_proxy
-    command: -H tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
+      - {{ container_net_name }}
+    command: -H tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
     ports:
-      - "127.0.0.1:{{ docker_services.portainer.port }}:{{ docker_services.portainer.port }}"
-    volumes:
-      - {{ docker_volumes_root }}/portainer/data:/data
+      - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
     environment:
-      - TZ={{ docker_timezone }}
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+    volumes:
+      - "{{ socket_proxy_host_socket }}:/var/run/docker.sock"
+      - "{{ container_volume_root }}/data:/data"
     labels:
       - homepage.group=Core
       - homepage.name=Portainer

@@ -17,6 +17,10 @@ ssl_controllers:
 reverse_proxy:
   hosts:
     lab0:
+
+docker_core_services:
+  hosts:
+    lab0:
       
 at_home:
   hosts:

@@ -1,0 +1,30 @@
+docker_site: docker-core-services
+
+docker_services:
+  homepage:
+    port: 3000
+    proxy:
+      base:
+        https://homepage.{{ site_name }}
+    socket_proxy_env:
+      - CONTAINERS=1
+  dozzle:
+    port: 8080
+    proxy:
+      base: https://dozzle.{{ site_name }}
+    socket_proxy_env:
+      - CONTAINERS=1
+      - INFO=1
+  portainer:
+    port: 9000
+    proxy:
+      base: https://portainer.{{ site_name }}
+    socket_proxy_env:
+      - POST=1
+      - CONTAINERS=1
+      - IMAGES=1
+      - INFO=1
+      - NETWORKS=1
+      - SERVICES=1
+      - TASKS=1
+      - VOLUMES=1

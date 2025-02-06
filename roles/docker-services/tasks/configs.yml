@@ -20,6 +20,7 @@
     container_sp_name: "{{ docker_site }}_sp-{{ item.path | split('/') | first }}"
     container_net_name: "{{ docker_site }}_net-{{ item.path | split('/') | first }}"
     container_volume_root: "{{ docker_volumes_root }}/{{ docker_site }}/{{ item.path | split('/') | first}}"
+    docker_service: "{{ docker_services[item.path | split('/') | first] }}"
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ docker_volumes_root }}/{{ docker_site }}/{{ item.path }}"

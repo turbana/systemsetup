@@ -1,0 +1,8 @@
+- name: Deploy docker-core-services
+  hosts: docker_core_services
+  become: true
+  pre_tasks:
+    - include_vars: secrets/docker_core_services.yml
+  roles:
+    - docker-core-services
+    - docker-services
