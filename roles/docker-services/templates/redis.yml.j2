@@ -1,0 +1,29 @@
+services:
+  {{ container_name }}:
+    image: docker.io/library/redis:alpine
+    container_name: {{ container_name }}
+    security_opt:
+      - no-new-privileges:true
+    command: /etc/redis/redis.conf
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -p {{ docker_service.port }} ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    networks:
+      - {{ container_net_name }}
+      - {{ docker_site }}_network
+    ports:
+      - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
+    environment:
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+    volumes:
+      - "{{ container_volume_root }}/data:/data"
+      - "{{ container_volume_root }}/config:/etc/redis"
+    labels:
+      - homepage.group=Auth
+      - homepage.name=Redis
+      - homepage.description=In-memory cache for auth sessions
+      - homepage.href={{ docker_service.proxy.base | default("") }}

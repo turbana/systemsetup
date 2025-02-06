@@ -1,0 +1,2 @@
+- name: test task
+  debug: msg="TODO setup auth-services tasks"

@@ -1,0 +1,39 @@
+services:
+  {{ container_name }}:
+    image: ghcr.io/goauthentik/server:2024.12.3
+    container_name: {{ container_name }}
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    command: server
+    networks:
+      - {{ container_net_name }}
+      - {{ docker_site }}_network
+    ports:
+      - "127.0.0.1:{{ docker_service.port_http }}:{{ docker_service.port_http }}"
+      - "127.0.0.1:{{ docker_service.port_https }}:{{ docker_service.port_https }}"
+    environment:
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+      AUTHENTIK_REDIS__HOST: auth-services_redis
+      AUTHENTIK_REDIS__PORT: {{ docker_services.redis.port }}
+      AUTHENTIK_POSTGRESQL__HOST: auth-services_postgres
+      AUTHENTIK_POSTGRESQL__PORT: {{ docker_services.postgres.port }}
+      AUTHENTIK_POSTGRESQL__NAME: {{ secret_auth_postgres_db }}
+      AUTHENTIK_POSTGRESQL__USER: {{ secret_auth_postgres_username }}
+      AUTHENTIK_POSTGRESQL__PASSWORD: {{ secret_auth_postgres_password }}
+      AUTHENTIK_LISTEN__HTTP: "0.0.0.0:{{ docker_service.port_http }}"
+      AUTHENTIK_LISTEN__HTTPS: "0.0.0.0:{{ docker_service.port_https }}"
+      AUTHENTIK_SECRET_KEY: {{ secret_auth_authentik_secret_key }}
+    volumes:
+      - "{{ docker_volumes_root }}/{{ docker_site }}/authentik-shared/media:/media"
+      - "{{ docker_volumes_root }}/{{ docker_site }}/authentik-shared/custom-templates:/custom-templates"
+    depends_on:
+      auth-services_postgres:
+        condition: service_healthy
+      auth-services_redis:
+        condition: service_healthy
+    labels:
+      - homepage.group=Auth
+      - homepage.name=Authentik Server
+      - homepage.description=CHANGEME
+      - homepage.href={{ docker_service.proxy.base | default("") }}

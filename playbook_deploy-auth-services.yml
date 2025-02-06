@@ -1,0 +1,8 @@
+- name: Deploy auth-services
+  hosts: auth_services
+  become: true
+  pre_tasks:
+    - include_vars: secrets/auth_services.yml
+  roles:
+    - auth-services
+    - docker-services

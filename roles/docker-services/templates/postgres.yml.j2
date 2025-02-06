@@ -1,0 +1,35 @@
+services:
+  {{ container_name }}:
+    image: docker.io/library/postgres:16-alpine
+    container_name: {{ container_name }}
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d {{ secret_auth_postgres_db }} -U {{ secret_auth_postgres_username }}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+    networks:
+      - {{ container_net_name }}
+      - {{ docker_site }}_network
+    ports:
+      - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
+    environment:
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+      POSTGRES_USER: {{ secret_auth_postgres_username }}
+      POSTGRES_PASSWORD: {{ secret_auth_postgres_password }}
+      POSTGRES_DB: {{ secret_auth_postgres_db }}
+    volumes:
+      - "{{ container_volume_root }}/data:/var/lib/postgresql/data"
+    labels:
+      - homepage.group=Auth
+      - homepage.name=Postgres
+      - homepage.description=SQL database for authentication
+      - homepage.href={{ docker_service.proxy.base | default("") }}
+
+networks:
+  auth-services_postgres:
+    driver: bridge
+    name: auth-services_postgres

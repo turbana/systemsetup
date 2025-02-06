@@ -18,6 +18,10 @@ reverse_proxy:
   hosts:
     lab0:
 
+auth_services:
+  hosts:
+    lab0:
+
 docker_core_services:
   hosts:
     lab0:

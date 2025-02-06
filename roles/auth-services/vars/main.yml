@@ -1,0 +1,20 @@
+docker_site: auth-services
+
+docker_services:
+  postgres:
+    port: 5432
+  redis:
+    port: 6380
+  authentik-server:
+    port: 9080
+    port_http: 9080
+    port_https: 9443
+    proxy:
+      base:
+        https://auth.{{ site_name }}
+  authentik-worker:
+    socket_proxy_env:
+      - POST=1
+      - IMAGES=1
+      - CONTAINERS=1
+      - SYSTEM=1
