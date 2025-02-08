@@ -89,6 +89,22 @@ entries:
       name: custom-authentication-mfa-validation
     model: authentik_stages_authenticator_validate.authenticatorvalidatestage
   
+  ## Default Authentication: Identification
+  - id: default-authentication-identification
+    identifiers:
+      name: default-authentication-identification
+    model: authentik_stages_identification.identificationstage
+    state: present
+    attrs:
+      user_fields:
+        - username
+      case_insensitive_matching: true
+      pretend_user_exists: true
+      show_matched_user: true
+      show_source_labels: true
+      sources:
+        - !KeyOf custom-source-google
+        
   ## Authentication: Identification
   - id: custom-authentication-identification
     identifiers:
@@ -152,7 +168,7 @@ entries:
     model: authentik_flows.flowstagebinding
 
   ## Enrollment: Username Prompt
-  - id: prompt-binding
+  - id: custom-source-enrollment-prompt-binding
     model: authentik_flows.flowstagebinding
     attrs:
       re_evaluate_policies: true
@@ -236,13 +252,23 @@ entries:
   - identifiers:
       order: 0
       policy: !KeyOf custom-source-enrollment-username-is-email
-      target: !KeyOf prompt-binding
-    model: authentik_policies.policybinding
+      target: !KeyOf custom-source-enrollment-prompt-binding
 
+    model: authentik_policies.policybinding
+    
   ## Enrollment: If Username
   - identifiers:
       order: 1
       policy: !KeyOf custom-source-enrollment-if-username
-      target: !KeyOf prompt-binding
+      target: !KeyOf custom-source-enrollment-prompt-binding
     model: authentik_policies.policybinding
-  
+    
+  ## Default Enrollment: Use email as username
+  # this only seems to run once :(
+  # - identifiers:
+  #     order: -1
+  #     policy: !KeyOf custom-source-enrollment-username-is-email
+  #     target: !Find [authentik_flows.flowstagebinding, [stage, !Find [authentik_stages_prompt.promptstage, [name, default-source-enrollment-prompt]]]]
+  #     # target: !Find [authentik_stages_prompt.promptstage, [name, default-source-enrollment-prompt]]
+  #   model: authentik_policies.policybinding
+  #   state: present
