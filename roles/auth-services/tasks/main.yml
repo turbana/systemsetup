@@ -1,3 +1,5 @@
+- include_vars: secrets/auth_users.yml
+
 - name: Create Authentik blueprints directory
   ansible.builtin.file:
     dest: "{{ authentik.blueprint_root }}"
@@ -9,3 +11,4 @@
     dest: "{{ authentik.blueprint_root }}/{{ item }}"
   loop:
     - custom-site-config.yaml
+    - custom-users.yaml

@@ -23,3 +23,7 @@ docker_services:
 authentik:
   # NOTE: must match the name of the authentik worker instance defined in docker_services
   blueprint_root: "{{ docker_volumes_root }}/{{ docker_site }}/authentik-worker/blueprints"
+
+  groups:
+    - Media Users
+    - Docker Admins
