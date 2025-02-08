@@ -27,6 +27,7 @@ services:
       - "{{ docker_volumes_root }}/{{ docker_site }}/authentik-shared/media:/media"
       - "{{ docker_volumes_root }}/{{ docker_site }}/authentik-shared/custom-templates:/custom-templates"
       - "{{ container_volume_root }}/certs:/certs"
+      - "{{ authentik.blueprint_root }}:/blueprints/custom"
     depends_on:
       auth-services_postgres:
         condition: service_healthy

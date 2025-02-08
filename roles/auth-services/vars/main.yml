@@ -12,9 +12,14 @@ docker_services:
     proxy:
       base:
         https://auth.{{ site_name }}
-  authentik-worker:
+      require_auth: false
     socket_proxy_env:
       - POST=1
       - IMAGES=1
       - CONTAINERS=1
       - SYSTEM=1
+  authentik-worker:
+
+authentik:
+  # NOTE: must match the name of the authentik worker instance defined in docker_services
+  blueprint_root: "{{ docker_volumes_root }}/{{ docker_site }}/authentik-worker/blueprints"

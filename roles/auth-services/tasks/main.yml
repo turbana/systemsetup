@@ -1,2 +1,11 @@
-- name: test task
-  debug: msg="TODO setup auth-services tasks"
+- name: Create Authentik blueprints directory
+  ansible.builtin.file:
+    dest: "{{ authentik.blueprint_root }}"
+    state: directory
+
+- name: Copy custom Authentik blueprints
+  ansible.builtin.template:
+    src: "blueprints/{{ item }}"
+    dest: "{{ authentik.blueprint_root }}/{{ item }}"
+  loop:
+    - custom-site-config.yaml
