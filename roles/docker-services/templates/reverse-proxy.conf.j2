@@ -3,10 +3,14 @@
 server {
     server_name {{ item.value.proxy.base | replace("https://", "") }};
     include includes/listen_ssl.conf;
+    include includes/proxy_auth_server.conf;
     location / {
         proxy_pass {{ item.value.proxy.host | default("http://127.0.0.1:{}".format(item.value.port)) }};
         # proxy_pass {{ item.value.proxy.host | default("http://{}_{}:{}".format(docker_site, item.key, item.value.port)) }};
         include includes/proxy_location.conf;
+{% if item.value.proxy.require_auth | default(True) %}
+        include includes/proxy_auth_location.conf;
+{% endif %}
     }
 }
 {% else %}
