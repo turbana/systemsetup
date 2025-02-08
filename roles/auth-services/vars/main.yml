@@ -27,3 +27,22 @@ authentik:
   groups:
     - Media Users
     - Docker Admins
+    - Test Group
+    
+  auth_sources:
+    - Google
+
+  applications:
+    - name: Hello World 0
+      slug: hello0
+      path: https://hello0.lab0.ianclark.dev
+      type: proxy
+      groups: [Test Group]
+      auth_sources: [Google]
+      
+    - name: Hello World 1
+      slug: hello1
+      path: https://hello1.lab0.ianclark.dev
+      type: proxy
+      groups: [Test Group]
+      auth_sources: [Google]

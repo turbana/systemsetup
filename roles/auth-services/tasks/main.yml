@@ -12,3 +12,4 @@
   loop:
     - custom-site-config.yaml
     - custom-users.yaml
+    - custom-applications.yaml

@@ -24,8 +24,9 @@ entries:
       slug: custom-source-enrollment
     model: authentik_flows.flow
     attrs:
-      name: Welcome to {{ site_name }}! Please select a username.
-      title: Welcome to {{ site_name }}! Please select a username.
+      # when things are working we shouldn't ever show an enrollment screen to the user
+      name: Sorry! Something has gone wrong.
+      title: Sorry! Something has gone wrong.
       designation: enrollment
       authentication: none
 
@@ -34,13 +35,14 @@ entries:
   ### Federation Sources
   ####################################################
   
+{% if "google" in authentik.auth_sources | lower %}
   ## Google
   - id: custom-source-google
     identifiers:
       name: Google
     model: authentik_sources_oauth.oauthsource
     attrs:
-      name: Google Source
+      name: Google
       slug: google
       enabled: true
       authentication_flow: !KeyOf custom-authentication-flow
@@ -50,15 +52,18 @@ entries:
       provider_type: google
       access_token_url: https://oauth2.googleapis.com/token
       authorization_url: https://accounts.google.com/o/oauth2/v2/auth
+      oidc_jwks_url: https://www.googleapis.com/oauth2/v3/certs
       profile_url: https://openidconnect.googleapis.com/v1/userinfo
       request_token_url: null
       group_matching_mode: identifier
-      policy_engine_mode: any
       user_matching_mode: identifier
+      policy_engine_mode: any
       user_path_template: goauthentik.io/sources/%(slug)s
+      # user_path_template: users/provisioned
     conditions: []
     permissions: []
     state: present
+{% endif %}
 
     
   ####################################################
@@ -183,8 +188,10 @@ entries:
       name: custom-source-enrollment-write
     model: authentik_stages_user_write.userwritestage
     attrs:
+      # options: always_create, create_when_required, never_create
       user_creation_mode: always_create
       user_type: internal
+      create_users_as_inactive: false
       
   ## Enrollment: Flow Write
   - identifiers:

@@ -8,6 +8,7 @@ entries:
   ####################################################
     
 {% for group in authentik.groups %}
+  ## Group
   - id: group-{{ group | lower | replace(' ', '-') }}
     identifiers:
       attributes:
@@ -19,6 +20,8 @@ entries:
     conditions: []
     permissions: []
     state: present
+    
+  ## Group Policy
 {% endfor %}
 
 
@@ -26,24 +29,28 @@ entries:
   ### Users
   ####################################################
 
-{% for user in secret_authentik_users %}
-  - id: user-{{ user.username | lower | replace('@', '-') | replace('.', '-') }}
-    identifiers:
-      attributes:
-        blueprint-id: user-{{ user.username | lower | replace('@', '-') | replace('.', '-') }}
-    model: authentik_core.user
-    attrs:
-      name: {{ user.name }}
-      username: {{ user.username }}
-      email: {{ user.username }}
-      type: internal
-      is_active: true
-      path: users/provisioned
-      groups:
-{% for group in user.groups %}
-        - !Find [authentik_core.group, [attributes__contains, {blueprint-id: group-{{ group | lower | replace(' ', '-')}}}]]
-{% endfor %}
-    conditions: []
-    permissions: []
-    state: present
-{% endfor %}
+# {% for user in secret_authentik_users %}
+#   - id: user-{{ user.username | lower | replace('@', '-') | replace('.', '-') }}
+#     identifiers:
+#       attributes:
+#         blueprint-id: user-{{ user.username | lower | replace('@', '-') | replace('.', '-') }}
+#     model: authentik_core.user
+#     attrs:
+#       name: {{ user.name }}
+#       username: {{ user.username }}
+#       email: {{ user.username }}
+#       type: internal
+#       is_active: true
+#       # path: goauthentik.io/sources/google
+#       # path: users/provisioned
+#       # attributes:
+#       #   goauthentik.io/user/sources:
+#       #     - Google
+#       groups:
+# {% for group in user.groups %}
+#         - !Find [authentik_core.group, [name, {{ group }}]]
+# {% endfor %}
+#     conditions: []
+#     permissions: []
+#     state: present
+# {% endfor %}

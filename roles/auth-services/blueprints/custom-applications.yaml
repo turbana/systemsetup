@@ -1,0 +1,97 @@
+version: 1
+metadata:
+  name: Custom Applications Setup - {{ site_name }}
+entries:
+
+{% for app in authentik.applications %}
+  ## setup provider for {{ app.name }}
+{% if app.type == "oauth2" %}
+  - model: authentik_providers_oauth2.oauth2provider
+    id: provider-{{ app.slug }}
+    identifiers:
+      name: 'OAuth2 Provider: {{ app.name }}'
+    attrs:
+      name: 'OAuth2 Provider: {{ app.name }}'
+      access_code_validity: minutes=1
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, custom-authentication-flow]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-invalidation-flow]]
+      # client_id: xxx
+      # client_secret: xxx
+      client_type: confidential
+      include_claims_in_id_token: true
+      issuer_mode: per_provider
+      jwt_federation_sources:
+{% for source in app.auth_sources %}
+        - !Find [authentik_core.source, [name, {{ source }}]]
+{% endfor %}
+      property_mappings:
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: Application Entitlements"]]
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'email'"]]
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: Proxy outpost"]]
+      redirect_uris:
+      - matching_mode: strict
+        url: {{ app.path }}/outpost.goauthentik.io/callback?X-authentik-auth-callback=true
+      - matching_mode: strict
+        url: {{ app.path }}?X-authentik-auth-callback=true
+      sub_mode: hashed_user_id
+    conditions: []
+    permissions: []
+    state: present
+    
+{% elif app.type == "proxy" %}
+  - model: authentik_providers_proxy.proxyprovider
+    id: provider-{{ app.slug }}
+    identifiers:
+      name: 'Proxy Provider: {{ app.name }}'
+    attrs:
+      name: 'Proxy Provider: {{ app.name }}'
+      external_host: {{ app.path }}
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, custom-authentication-flow]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-invalidation-flow]]
+      mode: forward_single
+      intercept_header_auth: true
+      internal_host_ssl_validation: true
+      jwt_federation_sources:
+{% for source in app.auth_sources %}
+        - !Find [authentik_core.source, [name, {{ source }}]]
+{% endfor %}
+      property_mappings:
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: Application Entitlements"]]
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'email'"]]
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
+        - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: Proxy outpost"]]
+    conditions: []
+    permissions: []
+    state: present
+    
+{% else %}
+ERROR: unknown application type found in authentik.applications.{{ app.name }}.type: {{ app.type }}
+{% endif %}
+
+  ## Application: {{ app.name }}
+  - model: authentik_core.application
+    identifiers:
+      slug: {{ app.slug }}
+    attrs:
+      # group: test
+      meta_launch_url: {{ app.path }}
+      name: {{ app.name }}
+      policy_engine_mode: any
+      provider: !KeyOf provider-{{ app.slug }}
+      slug: {{ app.slug }}
+    conditions: []
+    permissions: []
+    state: present
+
+  ## TODO add each provider to the builtin outpost
+  ## TODO add group bindings to each application
+{% endfor %}
