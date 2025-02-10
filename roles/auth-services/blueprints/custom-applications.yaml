@@ -4,8 +4,9 @@ metadata:
 entries:
 
 {% for app in authentik.applications %}
+{% set provider_type = app.provider_type | default("proxy") %}
   ## setup provider for {{ app.name }}
-{% if app.type == "oauth2" %}
+{% if provider_type == "oauth2" %}
   - model: authentik_providers_oauth2.oauth2provider
     id: provider-{{ app.slug }}
     identifiers:
@@ -24,7 +25,7 @@ entries:
       include_claims_in_id_token: true
       issuer_mode: per_provider
       jwt_federation_sources:
-{% for source in app.auth_sources %}
+{% for source in app.auth_sources | default(authentik.app_sources) %}
         - !Find [authentik_core.source, [name, {{ source }}]]
 {% endfor %}
       property_mappings:
@@ -43,7 +44,7 @@ entries:
     permissions: []
     state: present
     
-{% elif app.type == "proxy" %}
+{% elif provider_type == "proxy" %}
   - model: authentik_providers_proxy.proxyprovider
     id: provider-{{ app.slug }}
     identifiers:
@@ -60,7 +61,7 @@ entries:
       intercept_header_auth: true
       internal_host_ssl_validation: true
       jwt_federation_sources:
-{% for source in app.auth_sources %}
+{% for source in app.auth_sources | default(authentik.auth_sources) %}
         - !Find [authentik_core.source, [name, {{ source }}]]
 {% endfor %}
       property_mappings:
@@ -74,8 +75,9 @@ entries:
     state: present
     
 {% else %}
-ERROR: unknown application type found in authentik.applications.{{ app.name }}.type: {{ app.type }}
+ERROR: unknown application provider_type found in authentik.applications.{{ app.name }}.provider_type: {{ provider_type }}
 {% endif %}
+
 
   ## Application: {{ app.name }}
   - model: authentik_core.application
@@ -93,6 +95,9 @@ ERROR: unknown application type found in authentik.applications.{{ app.name }}.t
     permissions: []
     state: present
 
+    
+  ### TODO remove every group binding first
+  
 {% for group in app.groups %}
   ## Group Policy Binding {{ group }} for {{ app.name }}
   - model: authentik_policies.policybinding

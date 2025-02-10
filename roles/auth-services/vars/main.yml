@@ -36,13 +36,18 @@ authentik:
     - name: Hello World 0
       slug: hello0
       path: https://hello0.lab0.ianclark.dev
-      type: proxy
-      groups: [Test Group]
-      auth_sources: [Google]
+      # provider_type: proxy
+      groups: [Test Group, Media Users]
+      # auth_sources: [Google]
       
     - name: Hello World 1
       slug: hello1
       path: https://hello1.lab0.ianclark.dev
-      type: proxy
+      # provider_type: proxy
       groups: [Test Group]
-      auth_sources: [Google]
+      # auth_sources: [Google]
+
+    - name: Homepage
+      slug: homepage
+      path: https://homepage.lab0.ianclark.dev
+      groups: [Docker Admins]
