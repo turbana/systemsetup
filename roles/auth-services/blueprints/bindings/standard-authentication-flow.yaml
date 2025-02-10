@@ -1,0 +1,57 @@
+version: 1
+metadata:
+  name: Bindings - standard-authentication-flow
+context: {}
+entries:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ Dependency blueprints ~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Flow - standard-authentication-flow
+    required: true
+
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Stage - standard-authentication-identification
+    required: true
+    
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Stage - standard-authentication-mfa-validation
+    required: true
+    
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Stage - standard-authentication-login
+    required: true
+    
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ Notification transports ~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Groups ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Policies ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Flows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Prompts ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Stages ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Stage bindings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+- model: authentik_flows.flowstagebinding
+  identifiers:
+    order: 10
+    target: !Find [authentik_flows.flow, [slug, standard-authentication-flow]]
+    stage: !Find [authentik_stages_identification.identificationstage, [name, standard-authentication-identification]]
+
+- model: authentik_flows.flowstagebinding
+  identifiers:
+    order: 30
+    target: !Find [authentik_flows.flow, [slug, standard-authentication-flow]]
+    stage: !Find [authentik_stages_authenticator_validate.authenticatorvalidatestage, [name, standard-authentication-mfa-validation]]
+  
+- model: authentik_flows.flowstagebinding
+  identifiers:
+    order: 100
+    target: !Find [authentik_flows.flow, [slug, standard-authentication-flow]]
+    stage: !Find [authentik_stages_user_login.userloginstage, [name, standard-authentication-login]]
+  
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Policy bindings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Tenants ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#

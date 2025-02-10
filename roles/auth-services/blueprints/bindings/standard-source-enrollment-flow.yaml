@@ -1,0 +1,102 @@
+version: 1
+metadata:
+  name: Bindings - standard-source-enrollment-flow
+context: {}
+entries:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ Dependency blueprints ~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Flow - standard-source-enrollment-flow
+    required: true
+    
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Prompt - standard-source-enrollment-field-username
+    required: true
+    
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Stage - standard-source-enrollment-write
+    required: true
+    
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Stage - standard-source-enrollment-prompt
+    required: true
+    
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Stage - standard-source-enrollment-login
+    required: true
+    
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Policy - standard-source-enrollment-if-sso
+    required: true
+    
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Policy - standard-source-enrollment-username-is-email
+    required: true
+    
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Policy - standard-source-enrollment-if-username
+    required: true
+    
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ Notification transports ~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Groups ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Policies ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Flows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Prompts ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Stages ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Stage bindings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+- model: authentik_flows.flowstagebinding
+  id: stage-binding-username
+  identifiers:
+    order: 0
+    target: !Find [authentik_flows.flow, [slug, standard-source-enrollment-flow]]
+    stage: !Find [authentik_stages_prompt.promptstage, [name, standard-source-enrollment-prompt]]
+  attrs:
+    re_evaluate_policies: true
+    
+- model: authentik_flows.flowstagebinding
+  identifiers:
+    order: 1
+    target: !Find [authentik_flows.flow, [slug, standard-source-enrollment-flow]]
+    stage: !Find [authentik_stages_user_write.userwritestage, [name, standard-source-enrollment-write]]
+    
+- model: authentik_flows.flowstagebinding
+  identifiers:
+    order: 2
+    target: !Find [authentik_flows.flow, [slug, standard-source-enrollment-flow]]
+    stage: !Find [authentik_stages_user_login.userloginstage, [name, standard-source-enrollment-login]]
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Policy bindings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+- model: authentik_policies.policybinding
+  identifiers:
+    order: 0
+    target: !Find [authentik_flows.flow, [slug, standard-source-enrollment-flow]]
+    policy: !Find [authentik_policies_expression.expressionpolicy, [name, standard-source-enrollment-if-sso]]
+
+- model: authentik_policies.policybinding
+  identifiers:
+    order: 0
+    target: !KeyOf stage-binding-username
+    policy: !Find [authentik_policies_expression.expressionpolicy, [name, standard-source-enrollment-username-is-email]]
+
+- model: authentik_policies.policybinding
+  identifiers:
+    order: 1
+    target: !KeyOf stage-binding-username
+    policy: !Find [authentik_policies_expression.expressionpolicy, [name, standard-source-enrollment-if-username]]
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Tenants ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#

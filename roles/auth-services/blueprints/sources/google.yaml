@@ -1,0 +1,52 @@
+version: 1
+metadata:
+  name: Source - Google
+context: {}
+entries:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ Dependency blueprints ~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Flow - standard-authentication-flow
+    required: true
+    
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Flow - standard-source-enrollment-flow
+    required: true
+    
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ Notification transports ~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Groups ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Policies ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Flows ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Prompts ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Stages ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Stage bindings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Policy bindings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Tenants ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sources ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+{% if "google" in authentik.auth_sources | lower %}
+## Google
+- model: authentik_sources_oauth.oauthsource
+  identifiers:
+    name: Google
+  attrs:
+    name: Google
+    slug: google
+    enabled: true
+    authentication_flow: !Find [authentik_flows.flow, [slug, standard-authentication-flow]]
+    enrollment_flow: !Find [authentik_flows.flow, [slug, standard-source-enrollment-flow]]
+    consumer_key: {{ secret_auth_google_consumer_key }}
+    consumer_secret: {{ secret_auth_google_consumer_secret }}
+    provider_type: google
+    access_token_url: https://oauth2.googleapis.com/token
+    authorization_url: https://accounts.google.com/o/oauth2/v2/auth
+    oidc_jwks_url: https://www.googleapis.com/oauth2/v3/certs
+    profile_url: https://openidconnect.googleapis.com/v1/userinfo
+    request_token_url: null
+    group_matching_mode: identifier
+    user_matching_mode: identifier
+    policy_engine_mode: any
+    user_path_template: goauthentik.io/sources/%(slug)s
+{% endif %}

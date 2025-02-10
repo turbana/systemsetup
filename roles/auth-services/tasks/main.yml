@@ -5,11 +5,14 @@
     dest: "{{ authentik.blueprint_root }}"
     state: directory
 
-- name: Copy custom Authentik blueprints
+- name: Copy blueprint template files
   ansible.builtin.template:
-    src: "blueprints/{{ item }}"
-    dest: "{{ authentik.blueprint_root }}/{{ item }}"
-  loop:
-    - custom-site-config.yaml
-    - custom-users.yaml
-    - custom-applications.yaml
+    src: "{{ item.src }}"
+    dest: "{{ authentik.blueprint_root }}/{{ item.path | regex_replace('/', '__') }}"
+    owner: root
+    group: root
+    mode: "0644"
+  with_community.general.filetree: ../blueprints
+  when: item.state == "file"
+  loop_control:
+    label: "{{ item.path }}"
