@@ -1,0 +1,90 @@
+version: 1
+metadata:
+  name: Applications - Site Providers
+  context: {}
+entries:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ Dependency blueprints ~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Flow - standard-authentication-flow
+    required: true
+    
+{% for source in authentik.auth_sources %}
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Source - {{ source | title }}
+    required: true
+{% endfor %}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Providers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+{% for app in authentik.applications %}
+{% set provider_type = app.provider_type | default("proxy") %}
+{% if provider_type == "oauth2" %}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ OAuth2 Provider ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+- model: authentik_providers_oauth2.oauth2provider
+  identifiers:
+    name: 'Provider for {{ app.name }}'
+  attrs:
+    name: 'Provider for {{ app.name }}'
+    access_code_validity: minutes=1
+    access_token_validity: hours=24
+    refresh_token_validity: days=30
+    authentication_flow: !Find [authentik_flows.flow, [slug, standard-authentication-flow]]
+    authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+    invalidation_flow: !Find [authentik_flows.flow, [slug, default-invalidation-flow]]
+    # client_id: xxx
+    # client_secret: xxx
+    client_type: confidential
+    include_claims_in_id_token: true
+    issuer_mode: per_provider
+    jwt_federation_sources:
+{% for source in app.auth_sources | default(authentik.app_sources) %}
+      - !Find [authentik_core.source, [name, {{ source }}]]
+{% endfor %}
+    property_mappings:
+      - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: Application Entitlements"]]
+      - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'email'"]]
+      - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
+      - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
+      - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: Proxy outpost"]]
+    redirect_uris:
+    - matching_mode: strict
+      url: {{ app.path }}/outpost.goauthentik.io/callback?X-authentik-auth-callback=true
+    - matching_mode: strict
+      url: {{ app.path }}?X-authentik-auth-callback=true
+    sub_mode: hashed_user_id
+  
+{% elif provider_type == "proxy" %}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Proxy Provider ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+- model: authentik_providers_proxy.proxyprovider
+  identifiers:
+    name: 'Provider for {{ app.name }}'
+  attrs:
+    name: 'Provider for {{ app.name }}'
+    external_host: {{ app.path }}
+    access_token_validity: hours=24
+    refresh_token_validity: days=30
+    authentication_flow: !Find [authentik_flows.flow, [slug, standard-authentication-flow]]
+    authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+    invalidation_flow: !Find [authentik_flows.flow, [slug, default-invalidation-flow]]
+    mode: forward_single
+    intercept_header_auth: true
+    internal_host_ssl_validation: true
+    jwt_federation_sources:
+{% for source in app.auth_sources | default(authentik.auth_sources) %}
+      - !Find [authentik_core.source, [name, {{ source }}]]
+{% endfor %}
+    property_mappings:
+      - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: Application Entitlements"]]
+      - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'email'"]]
+      - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
+      - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
+      - !Find [authentik_core.propertymapping, [name, "authentik default OAuth Mapping: Proxy outpost"]]
+  
+{% else %}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Invalid Provider ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+ERROR: unknown application provider_type found in authentik.applications.{{ app.name }}.provider_type: {{ provider_type }}
+{% endif %}
+{% endfor %}

@@ -1,0 +1,31 @@
+version: 1
+metadata:
+  name: Applications - Site Applications
+  context: {}
+entries:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ Dependency blueprints ~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Applications - Site Providers
+    required: true
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Applications ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+{% for app in authentik.applications %}
+{% set provider_type = app.provider_type | default("proxy") %}
+- model: authentik_core.application
+  identifiers:
+    slug: {{ app.slug }}
+  attrs:
+    slug: {{ app.slug }}
+    name: {{ app.name }}
+    meta_launch_url: {{ app.path }}
+    policy_engine_mode: any
+{% if provider_type == "oauth2" %}
+    provider: !Find [authentik_providers_oauth2.oauth2provider, [name, 'Provider for {{ app.name }}']]
+{% elif provider_type == "proxy" %}
+    provider: !Find [authentik_providers_proxy.proxyprovider, [name, 'Provider for {{ app.name }}']]
+{% else %}
+    provider: "ERROR: unknown application provider_type found in authentik.applications.{{ app.name }}.provider_type: {{ provider_type }}"
+{% endif %}
+{% endfor %}

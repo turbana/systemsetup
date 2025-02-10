@@ -1,0 +1,30 @@
+version: 1
+metadata:
+  name: Bindings - Application Policies
+  context: {}
+entries:
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~ Dependency blueprints ~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Applications - Site Applications
+    required: true
+
+- model: authentik_blueprints.metaapplyblueprint
+  attrs:
+    identifiers:
+      name: Groups - Custom {{ site_name }}
+    required: true
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Applications ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+{% for app in authentik.applications %}
+{% for group in app.groups %}
+- model: authentik_policies.policybinding
+  identifiers:
+    order: 0
+    group: !Find [authentik_core.group, [name, {{ group }}]]
+    target: !Find [authentik_core.application, [slug, {{ app.slug }}]]
+  attrs:
+    timeout: 30
+{% endfor %}
+{% endfor %}
