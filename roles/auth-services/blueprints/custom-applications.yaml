@@ -79,6 +79,7 @@ ERROR: unknown application type found in authentik.applications.{{ app.name }}.t
 
   ## Application: {{ app.name }}
   - model: authentik_core.application
+    id: application-{{ app.slug }}
     identifiers:
       slug: {{ app.slug }}
     attrs:
@@ -92,6 +93,16 @@ ERROR: unknown application type found in authentik.applications.{{ app.name }}.t
     permissions: []
     state: present
 
+{% for group in app.groups %}
+  ## Group Policy Binding {{ group }} for {{ app.name }}
+  - model: authentik_policies.policybinding
+    identifiers:
+      enabled: true
+      order: 0
+      timeout: 30
+      group: !Find [authentik_core.group, [name, {{ group }}]]
+      target: !KeyOf application-{{ app.slug }}
+{% endfor %}
+
   ## TODO add each provider to the builtin outpost
-  ## TODO add group bindings to each application
 {% endfor %}
