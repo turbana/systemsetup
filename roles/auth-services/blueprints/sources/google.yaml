@@ -7,7 +7,7 @@ entries:
 - model: authentik_blueprints.metaapplyblueprint
   attrs:
     identifiers:
-      name: Flow - standard-authentication-flow
+      name: Flow - standard-source-authentication-flow
     required: true
     
 - model: authentik_blueprints.metaapplyblueprint
@@ -35,7 +35,7 @@ entries:
     name: Google
     slug: google
     enabled: true
-    authentication_flow: !Find [authentik_flows.flow, [slug, standard-authentication-flow]]
+    authentication_flow: !Find [authentik_flows.flow, [slug, standard-source-authentication-flow]]
     enrollment_flow: !Find [authentik_flows.flow, [slug, standard-source-enrollment-flow]]
     consumer_key: {{ secret_auth_google_consumer_key }}
     consumer_secret: {{ secret_auth_google_consumer_secret }}
