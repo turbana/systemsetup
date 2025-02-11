@@ -18,5 +18,5 @@ services:
     labels:
       - homepage.group=Downloaders
       - homepage.name=Sabnzbd
-      - homepage.href={{ docker_services.sabnzbd.proxy.base | default("") }}
+      - homepage.href={{ docker_services.sabnzbd.path | default("") }}
       - homepage.description=Binary newsgrabber (NZB downloader)

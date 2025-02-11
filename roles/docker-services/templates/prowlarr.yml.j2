@@ -17,5 +17,5 @@ services:
     labels:
       - homepage.group=Feeders
       - homepage.name=Prowlarr
-      - homepage.href={{ docker_services.prowlarr.proxy.base | default("") }}
+      - homepage.href={{ docker_services.prowlarr.path | default("") }}
       - homepage.description=Tracker aggregator

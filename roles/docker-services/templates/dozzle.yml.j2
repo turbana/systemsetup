@@ -17,4 +17,4 @@ services:
       - homepage.group=Core
       - homepage.name=Dozzle
       - homepage.description=View Docker log files for all containers
-      - homepage.href={{ docker_service.proxy.base | default("") }}
+      - homepage.href={{ docker_service.path | default("") }}

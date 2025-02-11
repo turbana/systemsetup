@@ -16,6 +16,6 @@ services:
       - "{{ container_volume_root }}/config:/app/config"
     labels:
       - homepage.group=Test
-      - homepage.name=Hello world
+      - homepage.name=Hello World 0
       - homepage.description=Shows an HTTP "hello world" page
-      - homepage.href={{ docker_service.proxy.base | default("") }}
+      - homepage.href={{ docker_service.path | default("") }}

@@ -38,7 +38,7 @@ services:
       - homepage.group=CHANGEME
       - homepage.name=CHANGEME
       - homepage.description=CHANGEME
-      - homepage.href={{ docker_service.proxy.base | default("") }}
+      - homepage.href={{ docker_service.path | default("") }}
 EOF
 
 echo "created '$service' docker service."

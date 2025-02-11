@@ -1,6 +1,9 @@
 docker_site: media-server
 
 docker_services:
+  - helloworld1
+
+YYY_docker_services:
   helloworld:
     port: 9011
     proxy:
@@ -25,8 +28,8 @@ XXX_docker_services:
     proxy:
       base: https://dozzle.{{ site_name }}
   nginx:
-    port_http: 3080
-    port_https: 3443
+    port.http: 3080
+    port.https: 3443
     
   # downloaders
   sabnzbd:

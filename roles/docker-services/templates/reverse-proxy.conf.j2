@@ -1,18 +1,18 @@
-{% if item.value.proxy.base | default(False) %}
-# {{ item.key }} service
+{% if docker_service.path | default(False) %}
+# {{ service_name }} service
 server {
-    server_name {{ item.value.proxy.base | replace("https://", "") }};
+    server_name {{ docker_service.path | replace("https://", "") }};
     include includes/listen_ssl.conf;
     include includes/proxy_auth_server.conf;
     location / {
-        proxy_pass {{ item.value.proxy.host | default("http://127.0.0.1:{}".format(item.value.port)) }};
-        # proxy_pass {{ item.value.proxy.host | default("http://{}_{}:{}".format(docker_site, item.key, item.value.port)) }};
+        proxy_pass {{ docker_service.proxy.host | default("http://127.0.0.1:{}".format(docker_service.port)) }};
+        # proxy_pass {{ docker_service.proxy.host | default("http://{}_{}:{}".format(docker_site, service_name, docker_service.port)) }};
         include includes/proxy_location.conf;
-{% if item.value.proxy.require_auth | default(True) %}
+{% if "auth" in docker_service %}
         include includes/proxy_auth_location.conf;
 {% endif %}
     }
 }
 {% else %}
-# {{ item.key }} is not being proxied
+# {{ service_name }} is not being proxied
 {% endif %}

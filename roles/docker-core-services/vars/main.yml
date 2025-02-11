@@ -1,6 +1,11 @@
 docker_site: docker-core-services
 
 docker_services:
+  - homepage
+  - dozzle
+  # - portainer
+  
+XXX_docker_services:
   homepage:
     port: 3000
     proxy:

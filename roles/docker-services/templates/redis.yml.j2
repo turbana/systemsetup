@@ -26,4 +26,4 @@ services:
       - homepage.group=Auth
       - homepage.name=Redis
       - homepage.description=In-memory cache for auth sessions
-      - homepage.href={{ docker_service.proxy.base | default("") }}
+      - homepage.href={{ docker_service.path | default("") }}

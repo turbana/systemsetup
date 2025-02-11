@@ -26,7 +26,7 @@ entries:
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Policy bindings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Tenants ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sources ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-{% if "google" in authentik.auth_sources | lower %}
+{% if "google" in authentik.sources | lower %}
 ## Google
 - model: authentik_sources_oauth.oauthsource
   identifiers:

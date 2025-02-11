@@ -7,22 +7,21 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
-    # profiles: ["apps", "all"]
     networks:
       - default
       - socket_proxy
     ports:
       # NOTE: due to CSRF we need to change the qbittorrent webui port inside the container along with the external. See qbittorrent.yml.j2 to set WEBUI_PORT.
       # https://docs.linuxserver.io/images/docker-qbittorrent/#webui_port-variable
-      - "127.0.0.1:{{ docker_services.qbittorrent.port }}:{{ docker_services.qbittorrent.port }}"
+      - "127.0.0.1:{{ service_catalog.qbittorrent.port }}:{{ service_catalog.qbittorrent.port }}"
     volumes:
       - {{ docker_volumes_root }}/gluetun/gluetun:/gluetun
     environment:
       VPN_SERVICE_PROVIDER: private internet access
-      OPENVPN_USER: "{{ vpn_user}}"
+      OPENVPN_USER: "{{ vpn_user }}"
       OPENVPN_PASSWORD: "{{ vpn_password }}"
     labels:
       - homepage.group=Core
       - homepage.name=Gluetun
-      - homepage.href={{ docker_services.gluetun.proxy.base | default("") }}
+      - homepage.href={{ docker_services.gluetun.path | default("") }}
       - homepage.description=VPN tunnel provider

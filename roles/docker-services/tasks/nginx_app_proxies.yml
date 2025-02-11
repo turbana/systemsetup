@@ -4,9 +4,10 @@
     state: directory
 
 - name: Add reverse proxy app configs
+  vars:
+    docker_service: "{{ service_catalog[item] }}"
+    service_name: "{{ item }}"
   ansible.builtin.template:
-    dest: "{{ docker_volumes_root }}/.reverse_proxy_configs/{{ docker_site }}_{{ item.key }}.conf"
+    dest: "{{ docker_volumes_root }}/.reverse_proxy_configs/{{ docker_site }}_{{ item }}.conf"
     src: templates/reverse-proxy.conf.j2
-  loop: "{{ docker_services | dict2items }}"
-  loop_control:
-    label: "{{ item.key }}"
+  loop: "{{ docker_services }}"

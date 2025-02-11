@@ -12,9 +12,9 @@ services:
     environment:
       DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
       AUTHENTIK_REDIS__HOST: auth-services_redis
-      AUTHENTIK_REDIS__PORT: {{ docker_services.redis.port }}
+      AUTHENTIK_REDIS__PORT: {{ service_catalog.redis.port }}
       AUTHENTIK_POSTGRESQL__HOST: auth-services_postgres
-      AUTHENTIK_POSTGRESQL__PORT: {{ docker_services.postgres.port }}
+      AUTHENTIK_POSTGRESQL__PORT: {{ service_catalog.postgres.port }}
       AUTHENTIK_POSTGRESQL__NAME: {{ secret_auth_postgres_db}}
       AUTHENTIK_POSTGRESQL__USER: {{ secret_auth_postgres_username }}
       AUTHENTIK_POSTGRESQL__PASSWORD: {{ secret_auth_postgres_password }}
@@ -37,4 +37,4 @@ services:
       - homepage.group=Auth
       - homepage.name=Authentik Worker
       - homepage.description=CHANGEME
-      - homepage.href={{ docker_service.proxy.base | default("") }}
+      - homepage.href={{ docker_service.path | default("") }}

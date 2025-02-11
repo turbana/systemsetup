@@ -20,5 +20,5 @@ services:
     labels:
       - homepage.group=Feeders
       - homepage.name=Radarr
-      - homepage.href={{ docker_services.radarr.proxy.base | default("") }}
+      - homepage.href={{ docker_services.radarr.path | default("") }}
       - homepage.description=Movie PVR

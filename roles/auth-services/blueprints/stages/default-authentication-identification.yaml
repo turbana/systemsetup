@@ -4,7 +4,7 @@ metadata:
 context: {}
 entries:
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~ Dependency blueprints ~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-{% if "google" in authentik.auth_sources | lower %}
+{% if "google" in authentik.sources | lower %}
 - model: authentik_blueprints.metaapplyblueprint
   attrs:
     identifiers:
@@ -29,7 +29,7 @@ entries:
     pretend_user_exists: true
     show_matched_user: true
     show_source_labels: true
-{% if "google" in authentik.auth_sources | lower %}
+{% if "google" in authentik.sources | lower %}
     sources:
       - !Find [authentik_sources_oauth.oauthsource, [name, Google]]
 {% endif %}

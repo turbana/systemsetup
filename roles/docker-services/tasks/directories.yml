@@ -13,4 +13,4 @@
   ansible.builtin.file:
     dest: "{{ docker_volumes_root }}/{{ item }}"
     state: directory
-  loop: "{{ docker_services.keys() }}"
+  loop: "{{ docker_services }}"

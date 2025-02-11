@@ -18,5 +18,5 @@ services:
     labels:
       - homepage.group=Downloaders
       - homepage.name=qBittorrent
-      - homepage.href={{ docker_services.qbittorrent.proxy.base | default("") }}
+      - homepage.href={{ docker_services.qbittorrent.path | default("") }}
       - homepage.description=Torrent downloader

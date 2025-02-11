@@ -1,6 +1,6 @@
 services:
   {{ container_name }}:
-    image: ghcr.io/gethomepage/homepage:latest
+    image: crccheck/hello-world:latest
     container_name: {{ container_name }}
     security_opt:
       - no-new-privileges:true
@@ -11,10 +11,11 @@ services:
       - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
     environment:
       DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+      PORT: {{ docker_service.port }}
     volumes:
       - "{{ container_volume_root }}/config:/app/config"
     labels:
-      - homepage.group=Core
-      - homepage.name=Homepage
-      - homepage.description=Collects links to every docker service (what you're seeing right now!)
+      - homepage.group=Test
+      - homepage.name=Hello world 1
+      - homepage.description=Shows an HTTP "hello world" page
       - homepage.href={{ docker_service.path | default("") }}

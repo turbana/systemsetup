@@ -11,21 +11,20 @@ entries:
     required: true
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Applications ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-{% for app in authentik.applications %}
-{% set provider_type = app.provider_type | default("proxy") %}
+{% for name, app in service_catalog.items() if "auth" in app %}
+{% set provider_type = app.auth.type | default("proxy") %}
 - model: authentik_core.application
   identifiers:
-    slug: {{ app.slug }}
+    slug: {{ name }}
   attrs:
-    slug: {{ app.slug }}
-    name: {{ app.name }}
+    name: {{ name }}
     meta_launch_url: {{ app.path }}
     policy_engine_mode: any
 {% if provider_type == "oauth2" %}
-    provider: !Find [authentik_providers_oauth2.oauth2provider, [name, 'Provider for {{ app.name }}']]
+    provider: !Find [authentik_providers_oauth2.oauth2provider, [name, 'Provider for {{ name }}']]
 {% elif provider_type == "proxy" %}
-    provider: !Find [authentik_providers_proxy.proxyprovider, [name, 'Provider for {{ app.name }}']]
+    provider: !Find [authentik_providers_proxy.proxyprovider, [name, 'Provider for {{ name }}']]
 {% else %}
-    provider: "ERROR: unknown application provider_type found in authentik.applications.{{ app.name }}.provider_type: {{ provider_type }}"
+    provider: "ERROR: unknown auth provider type found in service_catalog.{{ name }}.auth.type: {{ provider_type }}"
 {% endif %}
 {% endfor %}

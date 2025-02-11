@@ -27,7 +27,7 @@ services:
       - homepage.group=Auth
       - homepage.name=Postgres
       - homepage.description=SQL database for authentication
-      - homepage.href={{ docker_service.proxy.base | default("") }}
+      - homepage.href={{ docker_service.path | default("") }}
 
 networks:
   auth-services_postgres:

@@ -5,12 +5,12 @@
     container_sp_name: "{{ docker_site }}_sp-{{ item }}"
     container_net_name: "{{ docker_site }}_net-{{ item }}"
     container_volume_root: "{{ docker_volumes_root }}/{{ docker_site }}/{{ item }}"
-    docker_service: "{{ docker_services[item] }}"
+    docker_service: "{{ service_catalog[item] }}"
   ansible.builtin.template:
     src: templates/{{ item }}.yml.j2
     dest: "{{ docker_compose_root }}/{{ docker_site }}_{{ item }}.yml"
     mode: 0640
-  loop: "{{ docker_services.keys() }}"
+  loop: "{{ docker_services }}"
   
 - name: Copy docker socket proxy compose files
   become: false
@@ -19,12 +19,12 @@
     container_sp_name: "{{ docker_site }}_sp-{{ item }}"
     container_net_name: "{{ docker_site }}_net-{{ item }}"
     container_volume_root: "{{ docker_volumes_root }}/{{ docker_site }}/{{ item }}"
-    docker_service: "{{ docker_services[item] }}"
+    docker_service: "{{ service_catalog[item] }}"
   ansible.builtin.template:
     src: templates/_socket-proxy.yml.j2
     dest: "{{ docker_compose_root }}/{{ docker_site }}_sp_{{ item }}.yml"
     mode: 0640
-  loop: "{{ docker_services.keys() }}"
+  loop: "{{ docker_services }}"
   
 - name: Copy docker main compose file
   become: false

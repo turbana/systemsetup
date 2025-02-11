@@ -5,24 +5,23 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    # profiles: ["apps", "all"]
     networks:
       - socket_proxy
     ports:
-      - "127.0.0.1:{{ docker_services.jellyfin.port }}:{{ docker_services.jellyfin.port }}"
+      - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
     devices:
       - /dev/dri:/dev/dri
     volumes:
-      - {{ docker_volumes_root }}/jellyfin/config:/config
-      - {{ docker_volumes_root }}/jellyfin/cache:/cache
+      - {{ container_volume_root }}/config:/config
+      - {{ container_volume_root }}/cache:/cache
       - {{ media_download_root }}:/media/downloads
       - {{ media_files_root }}:/media/library
       - /dev/shm:/data/transcode
     environment:
       UMASK_SET: "022"
-      DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
     labels:
       - homepage.group=Media
       - homepage.name=Jellyfin
-      - homepage.href={{ docker_services.jellyfin.proxy.base | default("") }}
+      - homepage.href={{ docker_service.path | default("") }}
       - homepage.description=Media library

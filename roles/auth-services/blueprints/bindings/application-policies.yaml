@@ -17,13 +17,13 @@ entries:
     required: true
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Applications ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-{% for app in authentik.applications %}
-{% for group in app.groups %}
+{% for name, app in service_catalog.items() if "auth" in app %}
+{% for group in app.auth.groups %}
 - model: authentik_policies.policybinding
   identifiers:
     order: 0
     group: !Find [authentik_core.group, [name, {{ group }}]]
-    target: !Find [authentik_core.application, [slug, {{ app.slug }}]]
+    target: !Find [authentik_core.application, [slug, {{ name }}]]
   attrs:
     timeout: 30
 {% endfor %}

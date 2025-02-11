@@ -1,2 +1,90 @@
 root_site_name: ianclark.dev
 site_name: "{{ inventory_hostname }}.{{ root_site_name }}"
+
+service_catalog:
+  helloworld0:
+    port: 9010
+    path: https://hello0.{{ site_name }}
+    auth:
+      type: proxy
+      groups: [Test Group, Media Users]
+      sources: [Google]
+  helloworld1:
+    port: 9011
+    path: https://hello1.{{ site_name }}
+    auth:
+      groups: [Docker Admins]
+
+  # core docker services
+  socket-proxy:
+    port: 2375
+  gluetun: {}
+  homepage:
+    port: 3000
+    path: https://homepage.{{ site_name }}
+    auth:
+      groups: [Docker Admins]
+    socket_proxy_env:
+      - CONTAINERS=1
+  portainer:
+    port: 9443
+    path: https://portainer.{{ site_name }}
+    auth:
+      groups: [Docker Admins]
+    socket_proxy_env:
+      - POST=1
+      - CONTAINERS=1
+      - IMAGES=1
+      - INFO=1
+      - NETWORKS=1
+      - SERVICES=1
+      - TASKS=1
+      - VOLUMES=1
+  dozzle:
+    port: 8080
+    path: https://dozzle.{{ site_name }}
+    auth:
+      groups: [Docker Admins]
+    socket_proxy_env:
+      - CONTAINERS=1
+      - INFO=1
+  nginx:
+    port:
+      http: 3080
+      https: 3443
+    
+  # media downloaders
+  sabnzbd:
+    port: 8081
+    path: https://sabnzbd.{{ site_name }}
+  qbittorrent:
+    port: 8082
+    path: https://qbittorrent.{{ site_name }}
+    
+  # media feeders
+  radarr:
+    port: 7878
+    path: https://radarr.{{ site_name }}
+  prowlarr:
+    port: 9696
+    path: https://prowlarr.{{ site_name }}
+    
+  # media apps
+  jellyfin:
+    port: 8096
+    path: https://jellyfin.{{ site_name }}
+
+  # authentication services
+  postgres:
+    port: 5432
+  redis:
+    port: 6380
+  authentik-server:
+    port: 9080
+    path: https://auth.{{ site_name }}
+  authentik-worker:
+    socket_proxy_env:
+      - POST=1
+      - IMAGES=1
+      - CONTAINERS=1
+      - SYSTEM=1
