@@ -12,6 +12,9 @@ authentik:
     - Docker Admins
     - Test Group
 
+  default_app_groups:
+    - Docker Admins
+
 docker_services:
   - postgres
   - redis

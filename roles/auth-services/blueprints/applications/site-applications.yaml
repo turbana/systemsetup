@@ -11,7 +11,7 @@ entries:
     required: true
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Applications ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-{% for name, app in service_catalog.items() if "auth" in app %}
+{% for name, app in service_catalog.items() if (app | auth_enabled) %}
 {% set provider_type = app.auth.type | default("proxy") %}
 - model: authentik_core.application
   identifiers:

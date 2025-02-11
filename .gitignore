@@ -1,2 +1,3 @@
 /.ian.passwd
 /secrets/*
+**/__pycache__/

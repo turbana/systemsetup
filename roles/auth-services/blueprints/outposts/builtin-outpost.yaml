@@ -37,7 +37,7 @@ entries:
       kubernetes_ingress_annotations: {}
       kubernetes_ingress_secret_name: authentik-outpost-tls
     providers:
-{% for name, app in service_catalog.items() if "auth" in app %}
+{% for name, app in service_catalog.items() if (app | auth_enabled) %}
 {% set provider_type = app.auth.type | default("proxy") %}
 {% if provider_type == "oauth2" %}
       - !Find [authentik_providers_oauth2.oauth2provider, [name, 'Provider for {{ name }}']]

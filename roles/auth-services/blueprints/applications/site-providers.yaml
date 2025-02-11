@@ -19,7 +19,7 @@ entries:
 {% endfor %}
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Providers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-{% for name, app in service_catalog.items() if "auth" in app %}
+{% for name, app in service_catalog.items() if (app | auth_enabled) %}
 {% set provider_type = app.auth.type | default("proxy") %}
 {% if provider_type == "oauth2" %}
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ OAuth2 Provider ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#

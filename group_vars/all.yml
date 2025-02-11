@@ -82,6 +82,9 @@ service_catalog:
   authentik-server:
     port: 9080
     path: https://auth.{{ site_name }}
+    auth:
+      # we don't want to proxy requests to authentik... to authentik
+      enabled: false
   authentik-worker:
     socket_proxy_env:
       - POST=1

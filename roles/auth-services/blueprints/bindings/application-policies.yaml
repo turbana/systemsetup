@@ -17,8 +17,8 @@ entries:
     required: true
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Applications ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-{% for name, app in service_catalog.items() if "auth" in app %}
-{% for group in app.auth.groups %}
+{% for name, app in service_catalog.items() if (app | auth_enabled) %}
+{% for group in app.auth.groups | default(authentik.default_app_groups) %}
 - model: authentik_policies.policybinding
   identifiers:
     order: 0
