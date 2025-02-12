@@ -14,8 +14,8 @@ services:
     volumes:
       - {{ container_volume_root }}/config:/config
       - {{ container_volume_root }}/cache:/cache
-      - {{ media_download_root }}:/media/downloads
-      - {{ media_files_root }}:/media/library
+      - {{ media_downloads_hosts }}:{{ media_downloads_container }}
+      - {{ media_files_host }}:{{ media_files_container }}
       - /dev/shm:/data/transcode
     environment:
       UMASK_SET: "022"

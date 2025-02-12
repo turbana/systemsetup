@@ -17,7 +17,7 @@
     
 - name: Create media root directories
   ansible.builtin.file:
-    dest: "{{ media_files_root }}/{{ item }}"
+    dest: "{{ media_files_host }}/{{ item }}"
     state: directory
     group: "{{ media_group }}"
     mode: "2770"
@@ -29,7 +29,7 @@
 
 - name: Create download directories
   ansible.builtin.file:
-    dest: "{{ media_download_root }}/{{ item }}"
+    dest: "{{ media_downloads_hosts }}/{{ item }}"
     state: directory
     group: "{{ media_group }}"
     mode: "2770"

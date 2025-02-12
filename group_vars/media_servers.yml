@@ -1,7 +1,9 @@
 # directories
 app_root: /opt/media
-media_files_root: "{{ app_root }}/library"
-media_download_root: "{{ app_root }}/download"
+media_files_host: "{{ app_root }}/library"
+media_downloads_hosts: "{{ app_root }}/downloads"
+media_files_container: /media/library
+media_downloads_container: /media/downloads
 
 # all media libraries and downloads should be accessible by this host group
 media_group: media
