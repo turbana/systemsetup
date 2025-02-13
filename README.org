@@ -34,7 +34,7 @@ Provide complete workstation provisioning through ansible.
 - /opt/media/docker :: main docker config directory
 - /opt/media/downloads :: directory for completed downloads
 - /opt/media/downloads/nzbs :: usenet download directory
-- /opt/media/downloads/torrent :: torrent download directory
+- /opt/media/downloads/torrents :: torrent download directory
 - /opt/media/library/<format> :: data files for movies/tv/books/etc
 - /opt/ssl :: SSL certificates  
   

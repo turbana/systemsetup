@@ -1,15 +1,16 @@
 services:
-  gluetun:
-    image: qmcgaw/gluetun
-    container_name: gluetun
+  {{ container_name }}:
+    image: qmcgaw/gluetun:latest
+    container_name: {{ container_name }}
     restart: always
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
     networks:
-      - default
-      - socket_proxy
+      - {{ container_net_name }}
+      # we need to access the site network so the *arrs can talk to qbittorrent
+      - {{ docker_site }}_network
     ports:
       # NOTE: due to CSRF we need to change the qbittorrent webui port inside the container along with the external. See qbittorrent.yml.j2 to set WEBUI_PORT.
       # https://docs.linuxserver.io/images/docker-qbittorrent/#webui_port-variable
@@ -17,7 +18,7 @@ services:
     volumes:
       - {{ docker_volumes_root }}/gluetun/gluetun:/gluetun
     environment:
-      VPN_SERVICE_PROVIDER: private internet access
+      VPN_SERVICE_PROVIDER: "{{ vpn_provider }}"
       OPENVPN_USER: "{{ vpn_user }}"
       OPENVPN_PASSWORD: "{{ vpn_password }}"
     labels:

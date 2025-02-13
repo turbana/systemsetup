@@ -1,22 +1,23 @@
 services:
-  qbittorrent:
+  {{ container_name }}:
     image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
+    container_name: {{ container_name }}
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    # profiles: ["apps", "all"]
-    network_mode: "service:gluetun"
+    network_mode: "service:{{ docker_site }}_gluetun"
     volumes:
-      - {{ docker_volumes_root }}/qbittorrent/config:/config
-      - {{ media_download_root }}:/media/downloads
+      - {{ container_volume_root }}/config:/config
+      - {{ media_downloads_hosts }}:{{ media_downloads_container }}
     environment:
       PGID: 1001
-      WEBUI_PORT: {{ docker_services.qbittorrent.port }}
-      UMASK_SET: "002"
-      DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
+      UMASK: "007"
+      WEBUI_PORT: {{ docker_service.port }}
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
     labels:
       - homepage.group=Downloaders
       - homepage.name=qBittorrent
-      - homepage.href={{ docker_services.qbittorrent.path | default("") }}
+      - homepage.href={{ docker_service.path | default("") }}
       - homepage.description=Torrent downloader
+
+    
