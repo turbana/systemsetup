@@ -67,11 +67,15 @@ service_catalog:
     path: https://sabnzbd.{{ site_name }}
     uid: 911
     gid: 1001
+    auth:
+      groups: [Media Admins]
   qbittorrent:
     port: 8082
     path: https://qbittorrent.{{ site_name }}
     uid: 911
     gid: 1001
+    auth:
+      groups: [Media Admins]
     
   # media feeders
   radarr:
@@ -79,16 +83,22 @@ service_catalog:
     path: https://radarr.{{ site_name }}
     uid: 911
     gid: 1001
+    auth:
+      groups: [Media Admins]
   prowlarr:
     port: 9696
     path: https://prowlarr.{{ site_name }}
     uid: 911
     gid: 911
+    auth:
+      groups: [Media Admins]
     
   # media apps
   jellyfin:
     port: 8096
     path: https://jellyfin.{{ site_name }}
+    auth:
+      groups: [Media Users]
 
   # authentication services
   postgres:
