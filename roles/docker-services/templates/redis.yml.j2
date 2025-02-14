@@ -20,8 +20,9 @@ services:
     environment:
       DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
     volumes:
+      # NOTE: redis runs with gid 1000 so make sure redis.conf has same gid on controller
+      - "{{ container_volume_root }}/config/redis.conf:/etc/redis/redis.conf"
       - "{{ container_volume_root }}/data:/data"
-      - "{{ container_volume_root }}/config:/etc/redis"
     labels:
       - homepage.group=Auth
       - homepage.name=Redis

@@ -12,7 +12,11 @@ services:
     environment:
       DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
     volumes:
-      - "{{ container_volume_root }}/config:/app/config"
+      - "{{ container_volume_root }}/config/bookmarks.yaml:/app/config/bookmarks.yaml"
+      - "{{ container_volume_root }}/config/docker.yaml:/app/config/docker.yaml"
+      - "{{ container_volume_root }}/config/services.yaml:/app/config/services.yaml"
+      - "{{ container_volume_root }}/config/settings.yaml:/app/config/settings.yaml"
+      - "{{ container_volume_root }}/config/widgets.yaml:/app/config/widgets.yaml"
     labels:
       - homepage.group=Core
       - homepage.name=Homepage

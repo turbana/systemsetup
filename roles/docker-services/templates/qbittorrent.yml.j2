@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     network_mode: "service:{{ docker_site }}_gluetun"
     volumes:
-      - {{ container_volume_root }}/config:/config
+      - {{ container_volume_root }}/config/qBittorrent/qBittorrent.conf:/config/qBittorrent/qBittorrent.conf
       - {{ media_downloads_hosts }}:{{ media_downloads_container }}
     environment:
       PGID: 1001

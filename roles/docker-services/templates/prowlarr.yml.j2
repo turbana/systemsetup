@@ -13,7 +13,7 @@ services:
     environment:
       DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
     volumes:
-      - "{{ container_volume_root }}/config:/config"
+      - "{{ container_volume_root }}/config/config.xml:/config/config.xml"
     labels:
       - homepage.group=Feeders
       - homepage.name=Prowlarr

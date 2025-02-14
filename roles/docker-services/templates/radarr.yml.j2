@@ -11,7 +11,7 @@ services:
     ports:
       - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
     volumes:
-      - {{ container_volume_root }}/config:/config
+      - {{ container_volume_root }}/config/config.xml:/config/config.xml
       - {{ media_downloads_hosts }}:{{ media_downloads_container }}
       - {{ media_files_host }}:{{ media_files_container }}
     environment:
