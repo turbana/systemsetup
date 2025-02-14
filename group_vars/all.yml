@@ -85,6 +85,13 @@ service_catalog:
     gid: 1001
     auth:
       groups: [Media Admins]
+  sonarr:
+    port: 8989
+    path: https://sonarr.{{ site_name }}
+    uid: 911
+    gid: 1001
+    auth:
+      groups: [Media Admins]
   prowlarr:
     port: 9696
     path: https://prowlarr.{{ site_name }}

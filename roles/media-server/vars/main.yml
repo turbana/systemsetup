@@ -6,4 +6,5 @@ docker_services:
   - qbittorrent
   - sabnzbd
   - radarr
+  - sonarr
   - prowlarr
