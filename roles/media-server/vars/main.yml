@@ -2,4 +2,7 @@ docker_site: media-server
 
 docker_services:
   - helloworld1
+  - gluetun
+  - qbittorrent
   - radarr
+  - prowlarr

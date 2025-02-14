@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     networks:
       - {{ container_net_name }}
+      - {{ docker_site }}_network
     ports:
       - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
     volumes:
@@ -15,6 +16,7 @@ services:
       - {{ media_files_host }}:{{ media_files_container }}
     environment:
       PGID: 1001
+      UMASK: "007"
       DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
     labels:
       - homepage.group=Feeders
