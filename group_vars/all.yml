@@ -18,37 +18,45 @@ service_catalog:
   # core docker services
   socket-proxy:
     port: 2375
-  gluetun: {}
+  gluetun:
+    uid: 1000
+    gid: 0                      # "nonrootuser" has gid=0. lol
   homepage:
     port: 3000
     path: https://homepage.{{ site_name }}
+    uid: 0
+    gid: 0
     auth:
       groups: [Docker Admins]
     socket_proxy_env:
       - CONTAINERS=1
-  portainer:
-    port: 9443
-    path: https://portainer.{{ site_name }}
-    auth:
-      groups: [Docker Admins]
-    socket_proxy_env:
-      - POST=1
-      - CONTAINERS=1
-      - IMAGES=1
-      - INFO=1
-      - NETWORKS=1
-      - SERVICES=1
-      - TASKS=1
-      - VOLUMES=1
+  # portainer:
+  #   port: 9443
+  #   path: https://portainer.{{ site_name }}
+  #   auth:
+  #     groups: [Docker Admins]
+  #   socket_proxy_env:
+  #     - POST=1
+  #     - CONTAINERS=1
+  #     - IMAGES=1
+  #     - INFO=1
+  #     - NETWORKS=1
+  #     - SERVICES=1
+  #     - TASKS=1
+  #     - VOLUMES=1
   dozzle:
     port: 8080
     path: https://dozzle.{{ site_name }}
+    uid: 1000
+    gid: 1000
     auth:
       groups: [Docker Admins]
     socket_proxy_env:
       - CONTAINERS=1
       - INFO=1
   nginx:
+    uid: 101
+    gid: 101
     port:
       http: 3080
       https: 3443
@@ -57,17 +65,25 @@ service_catalog:
   sabnzbd:
     port: 8081
     path: https://sabnzbd.{{ site_name }}
+    uid: 911
+    gid: 1001
   qbittorrent:
     port: 8082
     path: https://qbittorrent.{{ site_name }}
+    uid: 911
+    gid: 1001
     
   # media feeders
   radarr:
     port: 7878
     path: https://radarr.{{ site_name }}
+    uid: 911
+    gid: 1001
   prowlarr:
     port: 9696
     path: https://prowlarr.{{ site_name }}
+    uid: 911
+    gid: 911
     
   # media apps
   jellyfin:
@@ -77,15 +93,23 @@ service_catalog:
   # authentication services
   postgres:
     port: 5432
+    uid: 70
+    gid: 70
   redis:
     port: 6380
+    uid: 999
+    gid: 1000
   authentik-server:
     port: 9080
     path: https://auth.{{ site_name }}
+    uid: 1000
+    gid: 1000
     auth:
       # we don't want to proxy requests to authentik... to authentik
       enabled: false
   authentik-worker:
+    uid: 1000
+    gid: 1000
     socket_proxy_env:
       - POST=1
       - IMAGES=1

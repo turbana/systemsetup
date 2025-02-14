@@ -6,8 +6,8 @@
   ansible.builtin.file:
     path: "{{ docker_volumes_root }}/{{ docker_site }}/{{ item.path }}"
     state: directory
-    owner: root
-    group: root
+    owner: "{{ service_catalog[item.path | split('/') | first].uid | default(1000) }}"
+    group: "{{ service_catalog[item.path | split('/') | first].gid | default(1000) }}"
     mode: "{{ item.mode }}"
   with_community.general.filetree: ../configs
   when: item.state == "directory" and item.path | split('/') | first in docker_services 
@@ -24,8 +24,8 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ docker_volumes_root }}/{{ docker_site }}/{{ item.path }}"
-    owner: root
-    group: root
+    owner: "{{ service_catalog[item.path | split('/') | first].uid | default(1000) }}"
+    group: "{{ service_catalog[item.path | split('/') | first].gid | default(1000) }}"
     mode: "{{ item.mode }}"
   with_community.general.filetree: ../configs
   when: item.state == "file" and item.path | split('/') | first in docker_services 
@@ -40,9 +40,6 @@
     # avoid corrupting target files if the link already exists
     follow: false
     force: true
-    owner: root
-    group: root
-    mode: "{{ item.mode }}"
   with_community.general.filetree: ../configs
   when: item.state == "link" and item.path | split('/') | first in docker_services 
   loop_control:

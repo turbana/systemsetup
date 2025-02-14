@@ -4,14 +4,17 @@
   ansible.builtin.file:
     dest: "{{ authentik.blueprint_root }}"
     state: directory
+    owner: "{{ service_catalog['authentik-worker'].uid | default(1000) }}"
+    group: "{{ service_catalog['authentik-worker'].gid | default(1000) }}"
+    mode: "0750"
 
 - name: Copy blueprint template files
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ authentik.blueprint_root }}/{{ item.path | regex_replace('/', '__') }}"
-    owner: root
-    group: root
-    mode: "0644"
+    owner: "{{ service_catalog['authentik-worker'].uid | default(1000) }}"
+    group: "{{ service_catalog['authentik-worker'].gid | default(1000) }}"
+    mode: "{{ item.mode }}"
   with_community.general.filetree: ../blueprints
   when: item.state == "file"
   loop_control:
