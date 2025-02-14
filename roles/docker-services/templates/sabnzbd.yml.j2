@@ -1,22 +1,24 @@
 services:
-  sabnzbd:
+  {{ container_name }}:
     image: lscr.io/linuxserver/sabnzbd:latest
-    container_name: sabnzbd
+    container_name: {{ container_name }}
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    # profiles: ["apps", "all"]
     networks:
-      - socket_proxy
+      - {{ container_net_name }}
+      - {{ docker_site }}_network
     ports:
-      - "127.0.0.1:{{ docker_services.sabnzbd.port }}:{{ docker_services.sabnzbd.port }}"
-    volumes:
-      - {{ docker_volumes_root }}/sabnzbd/config:/config
-      - {{ media_downloads_hosts }}:{{ media_downloads_container }}
+      - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
     environment:
-      DOCKER_HOST: tcp://socket-proxy:{{ docker_services.socket_proxy.port }}
+      PGID: 1001
+      UMASK: "007"
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+    volumes:
+      - "{{ container_volume_root }}/config/sabnzbd.ini:/config/sabnzbd.ini"
+      - {{ media_downloads_hosts }}:{{ media_downloads_container }}
     labels:
       - homepage.group=Downloaders
-      - homepage.name=Sabnzbd
-      - homepage.href={{ docker_services.sabnzbd.path | default("") }}
+      - homepage.name=SABnzbd
       - homepage.description=Binary newsgrabber (NZB downloader)
+      - homepage.href={{ docker_service.path | default("") }}

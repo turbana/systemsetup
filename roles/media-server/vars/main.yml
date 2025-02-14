@@ -4,5 +4,6 @@ docker_services:
   - helloworld1
   - gluetun
   - qbittorrent
+  - sabnzbd
   - radarr
   - prowlarr
