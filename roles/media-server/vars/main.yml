@@ -7,4 +7,5 @@ docker_services:
   - sabnzbd
   - radarr
   - sonarr
+  - lidarr
   - prowlarr

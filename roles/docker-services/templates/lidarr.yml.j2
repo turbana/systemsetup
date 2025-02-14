@@ -1,0 +1,25 @@
+services:
+  {{ container_name }}:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: {{ container_name }}
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      - {{ container_net_name }}
+      - {{ docker_site }}_network
+    ports:
+      - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
+    volumes:
+      - {{ container_volume_root }}/config/config.xml:/config/config.xml
+      - {{ media_downloads_hosts }}:{{ media_downloads_container }}
+      - {{ media_files_host }}:{{ media_files_container }}
+    environment:
+      PGID: 1001
+      UMASK: "007"
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+    labels:
+      - homepage.group=Feeders
+      - homepage.name=Lidarr
+      - homepage.href={{ docker_service.path | default("") }}
+      - homepage.description=Music PVR
