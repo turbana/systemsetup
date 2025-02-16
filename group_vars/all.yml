@@ -111,6 +111,8 @@ service_catalog:
   jellyfin:
     port: 8096
     path: https://jellyfin.{{ site_name }}
+    uid: 911
+    gid: 1001
     auth:
       groups: [Media Users]
 

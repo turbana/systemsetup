@@ -1,3 +1,8 @@
+- name: Install media tools
+  ansible.builtin.apt:
+    pkg:
+      - radeontop
+
 - name: Setup systcl tweaks
   ansible.builtin.copy:
     src: files/sysctl.conf
