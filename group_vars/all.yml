@@ -106,6 +106,7 @@ service_catalog:
     gid: 911
     auth:
       groups: [Media Admins]
+  flemmarr:
     
   # media apps
   jellyfin:

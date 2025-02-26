@@ -1,0 +1,11 @@
+sonarr:
+{% include "_sonarr.yml.j2" +%}
+  
+radarr:
+{% include "_radarr.yml.j2" +%}
+  
+lidarr:
+{% include "_lidarr.yml.j2" +%}
+  
+prowlarr:
+{% include "_prowlarr.yml.j2" +%}

@@ -1,0 +1,30 @@
+services:
+  {{ container_name }}:
+    image: pierremesure/flemmarr:latest
+    container_name: {{ container_name }}
+    security_opt:
+      - no-new-privileges:true
+    restart: no
+    networks:
+      - {{ container_net_name }}
+      - {{ docker_site }}_network
+    environment:
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+    volumes:
+      - "{{ container_volume_root }}/config:/config"
+    depends_on:
+      media-server_sonarr:
+        condition: service_started
+      media-server_radarr:
+        condition: service_started
+      media-server_lidarr:
+        condition: service_started
+      # media-server_readarr:
+      #   condition: service_started
+      media-server_prowlarr:
+        condition: service_started
+    labels:
+      - homepage.group=Feeders
+      - homepage.name=Flemmarr
+      - homepage.description=A service to configure the Arr apps from a config file
+      - homepage.href={{ docker_service.path | default("") }}
