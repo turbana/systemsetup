@@ -1,0 +1,86 @@
+  server:
+    address: http://media-server_lidarr
+    port: {{ service_catalog.lidarr.port }}
+  config:
+    host:
+      analyticsEnabled: false
+    ui:
+{% include "_ui_common.yml.j2" +%}
+    naming:
+      1:
+        renameTracks: true
+        replaceIllegalCharacters: true
+        colonReplacementFormat: 4
+        standardTrackFormat: >-
+          {Album Title} ({Release Year})/{Artist Name} - {Album Title} - {track:00} -
+          {Track Title}
+        multiDiscTrackFormat: >-
+          {Album Title} ({Release Year})/{Medium Format} {medium:00}/{Artist Name} -
+          {Album Title} - {track:00} - {Track Title}
+        artistFolderFormat: '{Artist Name}'
+        includeArtistName: false
+        includeAlbumTitle: false
+        includeQuality: false
+        replaceSpaces: false
+  rootfolder:
+    - name: Music
+      path: {{ media_files_container }}/music
+      defaultTags: []
+      defaultQualityProfileId: 1
+      defaultMetadataProfileId: 1
+  downloadclient:
+    - name: SABnzbd
+      enable: true
+      priority: 1
+      protocol: usenet
+      removeCompletedDownloads: true
+      removeFailedDownloads: true
+      fields:
+        - name: host
+          value: media-server_sabnzbd
+        - name: port
+          value: {{ service_catalog.sabnzbd.port }}
+        - name: useSsl
+          value: false
+        - name: urlBase
+        - name: apiKey
+          value: {{ sabnzbd_api_key }}
+        - name: username
+        - name: password
+        - name: musicCategory
+          value: music
+        - name: recentMusicPriority
+          value: -100
+        - name: olderMusicPriority
+          value: -100
+      implementationName: SABnzbd
+      implementation: Sabnzbd
+      configContract: SabnzbdSettings
+      infoLink: 'https://wiki.servarr.com/lidarr/supported#sabnzbd'
+      tags: []
+      
+    - name: qBittorrent
+      enable: true
+      priority: 2
+      protocol: torrent
+      removeCompletedDownloads: true
+      removeFailedDownloads: true
+      fields:
+      - name: host
+        value: media-server_gluetun
+      - name: port
+        value: {{ service_catalog.qbittorrent.port }}
+      - name: musicCategory
+        value: music
+      - name: recentMusicPriority
+        value: 0
+      - name: olderMusicPriority
+        value: 0
+      - name: initialState
+        value: 0
+      - name: sequentialOrder
+        value: false
+      - name: firstAndLast
+        value: false
+      implementation: QBittorrent
+      configContract: QBittorrentSettings

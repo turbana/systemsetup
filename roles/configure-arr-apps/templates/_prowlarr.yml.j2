@@ -1,0 +1,339 @@
+  server:
+    address: http://media-server_prowlarr
+    # address: localhost
+    port: {{ service_catalog.prowlarr.port }}
+  config:
+    host:
+      analyticsEnabled: false
+    ui:
+      theme: dark
+  applications:
+    - name: Sonarr
+      syncLevel: fullSync
+      implementation: Sonarr
+      configContract: SonarrSettings
+      fields:
+        - name: prowlarrUrl
+          value: http://media-server_prowlarr:{{ service_catalog.prowlarr.port }}
+        - name: baseUrl
+          value: http://media-server_sonarr:{{ service_catalog.sonarr.port }}
+        - name: apiKey
+          value: {{ sonarr_api_key }}
+    - name: Radarr
+      syncLevel: fullSync
+      implementation: Radarr
+      configContract: RadarrSettings
+      fields:
+        - name: prowlarrUrl
+          value: http://media-server_prowlarr:{{ service_catalog.prowlarr.port }}
+        - name: baseUrl
+          value: http://media-server_radarr:{{ service_catalog.radarr.port }}
+        - name: apiKey
+          value: {{ radarr_api_key }}
+    - name: Lidarr
+      syncLevel: fullSync
+      implementation: Lidarr
+      configContract: LidarrSettings
+      fields:
+        - name: prowlarrUrl
+          value: http://media-server_prowlarr:{{ service_catalog.prowlarr.port }}
+        - name: baseUrl
+          value: http://media-server_lidarr:{{ service_catalog.lidarr.port }}
+        - name: apiKey
+          value: {{ lidarr_api_key }}
+  indexer:
+    - name: NZBFinder
+      enable: true
+      priority: 1
+      indexerUrls:
+        - ''
+      legacyUrls: []
+      definitionName: Newznab
+      description: Newznab is an API search specification for Usenet
+      language: en-US
+      encoding: Unicode (UTF-8)
+      redirect: false
+      supportsRss: true
+      supportsSearch: true
+      supportsRedirect: true
+      supportsPagination: true
+      appProfileId: 1
+      protocol: usenet
+      privacy: private
+      capabilities:
+        limitsMax: 100
+        limitsDefault: 100
+        categories:
+          - id: 2000
+            name: Movies
+            subCategories: []
+          - id: 3000
+            name: Audio
+            subCategories: []
+          - id: 5000
+            name: TV
+            subCategories: []
+          - id: 6000
+            name: XXX
+            subCategories: []
+          - id: 7000
+            name: Books
+            subCategories: []
+        supportsRawSearch: false
+        searchParams:
+          - q
+        tvSearchParams: []
+        movieSearchParams: []
+        musicSearchParams: []
+        bookSearchParams: []
+      downloadClientId: 0
+      added: '0001-01-01T00:00:00Z'
+      sortName: nzbfinder
+      fields:
+        - name: baseUrl
+          value: 'https://nzbfinder.ws'
+        - name: apiPath
+          value: /api
+        - name: apiKey
+          value: {{ nzbfinder_api_key }}
+        - name: additionalParameters
+        - name: vipExpiration
+          value: ''
+        - name: baseSettings.queryLimit
+        - name: baseSettings.grabLimit
+        - name: baseSettings.limitsUnit
+          value: 0
+      implementationName: Newznab
+      implementation: Newznab
+      configContract: NewznabSettings
+      infoLink: 'https://wiki.servarr.com/prowlarr/supported-indexers#newznab'
+      tags: []
+
+    - name: The Pirate Bay
+      enable: true
+      priority: 5
+      indexerUrls:
+        - 'https://thepiratebay.org/'
+        - 'https://thepiratebay.unblockninja.com/'
+        - 'https://thepiratebay.ninjaproxy1.com/'
+        - 'https://tpb.proxyninja.org/'
+        - 'https://tpb.proxyninja.net/'
+        - 'https://thepiratebay.torrentbay.st/'
+        - 'https://tpb31.ukpass.co/'
+        - 'https://tpb.skynetcloud.site/'
+        - 'https://piratehaven.xyz/'
+        - 'https://mirrorbay.top/'
+        - 'https://thepiratebay0.org/'
+        - 'https://thepiratebay10.org/'
+        - 'https://pirateproxylive.org/'
+        - 'https://thehiddenbay.com/'
+        - 'https://thepiratebay.zone/'
+        - 'https://tpb.party/'
+        - 'https://piratebayproxy.live/'
+        - 'https://piratebay.live/'
+        - 'https://piratebay.party/'
+        - 'https://thepiratebay.party/'
+        - 'https://pirate-proxy.africa/'
+        - 'https://thepiratebaye.org/'
+        - 'https://5mins.eu/'
+        - 'https://thepiratebay.cloud/'
+        - 'https://tpb-proxy.xyz/'
+        - 'https://piratebay.army/'
+        - 'https://tpb-visit.me/'
+        - 'https://tpb.re/'
+        - 'https://pirate-proxy.ong/'
+      legacyUrls:
+        - 'https://pirate-proxy.page/'
+        - 'https://5mins.shop/'
+        - 'https://tpb.surf/'
+        - 'https://tpb.monster/'
+        - 'https://thepiratebay.host/'
+        - 'https://piratetoday.xyz/'
+        - 'https://tpb.wtf/'
+        - 'https://piratebayo3klnzokct3wt5yyxb2vpebbuyjl7m623iaxmqhsd52coid.onion.ly/'
+        - 'https://piratebayo3klnzokct3wt5yyxb2vpebbuyjl7m623iaxmqhsd52coid.tor2web.to/'
+        - >-
+          https://piratebayo3klnzokct3wt5yyxb2vpebbuyjl7m623iaxmqhsd52coid.tor2web.link/
+        - 'https://tpb25.ukpass.co/'
+        - 'https://tpb29.ukpass.co/'
+        - 'https://piratenow.xyz/'
+        - 'https://pirate-proxy.ink/'
+        - 'https://proxifiedpiratebay.org/'
+        - 'https://unlockedpiratebay.com/'
+        - 'https://tpb.one/'
+        - 'https://piratebayorg.net/'
+        - 'https://tpbproxy.click/'
+        - 'https://pirateproxy.live/'
+        - 'https://ukpiratebay.org/'
+        - 'https://piratebay.by/'
+        - 'https://pirate-proxy.date/'
+        - 'https://thepirateproxy.net/'
+        - 'https://thepiratebay.abcproxy.org/'
+      definitionName: thepiratebay
+      description: The Pirate Bay (TPB) is the galaxy’s most resilient Public BitTorrent site
+      language: en-US
+      redirect: false
+      supportsRss: true
+      supportsSearch: true
+      supportsRedirect: false
+      supportsPagination: false
+      appProfileId: 1
+      protocol: torrent
+      privacy: public
+      capabilities:
+        limitsMax: 100
+        limitsDefault: 100
+        categories:
+          - id: 3000
+            name: Audio
+            subCategories:
+              - id: 3030
+                name: Audio/Audiobook
+                subCategories: []
+              - id: 3040
+                name: Audio/Lossless
+                subCategories: []
+              - id: 3050
+                name: Audio/Other
+                subCategories: []
+              - id: 3020
+                name: Audio/Video
+                subCategories: []
+          - id: 2000
+            name: Movies
+            subCategories:
+              - id: 2020
+                name: Movies/Other
+                subCategories: []
+              - id: 2040
+                name: Movies/HD
+                subCategories: []
+              - id: 2060
+                name: Movies/3D
+                subCategories: []
+              - id: 2030
+                name: Movies/SD
+                subCategories: []
+              - id: 2045
+                name: Movies/UHD
+                subCategories: []
+          - id: 5000
+            name: TV
+            subCategories:
+              - id: 5050
+                name: TV/Other
+                subCategories: []
+              - id: 5040
+                name: TV/HD
+                subCategories: []
+              - id: 5045
+                name: TV/UHD
+                subCategories: []
+          - id: 4000
+            name: PC
+            subCategories:
+              - id: 4030
+                name: PC/Mac
+                subCategories: []
+              - id: 4040
+                name: PC/Mobile-Other
+                subCategories: []
+              - id: 4060
+                name: PC/Mobile-iOS
+                subCategories: []
+              - id: 4070
+                name: PC/Mobile-Android
+                subCategories: []
+              - id: 4050
+                name: PC/Games
+                subCategories: []
+          - id: 1000
+            name: Console
+            subCategories:
+              - id: 1180
+                name: Console/PS4
+                subCategories: []
+              - id: 1040
+                name: Console/XBox
+                subCategories: []
+              - id: 1030
+                name: Console/Wii
+                subCategories: []
+              - id: 1090
+                name: Console/Other
+                subCategories: []
+          - id: 6000
+            name: XXX
+            subCategories:
+              - id: 6010
+                name: XXX/DVD
+                subCategories: []
+              - id: 6060
+                name: XXX/ImageSet
+                subCategories: []
+              - id: 6040
+                name: XXX/x264
+                subCategories: []
+              - id: 6045
+                name: XXX/UHD
+                subCategories: []
+              - id: 6070
+                name: XXX/Other
+                subCategories: []
+          - id: 8000
+            name: Other
+            subCategories: []
+          - id: 7000
+            name: Books
+            subCategories:
+              - id: 7020
+                name: Books/EBook
+                subCategories: []
+              - id: 7030
+                name: Books/Comics
+                subCategories: []
+              - id: 7050
+                name: Books/Other
+                subCategories: []
+        supportsRawSearch: false
+        searchParams:
+          - q
+          - q
+        tvSearchParams:
+          - q
+          - season
+          - ep
+        movieSearchParams:
+          - q
+        musicSearchParams:
+          - q
+        bookSearchParams:
+          - q
+      downloadClientId: 0
+      added: '0001-01-01T00:00:00Z'
+      sortName: pirate bay
+      fields:
+        - name: definitionFile
+          value: thepiratebay
+        - name: baseUrl
+        - name: baseSettings.queryLimit
+        - name: baseSettings.grabLimit
+        - name: baseSettings.limitsUnit
+          value: 0
+        - name: torrentBaseSettings.appMinimumSeeders
+        - name: torrentBaseSettings.seedRatio
+        - name: torrentBaseSettings.seedTime
+        - name: torrentBaseSettings.packSeedTime
+        - name: torrentBaseSettings.preferMagnetUrl
+          value: false
+        - name: info_api
+          value: >-
+            This indexer uses the API at https://apibay.org/ to get its official TPB
+            data. Choose any site link that you can access/prefer so that you can view
+            the torrent details page when browsing the search results for this
+            indexer.
+      implementationName: Cardigann
+      implementation: Cardigann
+      configContract: CardigannSettings
+      infoLink: 'https://wiki.servarr.com/prowlarr/supported-indexers#thepiratebay'
+      tags: []

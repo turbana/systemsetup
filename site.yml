@@ -6,3 +6,4 @@
 - import_playbook: playbook_deploy-auth-services.yml
 - import_playbook: playbook_deploy-docker-core-services.yml
 - import_playbook: playbook_deploy-reverse-proxy.yml
+- import_playbook: playbook_deploy-configure-arr-apps.yml

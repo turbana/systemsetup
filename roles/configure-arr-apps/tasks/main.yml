@@ -1,0 +1,30 @@
+- name: Create container volume root
+  ansible.builtin.file:
+    path: "{{ container_volume_root }}"
+    state: directory
+    owner: "{{ service_catalog.flemmarr.uid | default(1000) }}"
+    group: "{{ service_catalog.flemmarr.gid | default(1000) }}"
+    mode: "0750"
+
+- name: Copy Flemmarr config file
+  ansible.builtin.template:
+    src: templates/config.yml.j2
+    dest: "{{ container_volume_root }}/config.yml"
+    owner: "{{ service_catalog.flemmarr.uid | default(1000) }}"
+    group: "{{ service_catalog.flemmarr.gid | default(1000) }}"
+    mode: "0640"
+
+- name: Run configuration
+  become: false
+  community.docker.docker_container:
+    name: flemmarr
+    image: pierremesure/flemmarr:latest
+    cleanup: true
+    detach: false
+    state: started
+    log_driver: local
+    networks:
+      # - name: media-server_network
+      - name: media-server_media-server_network
+    volumes:
+      - "{{ container_volume_root }}:/config"

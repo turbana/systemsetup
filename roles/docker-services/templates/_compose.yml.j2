@@ -3,6 +3,7 @@ name: {{ docker_site }}
 networks:
   {{ docker_site }}_network:
     driver: bridge
+    attachable: true
 
 include:
 {% for service in docker_services %}

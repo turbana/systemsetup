@@ -10,4 +10,3 @@ docker_services:
   - lidarr
   - prowlarr
   - jellyfin
-  - flemmarr

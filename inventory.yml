@@ -25,6 +25,10 @@ auth_services:
 docker_core_services:
   hosts:
     lab0:
+
+configure_arr_apps:
+  hosts:
+    lab0:
       
 at_home:
   hosts:

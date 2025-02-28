@@ -1,0 +1,7 @@
+- name: Deploy configure-arr-apps
+  hosts: configure_arr_apps
+  become: true
+  pre_tasks:
+    - include_vars: secrets/media_servers.yml
+  roles:
+    - configure-arr-apps
