@@ -337,3 +337,387 @@
       configContract: CardigannSettings
       infoLink: 'https://wiki.servarr.com/prowlarr/supported-indexers#thepiratebay'
       tags: []
+
+
+
+    - name: Internet Archive
+      enable: true
+      priority: 3
+      indexerUrls:
+        - 'https://archive.org/'
+      legacyUrls: []
+      definitionName: internetarchive
+      description: >-
+        Internet Archive is a non-profit digital library offering free universal
+        access to books, movies & music, as well as 406 billion archived web pages
+      language: en-US
+      redirect: false
+      supportsRss: true
+      supportsSearch: true
+      supportsRedirect: false
+      supportsPagination: false
+      appProfileId: 1
+      protocol: torrent
+      privacy: public
+      capabilities:
+        limitsMax: 100
+        limitsDefault: 100
+        categories:
+          - id: 3000
+            name: Audio
+            subCategories: []
+          - id: 2000
+            name: Movies
+            subCategories: []
+          - id: 5000
+            name: TV
+            subCategories: []
+          - id: 8000
+            name: Other
+            subCategories:
+              - id: 8010
+                name: Other/Misc
+                subCategories: []
+          - id: 7000
+            name: Books
+            subCategories: []
+          - id: 4000
+            name: PC
+            subCategories: []
+        supportsRawSearch: false
+        searchParams:
+          - q
+          - q
+        tvSearchParams:
+          - q
+          - season
+          - ep
+        movieSearchParams:
+          - q
+        musicSearchParams:
+          - q
+        bookSearchParams:
+          - q
+      downloadClientId: 0
+      added: '0001-01-01T00:00:00Z'
+      sortName: internet archive
+      fields:
+        - name: definitionFile
+          value: internetarchive
+        - name: baseUrl
+        - name: baseSettings.queryLimit
+        - name: baseSettings.grabLimit
+        - name: baseSettings.limitsUnit
+          value: 0
+        - name: torrentBaseSettings.appMinimumSeeders
+        - name: torrentBaseSettings.seedRatio
+        - name: torrentBaseSettings.seedTime
+        - name: torrentBaseSettings.packSeedTime
+        - name: torrentBaseSettings.preferMagnetUrl
+          value: false
+        - name: titleOnly
+          value: true
+        - name: noMagnet
+          value: false
+        - name: sort
+          value: 2
+        - name: type
+          value: 1
+      implementationName: Cardigann
+      implementation: Cardigann
+      configContract: CardigannSettings
+      infoLink: 'https://wiki.servarr.com/prowlarr/supported-indexers#internetarchive'
+      tags: []
+
+
+    - name: BT.etree
+      enable: true
+      priority: 4
+      indexerUrls:
+        - 'https://bt.etree.org/'
+      legacyUrls:
+        - 'http://bt.etree.org/'
+      definitionName: btetree
+      description: BT.etree is a Public Tracker dedicated to Bootleg FLAC MUSIC
+      language: en-US
+      redirect: false
+      supportsRss: true
+      supportsSearch: true
+      supportsRedirect: false
+      supportsPagination: false
+      appProfileId: 1
+      protocol: torrent
+      privacy: public
+      capabilities:
+        limitsMax: 100
+        limitsDefault: 100
+        categories:
+          - id: 3000
+            name: Audio
+            subCategories:
+              - id: 3040
+                name: Audio/Lossless
+                subCategories: []
+        supportsRawSearch: false
+        searchParams:
+          - q
+          - q
+        tvSearchParams: []
+        movieSearchParams: []
+        musicSearchParams:
+          - q
+          - artist
+        bookSearchParams: []
+      downloadClientId: 0
+      added: '0001-01-01T00:00:00Z'
+      sortName: bt etree
+      fields:
+        - name: definitionFile
+          value: btetree
+        - name: baseUrl
+        - name: baseSettings.queryLimit
+        - name: baseSettings.grabLimit
+        - name: baseSettings.limitsUnit
+          value: 0
+        - name: torrentBaseSettings.appMinimumSeeders
+        - name: torrentBaseSettings.seedRatio
+        - name: torrentBaseSettings.seedTime
+        - name: torrentBaseSettings.packSeedTime
+        - name: torrentBaseSettings.preferMagnetUrl
+          value: false
+        - name: sort
+          value: 0
+      implementationName: Cardigann
+      implementation: Cardigann
+      configContract: CardigannSettings
+      infoLink: 'https://wiki.servarr.com/prowlarr/supported-indexers#btetree'
+      tags: []
+
+      
+    - name: Solid Torrents
+      enable: true
+      priority: 5
+      indexerUrls:
+        - 'https://solidtorrents.to/'
+      legacyUrls:
+        - 'https://solidtorrents.net/'
+        - 'https://solidtorrents.nocensor.cloud/'
+        - 'https://solidtorrents.eu/'
+      definitionName: solidtorrents
+      description: Solid Torrents is a Public torrent meta-search engine
+      language: en-US
+      redirect: false
+      supportsRss: true
+      supportsSearch: true
+      supportsRedirect: false
+      supportsPagination: false
+      appProfileId: 1
+      protocol: torrent
+      privacy: public
+      capabilities:
+        limitsMax: 100
+        limitsDefault: 100
+        categories:
+          - id: 3000
+            name: Audio
+            subCategories:
+              - id: 3030
+                name: Audio/Audiobook
+                subCategories: []
+              - id: 3010
+                name: Audio/MP3
+                subCategories: []
+              - id: 3040
+                name: Audio/Lossless
+                subCategories: []
+              - id: 3020
+                name: Audio/Video
+                subCategories: []
+          - id: 7000
+            name: Books
+            subCategories:
+              - id: 7020
+                name: Books/EBook
+                subCategories: []
+              - id: 7030
+                name: Books/Comics
+                subCategories: []
+          - id: 4000
+            name: PC
+            subCategories:
+              - id: 4050
+                name: PC/Games
+                subCategories: []
+              - id: 4070
+                name: PC/Mobile-Android
+                subCategories: []
+              - id: 4020
+                name: PC/ISO
+                subCategories: []
+              - id: 4010
+                name: PC/0day
+                subCategories: []
+              - id: 4030
+                name: PC/Mac
+                subCategories: []
+          - id: 2000
+            name: Movies
+            subCategories: []
+          - id: 8000
+            name: Other
+            subCategories:
+              - id: 8010
+                name: Other/Misc
+                subCategories: []
+          - id: 5000
+            name: TV
+            subCategories: []
+          - id: 6000
+            name: XXX
+            subCategories: []
+        supportsRawSearch: false
+        searchParams:
+          - q
+          - q
+        tvSearchParams:
+          - q
+          - season
+          - ep
+        movieSearchParams:
+          - q
+        musicSearchParams:
+          - q
+        bookSearchParams:
+          - q
+      downloadClientId: 0
+      added: '0001-01-01T00:00:00Z'
+      sortName: solid torrents
+      fields:
+        - name: definitionFile
+          value: solidtorrents
+        - name: baseUrl
+        - name: baseSettings.queryLimit
+        - name: baseSettings.grabLimit
+        - name: baseSettings.limitsUnit
+          value: 0
+        - name: torrentBaseSettings.appMinimumSeeders
+        - name: torrentBaseSettings.seedRatio
+        - name: torrentBaseSettings.seedTime
+        - name: torrentBaseSettings.packSeedTime
+        - name: torrentBaseSettings.preferMagnetUrl
+          value: false
+        - name: prefer_magnet_links
+          value: false
+        - name: sort
+          value: 0
+        - name: type
+          value: 1
+      implementationName: Cardigann
+      implementation: Cardigann
+      configContract: CardigannSettings
+      infoLink: 'https://wiki.servarr.com/prowlarr/supported-indexers#solidtorrents'
+      tags: []
+
+
+    - name: Badass Torrents
+      enable: true
+      priority: 5
+      indexerUrls:
+        - 'https://badasstorrents.com/'
+      legacyUrls:
+        - 'https://badasstorrents.mrunblock.bond/'
+        - 'https://badasstorrents.nocensor.cloud/'
+      definitionName: badasstorrents
+      description: Badass Torrents is a Public torrent site for MOVIES / TV / GENERAL
+      language: en-US
+      redirect: false
+      supportsRss: true
+      supportsSearch: true
+      supportsRedirect: false
+      supportsPagination: false
+      appProfileId: 1
+      protocol: torrent
+      privacy: public
+      capabilities:
+        limitsMax: 100
+        limitsDefault: 100
+        categories:
+          - id: 5000
+            name: TV
+            subCategories:
+              - id: 5070
+                name: TV/Anime
+                subCategories: []
+          - id: 4000
+            name: PC
+            subCategories:
+              - id: 4050
+                name: PC/Games
+                subCategories: []
+          - id: 7000
+            name: Books
+            subCategories: []
+          - id: 2000
+            name: Movies
+            subCategories: []
+          - id: 3000
+            name: Audio
+            subCategories: []
+          - id: 8000
+            name: Other
+            subCategories: []
+          - id: 6000
+            name: XXX
+            subCategories: []
+        supportsRawSearch: false
+        searchParams:
+          - q
+          - q
+        tvSearchParams:
+          - q
+          - season
+          - ep
+        movieSearchParams:
+          - q
+        musicSearchParams:
+          - q
+          - album
+          - artist
+        bookSearchParams:
+          - q
+      downloadClientId: 0
+      added: '0001-01-01T00:00:00Z'
+      sortName: badass torrents
+      fields:
+        - name: definitionFile
+          value: badasstorrents
+        - name: baseUrl
+        - name: baseSettings.queryLimit
+        - name: baseSettings.grabLimit
+        - name: baseSettings.limitsUnit
+          value: 0
+        - name: torrentBaseSettings.appMinimumSeeders
+        - name: torrentBaseSettings.seedRatio
+        - name: torrentBaseSettings.seedTime
+        - name: torrentBaseSettings.packSeedTime
+        - name: torrentBaseSettings.preferMagnetUrl
+          value: false
+        - name: info_flaresolverr
+          value: >-
+            This site may use Cloudflare DDoS Protection, therefore Prowlarr requires
+            <a
+            href="https://wiki.servarr.com/prowlarr/faq#can-i-use-flaresolverr-indexers"
+            target="_blank" rel="noreferrer">FlareSolverr</a> to access it.
+        - name: downloadlink
+          value: 1
+        - name: downloadlink2
+          value: 0
+        - name: info_download
+          value: >-
+            You can optionally set as a fallback an automatic alternate link, so if
+            the .torrent download link fails your download will still be successful.
+      implementationName: Cardigann
+      implementation: Cardigann
+      configContract: CardigannSettings
+      infoLink: 'https://wiki.servarr.com/prowlarr/supported-indexers#badasstorrents'
+      tags: []

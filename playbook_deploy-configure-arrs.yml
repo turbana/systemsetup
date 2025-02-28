@@ -1,0 +1,8 @@
+- name: Configure Arr apps
+  hosts: configure_arrs
+  become: true
+  pre_tasks:
+    - include_vars: secrets/media_servers.yml
+  roles:
+    - configure-arrs
+    - docker-services
