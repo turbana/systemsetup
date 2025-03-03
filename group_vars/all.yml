@@ -122,6 +122,13 @@ service_catalog:
     uid: 1000
     gid: 1001
     auth:
+      # plex has it's own authentication
+      enabled: false
+  ombi:
+    port: 3579
+    path: https://ombi.{{ site_name }}
+    auth:
+      # ombi uses plex for authentication
       enabled: false
 
   # authentication services

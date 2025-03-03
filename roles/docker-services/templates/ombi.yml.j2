@@ -1,0 +1,21 @@
+services:
+  {{ container_name }}:
+    image: lscr.io/linuxserver/ombi:latest
+    container_name: {{ container_name }}
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      - {{ container_net_name }}
+      - {{ docker_site }}_network
+    ports:
+      - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
+    environment:
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+    volumes:
+      - {{ container_volume_root }}/config:/config
+    labels:
+      - homepage.group=Media
+      - homepage.name=Ombi
+      - homepage.description=A feeder aggregator
+      - homepage.href={{ docker_service.path | default("") }}

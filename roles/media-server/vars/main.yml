@@ -11,3 +11,4 @@ docker_services:
   - prowlarr
   - jellyfin
   - plex
+  - ombi
