@@ -11,7 +11,8 @@ services:
     networks:
       - {{ container_net_name }}
     ports:
-      - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
+      # expose plex publicly
+      - "0.0.0.0:{{ docker_service.port }}:{{ docker_service.port }}"
     environment:
       PLEX_GID: {{ docker_service.gid }}
       PLEX_CLAIM: {{ plex_claim_token }}
