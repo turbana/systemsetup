@@ -116,6 +116,13 @@ service_catalog:
     gid: 1001
     auth:
       groups: [Media Users]
+  plex:
+    port: 32400
+    path: https://plex.{{ site_name }}
+    uid: 1000
+    gid: 1001
+    auth:
+      enabled: false
 
   # authentication services
   postgres:
