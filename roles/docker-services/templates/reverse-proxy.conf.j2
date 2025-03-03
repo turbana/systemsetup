@@ -3,6 +3,7 @@
 server {
     server_name {{ docker_service.path | replace("https://", "") }};
     include includes/listen_ssl.conf;
+    include includes/gzip.conf;
     include includes/proxy_auth_server.conf;
     location / {
         proxy_pass {{ docker_service.proxy.host | default("http://127.0.0.1:{}".format(docker_service.port)) }};
