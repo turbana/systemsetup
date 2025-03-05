@@ -1,13 +1,17 @@
 - name: Create shared reverse proxy config directory
   ansible.builtin.file:
-    dest: "{{ docker_volumes_root }}/.reverse_proxy_configs"
+    dest: "{{ web_root }}/nginx.sites"
     state: directory
+    group: "{{ service_catalog.nginx.gid }}"
+    mode: "0750"
 
 - name: Add reverse proxy app configs
   vars:
     docker_service: "{{ service_catalog[item] }}"
     service_name: "{{ item }}"
   ansible.builtin.template:
-    dest: "{{ docker_volumes_root }}/.reverse_proxy_configs/{{ docker_site }}_{{ item }}.conf"
+    dest: "{{ web_root }}/nginx.sites/{{ docker_site }}_{{ item }}.conf"
     src: templates/reverse-proxy.conf.j2
+    group: "{{ service_catalog.nginx.gid }}"
+    mode: "0640"
   loop: "{{ docker_services }}"

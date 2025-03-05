@@ -3,6 +3,7 @@
   become: true
   pre_tasks:
     - include_vars: secrets/media_servers.yml
+    - include_vars: group_vars/reverse_proxy.yml
   roles:
     - media-server
     - docker-services

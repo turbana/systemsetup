@@ -11,7 +11,7 @@ services:
     network_mode: host
     volumes:
       - {{ container_volume_root }}/config:/etc/nginx
-      - {{ docker_volumes_root }}/.reverse_proxy_configs:/etc/nginx/sites
+      - {{ web_root }}/nginx.sites:/etc/nginx/sites
       - {{ ssl_root }}:/opt/ssl:ro
     environment:
       DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
