@@ -1,0 +1,24 @@
+services:
+  {{ container_name }}:
+    image: syncthing/syncthing:latest
+    container_name: {{ container_name }}
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # networks:
+    #   - {{ container_net_name }}
+    # ports:
+    #   - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
+    network_mode: host
+    environment:
+      PUID: {{ docker_service.uid | default(1000) }}
+      PGID: {{ docker_service.gid | default(1000) }}
+      # STGUIADDRESS: ""          # syncthing should only listen on the local interface
+      DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+    volumes:
+      - "/opt/sync:/var/syncthing"
+    labels:
+      - homepage.group=Misc
+      - homepage.name=Syncthing
+      - homepage.description=File synchronization system
+      - homepage.href={{ docker_service.path | default("") }}

@@ -2,3 +2,4 @@ docker_site: reverse-proxy
 
 docker_services:
   - nginx
+  - syncthing
