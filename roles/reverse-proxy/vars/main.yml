@@ -2,13 +2,3 @@ docker_site: reverse-proxy
 
 docker_services:
   - nginx
-  - helloworld0
-
-XXX_docker_services:
-  nginx:
-    port_http: 3080
-    port_https: 3443
-  helloworld:
-    port: 9010
-    proxy:
-      base: https://hello0.{{ site_name }}

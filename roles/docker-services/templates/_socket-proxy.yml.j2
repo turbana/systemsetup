@@ -16,10 +16,10 @@ services:
 {% for line in docker_service.socket_proxy_env | default("") %}
       - {{ line }}
 {% endfor %}
-    labels:
-      - homepage.group=Docker Socket Proxies
-      - homepage.name={{ container_sp_name }}
-      - homepage.description=Socket proxy for {{ container_name }} container
+    # labels:
+    #   - homepage.group=Docker Socket Proxies
+    #   - homepage.name={{ container_sp_name }}
+    #   - homepage.description=Socket proxy for {{ container_name }} container
 
 ### custom socket proxy network
 networks:
