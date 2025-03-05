@@ -1,2 +1,6 @@
-- name: test task
-  debug: msg="TODO setup reverse-proxy tasks"
+- name: Copy site configs
+  ansible.builtin.template:
+    src: "templates/{{ item }}.conf.j2"
+    dest: "{{ web_root }}/nginx.sites/{{ item }}.conf"
+  loop:
+    - zetian

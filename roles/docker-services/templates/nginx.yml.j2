@@ -12,6 +12,7 @@ services:
     volumes:
       - {{ container_volume_root }}/config:/etc/nginx
       - {{ web_root }}/nginx.sites:/etc/nginx/sites
+      - /opt/sync/www:/var/www
       - {{ ssl_root }}:/opt/ssl:ro
     environment:
       DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}

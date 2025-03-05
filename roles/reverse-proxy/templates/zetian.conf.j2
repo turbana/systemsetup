@@ -1,0 +1,15 @@
+# zetian service
+server {
+    server_name zetian.{{ site_name }};
+    include includes/listen_ssl.conf;
+    include includes/gzip.conf;
+    include includes/proxy_auth_server.conf;
+
+    root /var/www/zetian;
+    index index.html;
+    
+    location / {
+        include includes/proxy_auth_location.conf;
+        try_files $uri $uri/ =404;
+    }
+}

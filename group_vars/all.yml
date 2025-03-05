@@ -152,3 +152,9 @@ service_catalog:
     gid: 1000
     auth:
       groups: [Docker Admins]
+
+  # web
+  zetian:
+    path: https://zetian.{{ site_name }}
+    auth:
+      groups: [Docker Admins]
