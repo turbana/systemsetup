@@ -1,0 +1,13 @@
+# rpg service
+server {
+    server_name rpg.{{ site_name }};
+    include includes/listen_ssl.conf;
+    include includes/gzip.conf;
+
+    root /var/www/rpg;
+    index index.html;
+    
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}

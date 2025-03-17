@@ -4,3 +4,4 @@
     dest: "{{ web_root }}/nginx.sites/{{ item }}.conf"
   loop:
     - zetian
+    - rpg
