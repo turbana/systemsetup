@@ -154,7 +154,7 @@ service_catalog:
     port: 8384
     path: https://syncthing.{{ site_name }}
     uid: 1000
-    gid: 1000
+    gid: 1001
     auth:
       groups: [Docker Admins]
 
