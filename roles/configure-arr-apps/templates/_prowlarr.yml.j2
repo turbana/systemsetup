@@ -41,6 +41,17 @@
           value: http://media-server_lidarr:{{ service_catalog.lidarr.port }}
         - name: apiKey
           value: {{ lidarr_api_key }}
+    - name: Readarr
+      syncLevel: fullSync
+      implementation: Readarr
+      configContract: ReadarrSettings
+      fields:
+        - name: prowlarrUrl
+          value: http://media-server_prowlarr:{{ service_catalog.prowlarr.port }}
+        - name: baseUrl
+          value: http://media-server_readarr:{{ service_catalog.readarr.port }}
+        - name: apiKey
+          value: {{ readarr_api_key }}
   indexer:
     - name: NZBFinder
       enable: true

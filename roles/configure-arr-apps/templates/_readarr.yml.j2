@@ -1,0 +1,75 @@
+  server:
+    address: http://media-server_readarr
+    port: {{ service_catalog.readarr.port }}
+  config:
+    host:
+      analyticsEnabled: false
+    ui:
+{% include "_ui_common.yml.j2" +%}
+  rootfolder:
+    - name: Books
+      path: {{ media_files_container }}/books
+      defaultTags: []
+      defaultQualityProfileId: 1
+      defaultMetadataProfileId: 1
+  downloadclient:
+    - name: SABnzbd
+      enable: true
+      priority: 1
+      protocol: usenet
+      removeCompletedDownloads: true
+      removeFailedDownloads: true
+      fields:
+        - name: host
+          value: media-server_sabnzbd
+        - name: port
+          value: {{ service_catalog.sabnzbd.port }}
+        - name: useSsl
+          value: false
+        - name: urlBase
+        - name: apiKey
+          value: {{ sabnzbd_api_key }}
+        - name: username
+        - name: password
+        - name: musicCategory
+          value: music
+        - name: recentMusicPriority
+          value: -100
+        - name: olderMusicPriority
+          value: -100
+      implementationName: SABnzbd
+      implementation: Sabnzbd
+      configContract: SabnzbdSettings
+      infoLink: 'https://wiki.servarr.com/lidarr/supported#sabnzbd'
+      tags: []
+
+    - name: qBittorrent
+      enable: true
+      protocol: torrent
+      priority: 2
+      removeCompletedDownloads: true
+      removeFailedDownloads: true
+      fields:
+      - name: host
+        value: media-server_gluetun
+      - name: port
+        value: {{ service_catalog.qbittorrent.port }}
+      # - name: username
+      #   value: username
+      # - name: password
+      #   value: password
+      - name: bookCategory
+        value: book
+      - name: recentBookPriority
+        value: 0
+      - name: olderBookPriority
+        value: 0
+      - name: initialState
+        value: 0
+      - name: sequentialOrder
+        value: false
+      - name: firstAndLast
+        value: false
+      implementation: QBittorrent
+      configContract: QBittorrentSettings
+ 
