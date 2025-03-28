@@ -1,0 +1,13 @@
+# bookmarks service
+server {
+    server_name bookmarks.{{ site_name }};
+    include includes/listen_ssl.conf;
+    include includes/gzip.conf;
+
+    root /var/www/bookmarks;
+    index index.html;
+    
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
