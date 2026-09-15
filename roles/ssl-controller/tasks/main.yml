@@ -48,9 +48,13 @@
     dest: "{{ ssl_root }}/renew-all-certs.sh"
     content: |
       #!/bin/env sh
-      exec docker run -it --rm --name certbot \
+      set -e
+      docker run -it --rm --name certbot \
            -v {{ ssl_root }}:/etc/letsencrypt \
            certbot/dns-cloudflare renew -n -q
+      docker compose -f /opt/docker/compose/compose_reverse-proxy.yml \
+           exec -it reverse-proxy_nginx \
+           /usr/sbin/nginx -s reload
     mode: 0700
 
 - name: Setup crontab for auto renewal of certificate(s)
