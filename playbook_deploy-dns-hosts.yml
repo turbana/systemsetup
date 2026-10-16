@@ -7,4 +7,4 @@
   roles:
     - role: dns-host
       tags: dns-host
-      when: dns_records
+      when: dns_records | length > 0
