@@ -1,3 +1,9 @@
+- name: Update all packages
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+
 - name: Install basic packages
   ansible.builtin.apt:
     pkg:
