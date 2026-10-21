@@ -11,6 +11,7 @@ services:
       - "127.0.0.1:{{ docker_service.port }}:{{ docker_service.port }}"
     environment:
       DOCKER_HOST: tcp://{{ container_sp_name }}:{{ socket_proxy_port }}
+      HOMEPAGE_ALLOWED_HOSTS: "{{ docker_service.path | default ('') | replace('https://','') }}"
     volumes:
       - "{{ container_volume_root }}/config/bookmarks.yaml:/app/config/bookmarks.yaml"
       - "{{ container_volume_root }}/config/docker.yaml:/app/config/docker.yaml"
