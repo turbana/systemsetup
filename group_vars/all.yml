@@ -93,11 +93,6 @@ service_catalog:
     gid: 911
     auth:
       groups: [Media Admins]
-  readarr:
-    port: 8787
-    path: https://readarr.{{ site_name }}
-    auth:
-      groups: [Media Admins]
   flemmarr: {}
     
   # media apps

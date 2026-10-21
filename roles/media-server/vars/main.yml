@@ -8,7 +8,6 @@ docker_services:
   - sonarr
   - lidarr
   - prowlarr
-  - readarr
   - jellyfin
   - plex
   - ombi
