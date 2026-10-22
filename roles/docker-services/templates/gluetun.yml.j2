@@ -26,3 +26,8 @@ services:
       - homepage.name=Gluetun
       - homepage.href={{ docker_services.gluetun.path | default("") }}
       - homepage.description=VPN tunnel provider
+
+networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}

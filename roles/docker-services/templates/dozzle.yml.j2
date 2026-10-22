@@ -18,3 +18,8 @@ services:
       - homepage.name=Dozzle
       - homepage.description=View Docker log files for all containers
       - homepage.href={{ docker_service.path | default("") }}
+
+networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}

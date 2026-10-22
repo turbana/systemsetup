@@ -21,3 +21,8 @@ services:
       - homepage.description=Torrent downloader
 
     
+
+networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}

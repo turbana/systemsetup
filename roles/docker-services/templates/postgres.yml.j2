@@ -30,6 +30,9 @@ services:
       - homepage.href={{ docker_service.path | default("") }}
 
 networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}
   auth-services_postgres:
     driver: bridge
     name: auth-services_postgres

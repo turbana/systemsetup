@@ -19,3 +19,8 @@ services:
       - homepage.name=Ombi
       - homepage.description=A feeder aggregator
       - homepage.href={{ docker_service.path | default("") }}
+
+networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}

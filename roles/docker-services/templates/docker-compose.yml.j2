@@ -8,3 +8,8 @@ include:
 {% for service in docker_services %}
   - {{ docker_site }}_{{ service }}.yml
 {% endfor %}
+
+networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}

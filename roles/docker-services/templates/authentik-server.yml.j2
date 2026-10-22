@@ -35,3 +35,8 @@ services:
       - homepage.name=Authentik Server
       - homepage.description=Main authentication server
       - homepage.href={{ docker_service.path | default("") }}
+
+networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}

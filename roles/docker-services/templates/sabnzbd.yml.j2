@@ -22,3 +22,8 @@ services:
       - homepage.name=SABnzbd
       - homepage.description=Binary newsgrabber (NZB downloader)
       - homepage.href={{ docker_service.path | default("") }}
+
+networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}

@@ -28,3 +28,8 @@ services:
       - homepage.name=Plex
       - homepage.description=An all-in-one media playing app
       - homepage.href={{ docker_service.path | default("") }}
+
+networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}

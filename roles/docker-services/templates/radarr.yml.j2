@@ -23,3 +23,8 @@ services:
       - homepage.name=Radarr
       - homepage.href={{ docker_service.path | default("") }}
       - homepage.description=Movie PVR
+
+networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}

@@ -1,0 +1,63 @@
+- name: Update hosts and docker services
+  hosts: docker_hosts
+  become: true
+  vars:
+    compose_files:
+      - compose_auth-services.yml
+      - compose_docker-core-services.yml
+      - compose_media-server.yml
+      - compose_monitoring.yml
+      - compose_reverse-proxy.yml
+  # pre_tasks:
+  #   - include_vars: secrets/lab_hosts.yml
+  #     tags: lab-host
+  roles:
+    - role: docker-host
+      tags: docker-host
+  tasks:
+    - name: Update all host packages
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Pull all docker services
+      community.docker.docker_compose_v2:
+        project_src: "{{ docker_compose_root }}"
+        files: "{{ compose_files }}"
+        pull: always
+      register: pull_results
+
+    - name: Show docker pull result
+      ansible.builtin.debug:
+        msg: "Images pulled: {{ pull_result.changed }}"
+
+    - name: Update new images
+      community.docker.docker_compose_v2:
+        project_src: "{{ docker_compose_root }}"
+        files: "{{ compose_files }}"
+        state: present
+        pull: never
+        recreate: auto
+      when: pull_result.changed
+ 
+    - name: Remove dangling images
+      community.docker.docker_prune:
+        images: true
+        images_filters:
+          dangling: true
+      when: pull_result.changed
+
+    - name: Stop all docker services
+      community.docker.docker_compose_v2:
+        project_src: "{{ docker_compose_root }}"
+        files: "{{ compose_files }}"
+        state: absent
+      when: pull_result.changed
+
+    - name: Start all docker services
+      community.docker.docker_compose_v2:
+        project_src: "{{ docker_compose_root }}"
+        files: "{{ compose_files }}"
+        state: present
+      when: pull_result.changed

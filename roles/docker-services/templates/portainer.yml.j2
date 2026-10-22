@@ -20,3 +20,8 @@ services:
       - homepage.name=Portainer
       - homepage.href={{ docker_service.path | default("") }}
       - homepage.description=Manage Docker containers
+
+networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}

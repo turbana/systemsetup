@@ -19,3 +19,8 @@ services:
       - homepage.name=Hello World 0
       - homepage.description=Shows an HTTP "hello world" page
       - homepage.href={{ docker_service.path | default("") }}
+
+networks:
+  {{ container_net_name }}:
+    external: true
+    name: {{ container_net_name }}
